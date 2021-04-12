@@ -19,8 +19,6 @@ country <- "us"
 language <- "en"
 # article limit per API call under the free plan
 limit <- "20"
-date_from <- "2020-03-01"
-date_to <- "2020-03-30"
 source <- "cnn"
 
 # date range
@@ -28,7 +26,7 @@ date_init <- as.Date("2020-01-01")
 date_end <- as.Date("2021-04-09")
 
 get_date_range <- function(date_start, date_end, start_end = "start") {
-  # gets start or end of week for each date, given range of dates
+  # get start or end of week for each date, given range of dates
   # date_start: beginning date
   # date_end: end date
   # start_end: Get first or last date of the week. Values: "start" or "end" 
@@ -50,7 +48,6 @@ get_date_range <- function(date_start, date_end, start_end = "start") {
 dates_start <- get_date_range(date_init, date_end, start_end = "start")
 dates_end <- get_date_range(date_init, date_end, start_end = "end")
 
-# API call
 get_news <- function(topic, country, language, date_from, 
                      date_to, source, limit, token) {
   # get GNews API response
@@ -67,7 +64,8 @@ get_news <- function(topic, country, language, date_from,
   return(response)
 }
 
-# API call - one per week
+
+# API call - one call per week
 # check API page in https://gnewsapi.net/settings#/api to monitor progress
 api_results <- list()
 for (i in seq_along(dates_start)) {
@@ -76,10 +74,13 @@ for (i in seq_along(dates_start)) {
                                source, limit, token)
 }
 
+# only include API results that return a valid status code
+api_status_codes <- which(sapply(api_results, function(x) x$status_code) == 200)
+
 # convert to dataframe
 news <- bind_rows(
   lapply(
-    api_results, function(x) {
+    api_results[api_status_codes], function(x) {
     as.data.frame(fromJSON(content(x, "text"), flatten = TRUE))
       }
     )
@@ -91,16 +92,18 @@ news <- bind_rows(
 
 get_cnn_text <- function(url)
 {
+  # pull CNN article text given url.
+  html_ <- read_html(url)
   # get first sentence of article text
   df_first <- data.frame(
-    text = read_html(url) %>%
+    text = html_ %>%
       xml_find_all("//p[contains(@class, 'zn-body__paragraph speakable')]") %>%
       html_text(trim = TRUE),
     stringsAsFactors = FALSE
   )
   # get remainder of article text
   df_text <- data.frame(
-    text = read_html(url) %>%
+    text = html_ %>%
       xml_find_all("//div[contains(@class, 'zn-body__paragraph')]") %>%
       html_text(trim = TRUE),
     stringsAsFactors = FALSE
@@ -111,6 +114,7 @@ get_cnn_text <- function(url)
 }
 
 # full article text
+# this can take time. Find a more efficient way to pull this.
 text <- lapply(news$articles.article_url, get_cnn_text)
 
 # add full text to df
@@ -123,13 +127,35 @@ news$text <- if_else(news$text == "character(0)",
                      substring(news$text, 4, nchar(news$text) - 2))
 
 # write to csv
-write_csv(news, file = "../data/news_data_sample.csv")
+write_csv(news, file = "../data/news_data_cnn.csv")
 
 ###########
 # Reuters #
 ###########
 
-article_url <- news$articles.article_url[4]
+source_r <- "reuters"
+
+# API call - one call per week
+# check API page in https://gnewsapi.net/settings#/api to monitor progress
+api_results_r <- list()
+for (i in seq_along(dates_start)) {
+  api_results_r[[i]] <- get_news(topic, country, language, 
+                               dates_start[i], dates_end[i], 
+                               source_r, limit, token)
+}
+
+# only include API results that return a valid status code
+api_status_codes_r <- which(sapply(api_results_r, function(x) x$status_code) == 200)
+
+# convert to dataframe
+news_r <- bind_rows(
+  lapply(
+    api_results_r[api_status_codes_r], function(x) {
+      as.data.frame(fromJSON(content(x, "text"), flatten = TRUE))
+    }
+  )
+)
+
 get_reuters_text <- function(url) {
   df <- data.frame(text = read_html(url) %>% 
                      xml_find_all(
@@ -141,16 +167,20 @@ get_reuters_text <- function(url) {
   return(paste(df))
 }
 
-get_reuters_text(article_url)
-
 # full article text
-text <- lapply(news$articles.article_url, get_reuters_text)
+text_r <- lapply(news_r$articles.article_url, get_reuters_text)
 
 # add full text to df
-news$text <- NA
-for (i in seq_along(text)) {news$text[i] <- text[[i]]}
+news_r$text <- NA
+for (i in seq_along(text)) {news_r$text[i] <- text_r[[i]]}
+
+news_r$text <- if_else(news_r$text == "character(0)", 
+                     "N/A", 
+                     # remove combine syntax, i.e. "c()"
+                     substring(news_r$text, 4, nchar(news_r$text) - 2))
+
 # write to csv
-write.csv(news, file = "news_data_sample.csv")
+write_csv(news_r, file = "../data/news_data_reuters.csv")
 
 #######
 # BBC #
