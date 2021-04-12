@@ -8,6 +8,10 @@ library(rvest)
 library(tidyverse)
 library(tidytext)
 
+################
+# Get API data #
+################
+
 # API Documentation: https://documenter.getpostman.com/view/12365554/TVep87Q1#intro
 
 # note: generate your own GNews API token and save it as a file called "api_token"
@@ -19,7 +23,8 @@ country <- "us"
 language <- "en"
 # article limit per API call under the free plan
 limit <- "20"
-source <- "cnn"
+source_c <- "cnn"
+source_r <- "reuters"
 
 # date range
 date_init <- as.Date("2020-01-01")
@@ -64,31 +69,43 @@ get_news <- function(topic, country, language, date_from,
   return(response)
 }
 
-
-# API call - one call per week
-# check API page in https://gnewsapi.net/settings#/api to monitor progress
-api_results <- list()
-for (i in seq_along(dates_start)) {
-  api_results[[i]] <- get_news(topic, country, language, 
-                               dates_start[i], dates_end[i], 
-                               source, limit, token)
-}
-
-# only include API results that return a valid status code
-api_status_codes <- which(sapply(api_results, function(x) x$status_code) == 200)
-
-# convert to dataframe
-news <- bind_rows(
-  lapply(
-    api_results[api_status_codes], function(x) {
-    as.data.frame(fromJSON(content(x, "text"), flatten = TRUE))
+get_api_data <- function(topic, country, language, dates_start, 
+                         dates_end, source, limit, token) {
+  # API call - one call per week
+  # check API page in https://gnewsapi.net/settings#/api to monitor progress
+  api_results <- list()
+  for (i in seq_along(dates_start)) {
+    api_results[[i]] <- get_news(topic, country, language, 
+                                 dates_start[i], dates_end[i], 
+                                 source, limit, token)
+  }
+  
+  # only include API results that return a valid status code
+  api_status_codes <- which(sapply(api_results, function(x) x$status_code) == 200)
+  
+  # convert to dataframe
+  news <- bind_rows(
+    lapply(
+      api_results[api_status_codes], function(x) {
+        as.data.frame(fromJSON(content(x, "text"), flatten = TRUE))
       }
     )
   )
+  return(news)
+}
 
-####### 
-# CNN #
-####### 
+
+# CNN API dataframe
+news_cnn <- get_api_data(topic, country, language, dates_start, 
+                         dates_end, source = source_c, limit, token)
+
+# Reuters API dataframe
+news_reuters <- get_api_data(topic, country, language, dates_start, 
+                             dates_end, source = source_r, limit, token)
+
+############################
+# Scrape article full text #
+############################
 
 get_cnn_text <- function(url)
 {
@@ -113,50 +130,8 @@ get_cnn_text <- function(url)
   return(paste(final_text))
 }
 
-# full article text
-# this can take time. Find a more efficient way to pull this.
-text <- lapply(news$articles.article_url, get_cnn_text)
-
-# add full text to df
-news$text <- NA
-for (i in seq_along(text)) {news$text[i] <- text[[i]]}
-
-news$text <- if_else(news$text == "character(0)", 
-                     "N/A", 
-                     # remove combine syntax, i.e. "c()"
-                     substring(news$text, 4, nchar(news$text) - 2))
-
-# write to csv
-write_csv(news, file = "../data/news_data_cnn.csv")
-
-###########
-# Reuters #
-###########
-
-source_r <- "reuters"
-
-# API call - one call per week
-# check API page in https://gnewsapi.net/settings#/api to monitor progress
-api_results_r <- list()
-for (i in seq_along(dates_start)) {
-  api_results_r[[i]] <- get_news(topic, country, language, 
-                               dates_start[i], dates_end[i], 
-                               source_r, limit, token)
-}
-
-# only include API results that return a valid status code
-api_status_codes_r <- which(sapply(api_results_r, function(x) x$status_code) == 200)
-
-# convert to dataframe
-news_r <- bind_rows(
-  lapply(
-    api_results_r[api_status_codes_r], function(x) {
-      as.data.frame(fromJSON(content(x, "text"), flatten = TRUE))
-    }
-  )
-)
-
 get_reuters_text <- function(url) {
+  # pull Reuters article text given url
   df <- data.frame(text = read_html(url) %>% 
                      xml_find_all(
                        "//p[contains(@class, 'Paragraph-paragraph-2Bgue ArticleBody-para-TD_9x')]"
@@ -167,20 +142,50 @@ get_reuters_text <- function(url) {
   return(paste(df))
 }
 
+get_article_text <- function(news_url, source) {
+  # fetch full article text given article URL
+  # source: either "cnn" or "reuters"
+  if (source == "cnn") {
+    # full article text
+    # this can take time. Find a more fficient way to pull this.
+    text <- get_cnn_text(news_url) 
+    }
+  else if (source == "reuters") {
+    text <- get_reuters_text(news_url)
+  }
+  return(text)
+} 
+
 # full article text
-text_r <- lapply(news_r$articles.article_url, get_reuters_text)
+# this can take time. Find a more fficient way to pull this.
+text_c <- lapply(news_cnn$articles.article_url, get_article_text, source = "cnn")
+text_r <- lapply(news_reuters$articles.article_url, get_article_text, source = "reuters")
 
-# add full text to df
-news_r$text <- NA
-for (i in seq_along(text)) {news_r$text[i] <- text_r[[i]]}
 
-news_r$text <- if_else(news_r$text == "character(0)", 
-                     "N/A", 
-                     # remove combine syntax, i.e. "c()"
-                     substring(news_r$text, 4, nchar(news_r$text) - 2))
+# add full text to API dataframes
+news_cnn$text <- news_reuters$text <- NA
+for (i in seq_along(text)) {
+  news_cnn$text[i] <- text_c[[i]]
+  news_reuters$text[i] <- text_r[[i]]
+  }
+
+clean_null_articles <- function(news_df, fill_value = "N/A") {
+  # clean up articles that did not return a result
+  # news_df: API news dataframe. Assumes full article text column name is "text"
+  # fill_value: value to populate null articles. Default = "N/A".
+  news_df$text <- if_else(news_df$text == "character(0)", 
+                           "N/A", 
+                           # remove combine syntax, i.e. "c()"
+                           substring(news_df$text, 4, nchar(news_df$text) - 2))
+  return(news_df)
+}
+
+news_cnn <- clean_null_articles(news_cnn)
+news_reuters <- clean_null_articles(news_reuters)
 
 # write to csv
-write_csv(news_r, file = "../data/news_data_reuters.csv")
+write_csv(news_cnn, file = "../data/news_data_cnn.csv")
+write_csv(news_reuters, file = "../data/news_data_reuters.csv")
 
 #######
 # BBC #
@@ -226,10 +231,10 @@ write_csv(news_r, file = "../data/news_data_reuters.csv")
 
 #################
 
-# convert to tidy format
-text_tidy <- text %>% unnest_tokens(word, text)
-
-# get sentiment dictionary - try the different lexicons and compare
-# https://hoyeolkim.wordpress.com/2018/02/25/the-limits-of-the-bing-afinn-and-nrc-lexicons-with-the-tidytext-package-in-r/
-get_sentiments("bing")[ , 2] %>% distinct()
+# # convert to tidy format
+# text_tidy <- text %>% unnest_tokens(word, text)
+# 
+# # get sentiment dictionary - try the different lexicons and compare
+# # https://hoyeolkim.wordpress.com/2018/02/25/the-limits-of-the-bing-afinn-and-nrc-lexicons-with-the-tidytext-package-in-r/
+# get_sentiments("bing")[ , 2] %>% distinct()
 
