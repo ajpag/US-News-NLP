@@ -130,26 +130,16 @@ words_tf_idf <- words_long %>%
   summarise(word_count = n()) %>% 
   bind_tf_idf(word, articles.article_url, word_count)
 
-# Highest and lowest words by tf_idf
-tf_idf_rank <- words_tf_idf %>% arrange(desc(tf_idf))
-
-tf_idf_plot <- bind_rows(as.data.frame(tf_idf_rank) %>% 
-                           slice_head(n = 10) %>% 
-                           mutate(category = "Top Words"), 
-                         as.data.frame(tf_idf_rank) %>% 
-                           slice_tail(n = 10) %>% 
-                           mutate(category = "Bottom Words"))
-  
-
-# plot top and bottom tf-idf
-tf_idf_plot %>% 
+# Highest words by tf_idf
+words_tf_idf %>% 
+  arrange(desc(tf_idf)) %>% 
+  head(30) %>% 
   ggplot(aes(x = reorder(word, tf_idf), 
              y = tf_idf, 
              fill = articles.source_name)) +
   geom_bar(stat = "identity", position = "dodge") +
-  facet_wrap(~category, scales = "free") + 
   coord_flip()+ 
-  labs(title = "TF-IDF: Top and Bottom Words", x = "word") + 
+  labs(title = "TF-IDF: Top Words", x = "word") + 
   theme(legend.position = "bottom")
 
 ##########################
