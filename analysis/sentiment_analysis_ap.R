@@ -124,8 +124,12 @@ words %>%
   labs(title = "Word Frequency Distribution", x = "pct of Words") 
 
 # tf-idf (for words with a sentiment)
+# may need to create custom stop words to remove meaningless words
+# reference: https://www.tidytextmining.com/tfidf.html
+stop_words_custom <- tibble(word = c("n"))
+
 words_tf_idf <- words_long %>% 
-  drop_na() %>% 
+  anti_join(stop_words_custom) %>% 
   group_by(word, articles.article_url, articles.source_name) %>% 
   summarise(word_count = n()) %>% 
   bind_tf_idf(word, articles.article_url, word_count)
@@ -133,7 +137,7 @@ words_tf_idf <- words_long %>%
 # Highest words by tf_idf
 words_tf_idf %>% 
   arrange(desc(tf_idf)) %>% 
-  head(30) %>% 
+  head(100) %>% 
   ggplot(aes(x = reorder(word, tf_idf), 
              y = tf_idf, 
              fill = articles.source_name)) +
