@@ -55,24 +55,25 @@ words %>%
   geom_histogram(position = "dodge") + 
   labs(title = "Word Count Distribution")
 
-# top 20 words
-words_long %>% 
-  select(word, sentiment, lexicon) %>% 
-  drop_na() %>% 
-  group_by(word, articles.) %>% 
-  summarise(count = n()) %>% 
-  arrange(desc(count)) %>% 
-  head(20) %>% 
-  ggplot(aes(x = reorder(word, -count), y = count)) + 
-  geom_bar(stat = "identity") + 
-  theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
-  labs(title = "Word Sentiment")
-  
 # re-shape for plotting
 words_long <- words %>% 
   pivot_longer(cols = contains("sentiment"), 
                names_to = "lexicon", 
                values_to = "sentiment")
+
+# top 30 words
+words_long %>% 
+  select(word, sentiment, articles.source_name) %>% 
+  drop_na() %>% 
+  group_by(word, articles.source_name) %>% 
+  summarise(count = n()) %>% 
+  arrange(desc(count)) %>% 
+  head(30) %>% 
+  ggplot(aes(x = reorder(word, count), y = count)) + 
+  geom_bar(stat = "identity", position = "dodge") + 
+  coord_flip() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
+  labs(title = "Top 30 Words (with a sentiment)")
 
 # plot
 words_long %>%
