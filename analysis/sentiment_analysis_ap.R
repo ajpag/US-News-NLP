@@ -1,9 +1,11 @@
 # not run
-# getwd("C:\Users\apagta950\Documents\NYU\Courses\Spring 2021\MDML\Final Project\US-News-NLP\analysis")
+setwd("C:/Users/apagta950/Documents/NYU/Courses/Spring 2021/MDML/Final Project/US-News-NLP/analysis")
 
 library(ggplot2)
 library(dplyr)
+library(lubridate)
 library(readr)
+library(reshape2)
 library(tidyr)
 library(tidytext)
 
@@ -12,8 +14,8 @@ articles <- bind_rows(read_csv("../data/news_data_cnn.csv"),
                       read_csv("../data/news_data_reuters.csv") %>% 
                         filter(
                           (articles.source_domain == "www.reuters.com") & 
-                          (articles.source_name == "Reuters"))
-                      )
+                            (articles.source_name == "Reuters"))
+)
 
 ###############################
 # Baseline: Sentiment by Word #
@@ -21,7 +23,7 @@ articles <- bind_rows(read_csv("../data/news_data_cnn.csv"),
 
 # number of articles by source
 articles %>%
-  group_by(articles.source_domain, articles.source_name) %>% 
+  group_by(articles.source_name) %>% 
   summarise(articles = n()) %>% 
   arrange(desc(articles))
 
@@ -61,34 +63,104 @@ words_long <- words %>%
                names_to = "lexicon", 
                values_to = "sentiment")
 
-# top 30 words
+# top words with a sentiment
 words_long %>% 
   select(word, sentiment, articles.source_name) %>% 
   drop_na() %>% 
   group_by(word, articles.source_name) %>% 
-  summarise(count = n()) %>% 
-  arrange(desc(count)) %>% 
+  summarise(count = n()) %>%
+  group_by(articles.source_name) %>% 
+  mutate(pct_of_total = count / sum(count)) %>% 
+  arrange(desc(pct_of_total)) %>% 
   head(30) %>% 
-  ggplot(aes(x = reorder(word, count), y = count)) + 
+  ggplot(aes(x = reorder(word, pct_of_total), y = pct_of_total)) + 
   geom_bar(stat = "identity", position = "dodge") + 
   coord_flip() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
-  labs(title = "Top 30 Words (with a sentiment)")
+  labs(title = "Top Words (with a sentiment)")
 
 # plot
-words_long %>%
+words_long %>% 
+  group_by(lexicon, sentiment, articles.source_name) %>%
   drop_na() %>% 
-  ggplot(aes(x = sentiment, fill = articles.source_name)) +
-  geom_histogram(stat = "count", position = "dodge") +
+  summarise(count = n()) %>% 
+  group_by(lexicon, articles.source_name) %>% 
+  mutate(pct_of_total = count / sum(count)) %>% 
+  ggplot(aes(x = sentiment, 
+             y = pct_of_total, 
+             fill = articles.source_name)) + 
+  geom_bar(stat = "identity", position = "dodge") + 
   facet_wrap(~lexicon, scales = "free") + 
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        legend.position = "bottom") + 
+  labs(title = "Sentiment Distribution by Word")
+
+# sentiment by week - afinn
+words_long %>% 
+  drop_na() %>% 
+  mutate(date = floor_date(articles.published_datetime, unit = "week"),
+         sentiment = as.numeric(sentiment)) %>% 
+  filter(lexicon == "sentiment_afinn") %>% 
+  group_by(date, articles.source_name) %>% 
+  summarise(avg_sentiment = mean(sentiment)) %>% 
+  ggplot(aes(x = date, y = avg_sentiment, color = articles.source_name)) +
+  geom_line() + 
   theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
-  labs(title = "Word Sentiment")
+  labs(title = "Average Sentiment by Week")
+
+
+#######################################
+# Baseline: Sentiment by Word TF-IDF #
+#######################################
+
+# term frequency
+words %>% 
+  group_by(word, articles.source_name) %>% 
+  summarise(word_count = n()) %>% 
+  group_by(articles.source_name) %>% 
+  mutate(total_words = sum(word_count)) %>% 
+  ggplot(aes(x = word_count / total_words)) +
+  geom_histogram() + 
+  facet_wrap(~articles.source_name) + 
+  labs(title = "Word Frequency Distribution", x = "pct of Words") 
+
+# tf-idf (for words with a sentiment)
+words_tf_idf <- words_long %>% 
+  drop_na() %>% 
+  group_by(word, articles.article_url, articles.source_name) %>% 
+  summarise(word_count = n()) %>% 
+  bind_tf_idf(word, articles.article_url, word_count)
+
+# Highest and lowest words by tf_idf
+tf_idf_rank <- words_tf_idf %>% arrange(desc(tf_idf))
+
+tf_idf_plot <- bind_rows(as.data.frame(tf_idf_rank) %>% 
+                           slice_head(n = 10) %>% 
+                           mutate(category = "Top Words"), 
+                         as.data.frame(tf_idf_rank) %>% 
+                           slice_tail(n = 10) %>% 
+                           mutate(category = "Bottom Words"))
+  
+
+# plot top and bottom tf-idf
+tf_idf_plot %>% 
+  ggplot(aes(x = reorder(word, tf_idf), 
+             y = tf_idf, 
+             fill = articles.source_name)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  facet_wrap(~category, scales = "free") + 
+  coord_flip()+ 
+  labs(title = "TF-IDF: Top and Bottom Words", x = "word") + 
+  theme(legend.position = "bottom")
 
 ##########################
 # Sentiment by Sentences #
 ##########################
 
-# Get sentiment on articles looking at broader context instead of just words
+# Get sentiment on articles looking at sentence context instead of just words
+
+sentences <- articles %>% 
+  unnest_tokens(sentence, text, token = "sentences")
+
 
 ##################
 # Topic Modeling #

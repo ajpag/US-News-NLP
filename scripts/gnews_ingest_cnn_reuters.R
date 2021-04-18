@@ -28,7 +28,7 @@ source_r <- "reuters"
 
 # date range
 date_init <- as.Date("2020-01-01")
-date_end <- as.Date("2020-01-01")
+date_end <- as.Date("2021-04-09")
 
 get_date_range <- function(date_start, date_end, start_end = "start") {
   # get start or end of week for each date, given range of dates
