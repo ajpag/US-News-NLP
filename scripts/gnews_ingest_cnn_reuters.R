@@ -1,5 +1,5 @@
 # not run
-setwd("C:/Users/apagta950/Documents/NYU/Courses/Spring 2021/MDML/Final Project/US-News-NLP/scripts")
+# setwd("C:/Users/apagta950/Documents/NYU/Courses/Spring 2021/MDML/Final Project/US-News-NLP/scripts")
 
 library(httr)
 library(jsonlite)
