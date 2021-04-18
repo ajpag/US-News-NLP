@@ -1,5 +1,5 @@
 # not run
-# setwd("C:/Users/apagta950/Documents/NYU/Courses/Spring 2021/MDML/Final Project/US-News-NLP/scripts")
+setwd("C:/Users/apagta950/Documents/NYU/Courses/Spring 2021/MDML/Final Project/US-News-NLP/scripts")
 
 library(httr)
 library(jsonlite)
@@ -15,7 +15,7 @@ library(tidytext)
 # API Documentation: https://documenter.getpostman.com/view/12365554/TVep87Q1#intro
 
 # note: generate your own GNews API token and save it as a file called "api_token"
-token <- colnames(read.csv("api_token"))
+token <- colnames(read.csv("../api_token"))
 
 # parameters
 topic <- "\"COVID-19\""
@@ -28,7 +28,7 @@ source_r <- "reuters"
 
 # date range
 date_init <- as.Date("2020-01-01")
-date_end <- as.Date("2021-04-09")
+date_end <- as.Date("2020-01-01")
 
 get_date_range <- function(date_start, date_end, start_end = "start") {
   # get start or end of week for each date, given range of dates
@@ -228,6 +228,51 @@ write_csv(news_reuters, file = "../data/news_data_reuters.csv")
 # 
 # # full article text
 # text <- bind_rows(lapply(news$articles.article_url, get_jazeera_text))
+
+############
+# Fox News #
+############
+
+# source_f <- "foxnews"
+# # Fox API dataframe
+# news_fox <- get_api_data(topic, country, language, dates_start, 
+#                          dates_end, source = source_f, limit, token)
+# 
+# article_url <- news_fox$articles.article_url[8]
+# 
+# get_fox_text <- function(url) {
+#  df <- as.data.frame(read_html(url) %>%
+#                        xml_find_all("///p[contains(@p, '')]") %>%
+#                        html_text(trim = TRUE),
+#                      stringsAsFactors = FALSE)
+#   return(paste(df))
+# }
+# 
+# 
+# text_f <- lapply(news_fox$articles.article_url, get_fox_text)
+# 
+# # add full text to API dataframes
+# news_fox$text <- NA
+# for (i in seq_along(text_f)) {
+#   news_fox$text[i] <- text_f[[i]]
+# }
+# 
+# clean_null_articles <- function(news_df, fill_value = "N/A") {
+#   # clean up articles that did not return a result
+#   # news_df: API news dataframe. Assumes full article text column name is "text"
+#   # fill_value: value to populate null articles. Default = "N/A".
+#   news_df$text <- if_else(news_df$text == "character(0)", 
+#                           "N/A", 
+#                           # remove combine syntax, i.e. "c()"
+#                           substring(news_df$text, 4, nchar(news_df$text) - 2))
+#   return(news_df)
+# }
+# 
+# news_fox <- clean_null_articles(news_fox)
+# 
+# # write to csv
+# write_csv(news_fox, file = "../data/news_data_fox.csv")
+# # write_csv(news_reuters, file = "../data/news_data_reuters.csv")
 
 #################
 
