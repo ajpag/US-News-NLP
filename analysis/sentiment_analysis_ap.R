@@ -171,18 +171,17 @@ p6 <- words_tf_idf %>%
 
 # save figures
 plot_titles <- c("words_per_article", "top_words_with_sentiment",
-                 "sentiment_distr_by_word", "avg_sentiment_by_week_afinn",
-                 "word_freq_distr", "tfidf_top_words")
+                 "word_sentiment_distr", "word_avg_sentiment_by_week_afinn",
+                 "word_freq_distr", "word_tfidf_top_words")
 
 plots <- list(p1, p2, p3, p4, p5, p6)
 
 for (i in seq_along(plot_titles)) {
   p <- plots[[i]]
   ggsave(plot = p, file = paste(figures_dir,
-                                         "word/",
-                                         plot_titles[i],
-                                         ".png",
-                                         sep = ""), 
+                                plot_titles[i],
+                                ".png",
+                                sep = ""), 
          height = 10, width = 10)
 }
 
