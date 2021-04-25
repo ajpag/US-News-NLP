@@ -1,15 +1,26 @@
 # not run
-setwd("C:/Users/apagta950/Documents/NYU/Courses/Spring 2021/MDML/Final Project/US-News-NLP/analysis")
+# setwd("C:/Users/apagta950/Documents/NYU/Courses/Spring 2021/MDML/Final Project/US-News-NLP/analysis")
 
 library(ggplot2)
 library(dplyr)
 library(lubridate)
 library(readr)
 library(reshape2)
+library(stringr)
 library(tidyr)
 library(tidytext)
 
 figures_dir <- "../figures/"
+
+# # read cnn and clean
+# articles_cnn <- read_csv("../data/news_data_cnn.csv") %>% 
+#   filter(text != "N/A") %>% 
+#   mutate(text = str_remove_all(text, "CNN")) %>% 
+#   mutate(text = str_replace(text, fixed("()"), "")) %>% 
+#   mutate(text = str_replace(text, fixed("( Business)"), "")) %>% 
+#   mutate(text = str_replace_all(text, "[\n]", "")) %>% 
+#   mutate(text = gsub("\\\"", "", text, fixed = TRUE)) %>% 
+#   mutate(text = gsub("\"", "", text, fixed = TRUE))
 
 # read cnn and reuters. Drop International Reuters news sources
 articles_cnn_reuters <- bind_rows(read_csv("../data/news_data_cnn.csv"), 
@@ -45,8 +56,9 @@ articles %>%
   summarise(articles = n()) %>% 
   arrange(desc(articles))
 
-tokenize_words <- function(df) {
+tokenize_words <- function(df, text) {
   # tokenize words and add sentiments given news dataframe
+  # text: column to tokenize
   words <- df %>% 
     unnest_tokens(word, text) %>% 
     left_join(get_sentiments(lexicon = "bing") %>% 
@@ -65,7 +77,7 @@ tokenize_words <- function(df) {
 }
 
 # baseline: tokenize words
-words <- tokenize_words(articles)
+words <- tokenize_words(articles, text)
 
 # words per article
 p1 <- words %>% 
@@ -169,12 +181,77 @@ p6 <- words_tf_idf %>%
   labs(title = "TF-IDF: Top Words", x = "word") + 
   theme(legend.position = "bottom")
 
-# save figures
+##########################
+# Sentiment by Sentences #
+##########################
+
+# Get sentiment on articles looking at sentence context instead of just words
+
+sentences <- articles %>% 
+  mutate(article_num = row_number()) %>% 
+  unnest_tokens(sentence, text, token = "sentences") %>% 
+  mutate(sentence_num = row_number())
+
+# add sentiment for each word
+sentence_sentiment <- sentences %>% 
+  unnest_tokens(word, sentence, drop = FALSE) %>% 
+  left_join(get_sentiments(lexicon = "bing") %>% 
+              mutate(sentiment_bing = sentiment) %>% 
+              select(-sentiment)) %>% 
+  left_join(get_sentiments(lexicon = "afinn") %>% 
+              mutate(sentiment_afinn = as.factor(value)) %>% 
+              select(-value)) %>% 
+  left_join(get_sentiments(lexicon = "loughran") %>% 
+              mutate(sentiment_loughran = sentiment) %>% 
+              select(-sentiment)) %>% 
+  left_join(get_sentiments(lexicon = "nrc") %>% 
+              mutate(sentiment_nrc = sentiment) %>% 
+              select(-sentiment))
+
+# convert to long format for plotting
+sentence_long <- sentence_sentiment %>% 
+  pivot_longer(cols = contains("sentiment"), 
+               names_to = "lexicon", 
+               values_to = "sentiment")
+
+# average afinn sentiment by sentence
+avg_sentiment_afinn <- sentence_long %>% 
+  filter(lexicon == "sentiment_afinn") %>% 
+  mutate(articles.published_datetime = date(articles.published_datetime)) %>% 
+  drop_na() %>% 
+  group_by(articles.source_name, articles.published_datetime, 
+           sentence_num) %>% 
+  summarise(avg_sentiment_afinn = mean(as.numeric(sentiment)))
+
+# plot
+p7 <- avg_sentiment_afinn %>% 
+  group_by(articles.source_name) %>% 
+  summarise(avg_sentiment_afinn = mean(avg_sentiment_afinn)) %>% 
+  ggplot(aes(x = articles.source_name, y = avg_sentiment_afinn)) +
+  geom_bar(stat = "identity") +
+  labs(title = "Average Afinn Sentiment by News Source",
+       subtitle = "By Sentence")
+
+# plot by day
+p8 <- avg_sentiment_afinn %>% 
+  group_by(articles.source_name, 
+           week = floor_date(articles.published_datetime, "week")) %>% 
+  summarise(avg_sentiment_afinn = mean(avg_sentiment_afinn)) %>% 
+  ggplot(aes(x = week, y = avg_sentiment_afinn)) +
+  geom_line() +
+  facet_wrap(~articles.source_name) + 
+  labs(title = "Average Afinn Sentiment by News Source",
+       subtitle = "By Sentence")
+
+##############
+# save plots #
+##############
 plot_titles <- c("words_per_article", "top_words_with_sentiment",
                  "word_sentiment_distr", "word_avg_sentiment_by_week_afinn",
-                 "word_freq_distr", "word_tfidf_top_words")
+                 "word_freq_distr", "word_tfidf_top_words",
+                 "sentence_afinn_sentiment", "sentence_afinn_sentiment_week")
 
-plots <- list(p1, p2, p3, p4, p5, p6)
+plots <- list(p1, p2, p3, p4, p5, p6, p7, p8)
 
 for (i in seq_along(plot_titles)) {
   p <- plots[[i]]
@@ -185,16 +262,17 @@ for (i in seq_along(plot_titles)) {
          height = 10, width = 10)
 }
 
+#############################
+# Sentence Sentiment: Trump #
+#############################
 
-##########################
-# Sentiment by Sentences #
-##########################
+# Look at sentiment comparison filtered by articles with "Trump" keyword
 
-# Get sentiment on articles looking at sentence context instead of just words
+#############################
+# Sentence Sentiment: Biden #
+#############################
 
-sentences <- articles %>% 
-  unnest_tokens(sentence, text, token = "sentences")
-
+# Look at sentiment comparison filtered by articles with "Biden" keyword
 
 ##################
 # Topic Modeling #
