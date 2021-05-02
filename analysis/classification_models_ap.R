@@ -5,10 +5,10 @@ library(anytime) # epoch to datetime
 library(bartCause) # Bayesian Additive Regression Trees
 library(dplyr)
 library(caret) # Gradient Boosting Machine  
-library(gbm) # Gradient Boosting Machine  
 library(lubridate)
 library(readr)
-library(ROCR)
+library(pROC) # multi-class ROC and AUC
+library(xgboost)
 seed <- 14
 set.seed(seed)
 
@@ -23,10 +23,9 @@ articles <- read_csv(paste0(data_dir, "news_model_input.csv"))
 articles_input <- articles %>% 
   select(c(document, articles.source_name, avg_sentiment_afinn_word, 
            articles.published_timestamp, articles.published_datetime,
-           avg_sentiment_afinn_sent, word_count, word_count_sentiment) | 
+           avg_sentiment_afinn_sent, word_count, word_count_sentiment,
+           published_hour_et, published_dow) | 
            contains("topic")) %>% 
-  mutate(published_hour_et = hour(anytime(articles.published_timestamp)),
-         published_dow = weekdays(articles$articles.published_datetime)) %>% 
   drop_na()
 
 ################### Train / Test Split #########################################
@@ -53,26 +52,27 @@ bind_rows(articles_train %>% mutate(set = "train"),
 #############
 
 # fit model
-gbm_fit <- train(articles.source_name ~ . - articles.published_datetime - 
-                                        articles.published_timestamp - document,
+gbm_fit <- train(articles.source_name ~ . - articles.published_datetime 
+                                          - articles.published_timestamp 
+                                          - document
+                                          - published_hour_et,
                data = articles_train,
                method = "gbm")
 
+# plot variable importance
+varImp(gbm_fit)
+
 # predictions on test set
 gbm_preds <- predict(gbm_fit, articles_test)
-
-# fit model
-# multi-class is ill-advised per documentation
-gbm_fit <- gbm(articles.source_name ~ . - articles.published_datetime - 
-                   articles.published_timestamp - document,
-                 data = articles_train %>% 
-                 mutate(published_dow = as.factor(published_dow)),
-                 distribution = "multinomial")
-
+# probabilities on test set
+gbm_prob <- predict(gbm_fit, articles_test, type = "prob")
 
 ######################
 # Validation Metrics #
 ######################
+
+gbm_accuracy <- mean(gbm_preds == articles_test$articles.source_name)
+paste("GBM Accuracy:", round(gbm_accuracy, 3))
 
 #######
 # AUC #
@@ -83,7 +83,16 @@ gbm_fit <- gbm(articles.source_name ~ . - articles.published_datetime -
 ######################
 
 
-###################### Bayesian Additive Regress Trees #########################
+###################### XGBoost #################################################
+
+#############
+# Model Fit #
+#############
+
+
+
+# fit model
+xgb_fit <- 
 
 ######################
 # Validation Metrics #
