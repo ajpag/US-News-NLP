@@ -5,7 +5,7 @@ library(ggplot2)
 library(dplyr)
 library(lubridate)
 library(readr)
-library(reshape2)
+# library(reshape2)
 library(stringr)
 library(tidyr)
 library(tidytext)
@@ -400,6 +400,7 @@ term_freq <- articles %>%
 news_dtm <- term_freq %>% cast_dtm(document, word, n)
 
 # fit a topic model
+# try different k and fitting methods
 news_lda <- LDA(news_dtm, k = 7, control = list(seed = seed))
 
 # per-topic per-word probabilities

@@ -1,0 +1,48 @@
+---
+title: "Measuring Bias in COVID-19 News Articles"
+author: "Andrew Pagtakhan, Kwan Bo Shim, Jazmin Trejo"
+date: "5/10/2021"
+output:
+  pdf_document:
+    toc: yes
+    toc_depth: 3
+    number_section: true
+---
+
+# Research Question
+
+```{r setup, include=TRUE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Data Cleaning
+
+## GNews API
+
+## Web Scraping
+
+# Exploratory Data Analysis
+
+## Sentiment Analysis
+
+# Topic Modeling
+
+## VEM
+
+## Gibbs 
+
+# Classification
+
+## Logistic Regression
+
+## Random Forest
+
+## Naive Bayes
+
+## Support Vector Machine
+
+## Gradient Boosting Machine
+
+## Bayesian Additive Regression Trees
+
+# Results
