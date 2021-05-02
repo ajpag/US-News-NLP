@@ -240,7 +240,7 @@ p_topic <- articles %>%
   theme(legend.position = "bottom") + 
   labs(title = "Topic Probabilities by News Source")
 
-ggsave(plot = p2, file = paste0(figures_dir, "topic_probabilities_news_source.png"),
+ggsave(plot = p_topic, file = paste0(figures_dir, "topic_probabilities_news_source.png"),
        height = 10, width = 10)
 
 ############################### TF-IDF #########################################
