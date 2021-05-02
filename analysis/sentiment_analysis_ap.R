@@ -12,16 +12,43 @@ library(tidytext)
 
 figures_dir <- "../figures/"
 
-# # read cnn and clean
-# articles_cnn <- read_csv("../data/news_data_cnn.csv") %>% 
-#   filter(text != "N/A") %>% 
-#   mutate(text = str_remove_all(text, "CNN")) %>% 
-#   mutate(text = str_replace(text, fixed("()"), "")) %>% 
-#   mutate(text = str_replace(text, fixed("( Business)"), "")) %>% 
-#   mutate(text = str_replace_all(text, "[\n]", "")) %>% 
-#   mutate(text = gsub("\\\"", "", text, fixed = TRUE)) %>% 
-#   mutate(text = gsub("\"", "", text, fixed = TRUE))
+## COMBINE ARTICLES ##
 
+# # read cnn and clean
+articles_cnn <- read_csv("../data/news_data_cnn.csv") %>%
+  filter(text != "N/A") %>%
+  mutate(text = str_remove_all(text, "CNN")) %>%
+  mutate(text = str_replace(text, fixed("()"), "")) %>%
+  mutate(text = str_replace(text, fixed("( Business)"), "")) %>%
+  mutate(text = str_replace_all(text, "[\n]", "")) %>%
+  mutate(text = gsub("\\\"", "", text, fixed = TRUE)) %>%
+  mutate(text = gsub("\"", "", text, fixed = TRUE))
+
+articles_cnn_reuters <- bind_rows(articles_cnn, 
+                                  read_csv("../data/news_data_reuters.csv"))
+
+# read wsj and bbc
+articles_bbc_wsj <- bind_rows(read_csv("../data/news_wsj.csv"),
+                              read_csv("../data/news_bbc.csv"))
+
+# remove first three columns and consolidate source names
+articles_bbc_wsj <- articles_bbc_wsj %>% 
+  select(-c(X1, X.1, X)) %>% 
+  mutate(articles.source_name = 
+           if_else(articles.source_name == "Wall Street Journal", 
+                   "The Wall Street Journal",
+                   articles.source_name))
+
+# combine articles
+articles <- bind_rows(articles_cnn_reuters, articles_bbc_wsj)
+
+articles %>% group_by(articles.source_name) %>% summarise(n())
+
+# write file
+write_csv(articles, file = "../data/news_all.csv")
+
+############################################################
+  
 # read cnn and reuters. Drop International Reuters news sources
 articles_cnn_reuters <- bind_rows(read_csv("../data/news_data_cnn.csv"), 
                                   read_csv("../data/news_data_reuters.csv") %>% 
@@ -30,6 +57,7 @@ articles_cnn_reuters <- bind_rows(read_csv("../data/news_data_cnn.csv"),
                                       & 
                                       (articles.source_name == "Reuters"))
 )
+
 
 # read wsj and bbc
 articles_bbc_wsj <- bind_rows(read_csv("../data/news_wsj.csv"),
