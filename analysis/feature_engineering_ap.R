@@ -1,8 +1,10 @@
 # not run
 # setwd("C:/Users/apagta950/Documents/NYU/Courses/Spring 2021/MDML/Final Project/US-News-NLP/analysis")
 
+library(anytime)
 library(dplyr)
 library(ggplot2)
+library(lubridate)
 library(readr)
 library(tidyr)
 library(tidytext)
@@ -254,6 +256,11 @@ ggsave(plot = p_topic, file = paste0(figures_dir, "topic_probabilities_news_sour
 # 
 # # get tf-idf
 # tf_idf <- bind_tf_idf(word_counts_, document, word, n)
+
+########################## Other features #######################################
+articles <- articles %>% 
+  mutate(published_hour_et = hour(anytime(articles.published_timestamp)), 
+         published_dow = weekdays(articles$articles.published_datetime))
 
 # write to csv
 write_csv(articles, paste0(data_dir, "news_model_input.csv"))
