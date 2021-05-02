@@ -14,41 +14,6 @@ seed <- 14
 
 figures_dir <- "../figures/"
 
-##################### COMBINE ARTICLES ########################################
-
-# # read cnn and clean
-articles_cnn <- read_csv("../data/news_data_cnn.csv") %>%
-  filter(text != "N/A") %>%
-  mutate(text = str_remove_all(text, "CNN")) %>%
-  mutate(text = str_replace(text, fixed("()"), "")) %>%
-  mutate(text = str_replace(text, fixed("( Business)"), "")) %>%
-  mutate(text = str_replace_all(text, "[\n]", "")) %>%
-  mutate(text = gsub("\\\"", "", text, fixed = TRUE)) %>%
-  mutate(text = gsub("\"", "", text, fixed = TRUE))
-
-articles_cnn_reuters <- bind_rows(articles_cnn, 
-                                  read_csv("../data/news_data_reuters.csv"))
-
-# read wsj and bbc
-articles_bbc_wsj <- bind_rows(read_csv("../data/news_wsj.csv"),
-                              read_csv("../data/news_bbc.csv"))
-
-# remove first three columns and consolidate source names
-articles_bbc_wsj <- articles_bbc_wsj %>% 
-  select(-c(X1, X.1, X)) %>% 
-  mutate(articles.source_name = 
-           if_else(articles.source_name == "Wall Street Journal", 
-                   "The Wall Street Journal",
-                   articles.source_name))
-
-# combine articles
-articles <- bind_rows(articles_cnn_reuters, articles_bbc_wsj)
-
-articles %>% group_by(articles.source_name) %>% summarise(n())
-
-# write file
-write_csv(articles, file = "../data/news_all.csv")
-
 ################ SENTIMENT ANALYSIS ############################################
   
 # read cnn and reuters. Drop International Reuters news sources
@@ -376,61 +341,3 @@ for (i in seq_along(plot_titles)) {
                                 sep = ""), 
          height = 10, width = 10)
 }
-
-################################ Topic Modeling ################################
-
-# Engineer new features for sentiment charts and classification model
-
-# also removed top COVID-19 high-frequency words
-# the articles were already filtered to COVID-19 articles via GNews API
-stop_words_custom <- tibble(word = c("n", "2w7hx9t", "202f", "comma",
-                                     "covid", "19", "coronavirus", 
-                                     "virus", "health", "people",
-                                     "bbc", "reuters", "cnn", "wsj"))
-
-# word frequencies
-term_freq <- articles %>% 
-  mutate(document = row_number()) %>% 
-  unnest_tokens(word, text) %>%
-  group_by(document, word) %>% summarise(n = n()) %>% 
-  anti_join(stop_words, by = c(word = "word")) %>% 
-  anti_join(stop_words_custom, by = c(word = "word"))
-
-# document-term matrix
-news_dtm <- term_freq %>% cast_dtm(document, word, n)
-
-# fit a topic model
-# try different k and fitting methods
-news_lda <- LDA(news_dtm, k = 7, control = list(seed = seed))
-
-# per-topic per-word probabilities
-news_topics <- tidy(news_lda, matrix = "beta")
-
-news_topics %>% filter(term=='trump')
-news_topics %>% filter(term=='biden')
-news_topics %>% filter(topic==3) %>% summarize(sum(beta))
-
-top_terms <- news_topics %>%
-  group_by(topic) %>%
-  top_n(10, beta) %>%
-  ungroup() %>%
-  arrange(topic, -beta)
-
-top_terms %>% print(n=40)
-
-# we can plot these top terms:
-p11 <- top_terms %>%
-  mutate(term = reorder(term, beta)) %>%
-  ggplot(aes(term, beta, fill = factor(topic))) +
-  geom_bar(alpha = 0.8, stat = "identity", show.legend = FALSE) +
-  facet_wrap(~ topic, scales = "free", ncol = 2) +
-  coord_flip()
-
-ggsave(plot = p11, file = paste0(figures_dir, "lda_top_terms.png"), 
-                              height = 10, width = 10)
-
-################################# CLASSIFICATION ###############################
-
-# Labels: Liberal, Conservative, Moderate
-# GBM, BART
-
