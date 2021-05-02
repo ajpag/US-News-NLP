@@ -82,6 +82,16 @@ p1 <- plot_lda(news_lda, 10, "Topic Modeling (LDA VEM): Top Terms")
 ggsave(plot = p1, file = paste0(figures_dir, "lda_top_terms.png"), 
        height = 10, width = 10)
 
+# add topic probabilities to dataframe 
+# topic probabilities by document
+lda_probs <- tidy(news_lda, matrix = "gamma") %>%
+  pivot_wider(names_from = topic, 
+              values_from = gamma,
+              names_prefix = "topic_vem_")
+
+# add to dataframe
+articles <- articles %>% left_join(lda_probs)
+
 #########
 # Gibbs #
 #########
@@ -97,6 +107,20 @@ p2 <- plot_lda(news_lda_g, 10, "Topic Modeling (LDA Gibbs): Top Terms")
 ggsave(plot = p2, file = paste0(figures_dir, "lda_top_terms_gibbs.png"), 
        height = 10, width = 10)
 
+# add topic probabilities to dataframe 
+# topic probabilities
+lda_probs_g <- tidy(news_lda, matrix = "gamma")
+colnames(lda_probs_g) <- paste0("topic_", colnames(lda_probs_g), "_prob_gibbs")
+
+# add topic probabilities to dataframe 
+# topic probabilities by document
+lda_probs_g <- tidy(news_lda_g, matrix = "gamma") %>%
+  pivot_wider(names_from = topic, 
+              values_from = gamma,
+              names_prefix = "topic_gibbs_")
+
+# add to dataframe
+articles <- articles %>% left_join(lda_probs_g)
 
 ################################# Sentiment Features ###########################
 
@@ -167,15 +191,19 @@ sentences_sentiment <- sentences %>%
 # add to dataframe
 articles <- articles %>% left_join(sentences_sentiment)
 
-# inspect differences between sentimeny by word and sentence
+# inspect differences between sentiment by word and sentence across data sources
 articles %>% 
   pivot_longer(cols = c(avg_sentiment_afinn_word, 
                         avg_sentiment_afinn_sent)) %>% 
   ggplot(aes(x = value, fill = name)) + 
   geom_histogram() + 
+  facet_wrap(~artic)
   labs(title = "Sentiment by Article") + 
   theme(legend.position = "bottom")
 
+# plot average sentiment by topic and news source
+
+  
 # write to csv
 write_csv(articles, paste0(data_dir, "news_model_input.csv"))
 
