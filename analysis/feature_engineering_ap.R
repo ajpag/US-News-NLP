@@ -215,6 +215,8 @@ articles <- articles %>%
   left_join(word_count) %>% 
   left_join(word_count_sentiment)
 
+##################### Plot Features ############################################
+
 # inspect differences between sentiment by word and sentence across data sources
 articles %>% 
   pivot_longer(cols = c(avg_sentiment_afinn_word, 
@@ -226,14 +228,20 @@ articles %>%
   theme(legend.position = "bottom")
 
 # plot topic probabilities by news source
-articles %>% 
-  select(contains("topic")) %>% 
-  pivot_longer(cols = everything()) %>% 
+p_topic <- articles %>% 
+  select(articles.source_name | contains("topic")) %>% 
+  pivot_longer(cols = -articles.source_name) %>% 
   drop_na() %>% 
-  group_by(name, ) %>% 
-  summarise(topic_prob = mean(value))
-  
-# plot average sentiment by topic and news source
+  group_by(name, articles.source_name) %>% 
+  summarise(topic_prob = mean(value)) %>% 
+  ggplot(aes(x = articles.source_name, y = topic_prob, fill = articles.source_name)) + 
+  geom_bar(stat = "identity", position = "dodge") + 
+  facet_wrap(~name) + 
+  theme(legend.position = "bottom") + 
+  labs(title = "Topic Probabilities by News Source")
+
+ggsave(plot = p2, file = paste0(figures_dir, "topic_probabilities_news_source.png"),
+       height = 10, width = 10)
 
 ############################### TF-IDF #########################################
 
