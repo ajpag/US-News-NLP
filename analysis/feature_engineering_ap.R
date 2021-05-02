@@ -14,7 +14,15 @@ figures_dir <- "../figures/"
 data_dir <- "../data/"
 
 # read news data
-articles <- read_csv(paste0(data_dir, "news_all.csv"))
+articles <- read_csv(paste0(data_dir, "news_all.csv"))  %>% 
+  mutate(document = as.character(row_number()))
+
+# filter out international Reuters sources
+news_source_exclude <- c("Reuters Africa", "Reuters Australia", 
+                         "Reuters India", "Reuters UK", "Reuters.com")
+
+# remove international Reuters articles
+articles <- filter(articles, !articles.source_name %in% news_source_exclude)
 
 # Purpose: Engineer new features for classification modeling
 
@@ -87,7 +95,7 @@ ggsave(plot = p1, file = paste0(figures_dir, "lda_top_terms.png"),
 lda_probs <- tidy(news_lda, matrix = "gamma") %>%
   pivot_wider(names_from = topic, 
               values_from = gamma,
-              names_prefix = "topic_vem_")
+              names_prefix = "prob_topic_")
 
 # add to dataframe
 articles <- articles %>% left_join(lda_probs)
@@ -96,31 +104,31 @@ articles <- articles %>% left_join(lda_probs)
 # Gibbs #
 #########
 
-# try Gibbs method
-news_lda_g <- LDA(news_dtm, k = topics, method = "Gibbs", 
-                control = list(seed = seed))
-
-# plot top terms per topic
-p2 <- plot_lda(news_lda_g, 10, "Topic Modeling (LDA Gibbs): Top Terms")
-
-# save plot
-ggsave(plot = p2, file = paste0(figures_dir, "lda_top_terms_gibbs.png"), 
-       height = 10, width = 10)
-
-# add topic probabilities to dataframe 
-# topic probabilities
-lda_probs_g <- tidy(news_lda, matrix = "gamma")
-colnames(lda_probs_g) <- paste0("topic_", colnames(lda_probs_g), "_prob_gibbs")
-
-# add topic probabilities to dataframe 
-# topic probabilities by document
-lda_probs_g <- tidy(news_lda_g, matrix = "gamma") %>%
-  pivot_wider(names_from = topic, 
-              values_from = gamma,
-              names_prefix = "topic_gibbs_")
-
-# add to dataframe
-articles <- articles %>% left_join(lda_probs_g)
+# # try Gibbs method
+# news_lda_g <- LDA(news_dtm, k = topics, method = "Gibbs", 
+#                 control = list(seed = seed))
+# 
+# # plot top terms per topic
+# p2 <- plot_lda(news_lda_g, 10, "Topic Modeling (LDA Gibbs): Top Terms")
+# 
+# # save plot
+# ggsave(plot = p2, file = paste0(figures_dir, "lda_top_terms_gibbs.png"), 
+#        height = 10, width = 10)
+# 
+# # add topic probabilities to dataframe 
+# # topic probabilities
+# lda_probs_g <- tidy(news_lda, matrix = "gamma")
+# colnames(lda_probs_g) <- paste0("topic_", colnames(lda_probs_g), "_prob_gibbs")
+# 
+# # add topic probabilities to dataframe 
+# # topic probabilities by document
+# lda_probs_g <- tidy(news_lda_g, matrix = "gamma") %>%
+#   pivot_wider(names_from = topic, 
+#               values_from = gamma,
+#               names_prefix = "topic_gibbs_")
+# 
+# # add to dataframe
+# articles <- articles %>% left_join(lda_probs_g)
 
 ################################# Sentiment Features ###########################
 
@@ -129,9 +137,6 @@ articles <- articles %>% left_join(lda_probs_g)
 ##################
 # Tokenize Words #
 ##################
-
-# add row number for each article
-articles <- articles %>% mutate(document = row_number())
 
 tokenize_words <- function(df, text) {
   # tokenize text by word and add sentiments
@@ -165,7 +170,21 @@ avg_sentiment_afinn_word <- words %>%
   select(document, sentiment_afinn) %>%
   drop_na() %>% 
   group_by(document) %>% 
-  summarise(avg_sentiment_afinn_word = mean(sentiment_afinn))
+  summarise(avg_sentiment_afinn_word = mean(sentiment_afinn)) %>% 
+  mutate(document = as.character(document))
+
+# word count per article
+word_count <- words %>% 
+  group_by(document) %>% 
+  mutate(document = as.character(document)) %>% 
+  summarise(word_count = n())
+
+# word count with mapped sentiment
+word_count_sentiment <- words %>%
+  group_by(document) %>% 
+  inner_join(get_sentiments("afinn")) %>% 
+  mutate(document = as.character(document)) %>% 
+  summarise(word_count_sentiment = n())
 
 # add to dataframe
 articles <- articles %>% left_join(avg_sentiment_afinn_word)
@@ -186,10 +205,15 @@ sentences <- articles %>%
 sentences_sentiment <- sentences %>% 
   inner_join(get_sentiments("afinn")) %>% 
   group_by(document) %>% 
-  summarise(avg_sentiment_afinn_sent = mean(value))
+  summarise(avg_sentiment_afinn_sent = mean(value)) %>% 
+  mutate(document = as.character(document))
 
 # add to dataframe
-articles <- articles %>% left_join(sentences_sentiment)
+# also add word counts
+articles <- articles %>% 
+  left_join(sentences_sentiment) %>% 
+  left_join(word_count) %>% 
+  left_join(word_count_sentiment)
 
 # inspect differences between sentiment by word and sentence across data sources
 articles %>% 
@@ -197,13 +221,32 @@ articles %>%
                         avg_sentiment_afinn_sent)) %>% 
   ggplot(aes(x = value, fill = name)) + 
   geom_histogram() + 
-  facet_wrap(~artic)
+  facet_wrap(~articles.source_name) + 
   labs(title = "Sentiment by Article") + 
   theme(legend.position = "bottom")
 
+# plot topic probabilities by news source
+articles %>% 
+  select(contains("topic")) %>% 
+  pivot_longer(cols = everything()) %>% 
+  drop_na() %>% 
+  group_by(name, ) %>% 
+  summarise(topic_prob = mean(value))
+  
 # plot average sentiment by topic and news source
 
-  
+############################### TF-IDF #########################################
+
+# drop for now.. this would add too many columns to the dataframe
+
+# # prep data for tf_idf
+# word_counts_ <- words %>% 
+#   group_by(document, word) %>% 
+#   summarise(n = n())
+# 
+# # get tf-idf
+# tf_idf <- bind_tf_idf(word_counts_, document, word, n)
+
 # write to csv
 write_csv(articles, paste0(data_dir, "news_model_input.csv"))
 
