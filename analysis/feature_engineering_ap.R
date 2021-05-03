@@ -274,6 +274,33 @@ articles <- articles %>%
               mutate(article.no = as.factor(article.no)), 
             by = c("document" = "article.no"))
 
+
+# ============= these are new features related to other research papers ================
+all_news_class <- all_news %>%
+  mutate(text1 = tolower(text),
+         # new features1
+         # study by "Politicization and Polarization in COVID-19 News Coverage"
+         covid19 = grepl(c("corona", "coronavirus","covid"), text1)*1,
+         scientist = grepl(c('scientist', 'research', 'professor', 'health official', 'doctor','dr', 'health commission','expert', 'health leader', 'health service','health authorit', 'world health organization', 'centers for disease control and prevention', 'cdc', 'national institutes of health', 'health and human services', 'mayo clinic', 'johns hopkins' , 'fauci', 'birx', 'tedros'), text1)*1,
+         republican = grepl(c("republican","gop", 'conservative', "trump", "pence", "mcconnell","white house","administration"), text1)*1,
+         democrat = grepl(c("democrat","liberal","progressive","pelosi" ,"schumer", "biden", "obama","newsom" ,"whitmer","cuomo","biden,","sanders"), text1)*1,
+        # new feature 2
+        # study name "Polarization in elite communication on the COVID-19 pandemic"
+        repub_words = grepl(c("coronavirus","china","businesses","realdonaltrump","relief","inittogether","small","together", "cares","great"), text1)*1,
+        demo_words = grepl(c("health","need","crisis","public","workers","trump","must","pandemic","care","leave","paid","familiesfirst","people","sick","emergency"), text1)*1,
+        # new feature 3
+        # research paper by Pew Research Center
+        div_words1 = grepl(c("social distance","gathering","avoid","large groups"), text1)*1,
+        div_words2 = grepl(c("limit","carry-out","restaurant","restaurants"), text1)*1,
+        div_words3 = grepl(c("closing","close","k-12","school"), text1)*1,
+        div_words4 = grepl(c("race","racial","racism","blm"), text1)*1,
+        div_words5 = grepl(c("climate","climate change","global warming","global climate change"), text1)*1,
+         )
+# ============= ends here ================
+
+
+
+
 # write to csv
 write_csv(articles, paste0(data_dir, "news_model_input.csv"))
 
