@@ -2,7 +2,6 @@
 # setwd("C:/Users/apagta950/Documents/NYU/Courses/Spring 2021/MDML/Final Project/US-News-NLP/analysis")
 
 library(anytime) # epoch to datetime
-library(bartCause) # Bayesian Additive Regression Trees
 library(dplyr)
 library(caret) # Gradient Boosting Machine  
 library(lubridate)
@@ -86,13 +85,39 @@ paste("GBM Accuracy:", round(gbm_accuracy, 3))
 ###################### XGBoost #################################################
 
 #############
+# Prep data #
+#############
+
+# convert class labels to numeric
+news_source_unique <- sort(unique(articles$articles.source_name))
+class_label <- as.vector(1:length(news_source_unique)) - 1
+names(class_label) <- news_source_unique
+
+d <- dummyVars(" ~ .", 
+               data = articles_train %>% 
+                 select(articles.source_name))
+
+class_label <- data.frame(predict(d, newdata = articles_train %>% select(articles.source_name)))
+
+# convert day of week label to numeric
+
+train_xgb <- xgb.DMatrix(data = as.matrix(
+  articles_train %>%
+    mutate(published_dow = as.factor(published_dow)) %>% 
+    select(-c(articles.source_name, document,
+              articles.published_datetime, articles.published_timestamp,
+              published_hour_et)
+    )
+  ),
+  label = as.matrix(class_label)
+  )
+
+#############
 # Model Fit #
 #############
 
 
-
 # fit model
-xgb_fit <- 
 
 ######################
 # Validation Metrics #
