@@ -1,5 +1,5 @@
 # not run
-# setwd("C:/Users/apagta950/Documents/NYU/Courses/Spring 2021/MDML/Final Project/US-News-NLP/analysis")
+setwd("C:/Users/apagta950/Documents/NYU/Courses/Spring 2021/MDML/Final Project/US-News-NLP/analysis")
 
 library(anytime)
 library(dplyr)
@@ -275,8 +275,9 @@ articles <- articles %>%
             by = c("document" = "article.no"))
 
 
-# ============= these are new features related to other research papers ================
-all_news_class <- all_news %>%
+# ============= these are new features related to other research papers ================ (Shim)
+
+all_news_class <- articles %>%
   mutate(text1 = tolower(text),
          # new features1
          # study by "Politicization and Polarization in COVID-19 News Coverage"
@@ -295,12 +296,10 @@ all_news_class <- all_news %>%
         div_words3 = grepl(c("closing","close","k-12","school"), text1)*1,
         div_words4 = grepl(c("race","racial","racism","blm"), text1)*1,
         div_words5 = grepl(c("climate","climate change","global warming","global climate change"), text1)*1,
-         )
+         ) %>% 
+  select(-text1)
 # ============= ends here ================
 
-
-
-
 # write to csv
-write_csv(articles, paste0(data_dir, "news_model_input.csv"))
+write_csv(all_news_class, paste0(data_dir, "news_model_input.csv"))
 
