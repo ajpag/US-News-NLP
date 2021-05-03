@@ -273,7 +273,7 @@ articles <- articles %>%
               select(-c(articles.title, text, articles.published_datetime)), 
             by = c("document" = "article.no"))
 
-# articles <- read_csv(paste0(data_dir, "news_model_input.csv"))
+articles <- read_csv(paste0(data_dir, "news_model_input.csv"))
 
 
 # write to csv
