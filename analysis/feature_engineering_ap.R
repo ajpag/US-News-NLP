@@ -270,11 +270,9 @@ keyword_features <- read_csv(paste0(data_dir, "sentiment_by_words_new_features.c
 # join datasets and remove redundant columns
 articles <- articles %>% 
   left_join(keyword_features %>% 
-              select(-c(articles.title, text, articles.published_datetime)), 
+              select(-c(articles.title, text, articles.published_datetime)) %>% 
+              mutate(article.no = as.factor(article.no)), 
             by = c("document" = "article.no"))
-
-articles <- read_csv(paste0(data_dir, "news_model_input.csv"))
-
 
 # write to csv
 write_csv(articles, paste0(data_dir, "news_model_input.csv"))
