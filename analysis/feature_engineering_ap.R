@@ -258,6 +258,8 @@ ggsave(plot = p_topic, file = paste0(figures_dir, "topic_probabilities_news_sour
 # tf_idf <- bind_tf_idf(word_counts_, document, word, n)
 
 ########################## Other features #######################################
+
+# add hour published and day of week published
 articles <- articles %>% 
   mutate(published_hour_et = hour(anytime(articles.published_timestamp)), 
          published_dow = weekdays(articles$articles.published_datetime))
