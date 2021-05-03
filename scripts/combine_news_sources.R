@@ -1,5 +1,5 @@
 # not run
-# setwd("C:/Users/apagta950/Documents/NYU/Courses/Spring 2021/MDML/Final Project/US-News-NLP/analysis")
+setwd("C:/Users/apagta950/Documents/NYU/Courses/Spring 2021/MDML/Final Project/US-News-NLP/analysis")
 
 library(dplyr)
 library(stringr)
@@ -31,13 +31,21 @@ articles_cnn_reuters <- bind_rows(articles_cnn,
 # WSJ and BBC #
 ###############
 
+# read wsj
+articles_wsj <- read_csv("../data/news_wsj_new.csv") %>% 
+  mutate(text = text_new) %>% 
+  select(-text_new)
+# read bbc
+articles_bbc <- read_csv("../data/news_bbc_new.csv") %>% 
+  mutate(text = text_new) %>% 
+  select(-text_new)
+
 # read wsj and bbc
-articles_bbc_wsj <- bind_rows(read_csv("../data/news_wsj.csv"),
-                              read_csv("../data/news_bbc.csv"))
+articles_bbc_wsj <- bind_rows(articles_wsj, articles_bbc)
 
 # remove first three columns and consolidate source names
 articles_bbc_wsj <- articles_bbc_wsj %>% 
-  select(-c(X1, X.1, X)) %>% 
+  select(-c(X1, X.1, X, X.2)) %>% 
   mutate(articles.source_name = 
            if_else(articles.source_name == "Wall Street Journal", 
                    "The Wall Street Journal",
