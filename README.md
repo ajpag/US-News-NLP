@@ -58,8 +58,8 @@ Engineered features using the following methodologies:
 - Topic Modeling average probabilities (Latent Dirichlet Allocation)
 
 To do:
-- Measure bias from LDA topic probabilities: Chi-Square test
-- Try LDA tuning to further optimize on number of topics
+- Measure bias from LDA topic probabilities, avg sentiment, and word count: Chi-Square test
+- Try LDA tuning to further optimize on number of topics (already tried 5 and there was too much overlap in top words)
 - Use Lasso Regression for feature selection
 - Consider combining results of all models (hybrid model)
 - Add more sources for Background section
