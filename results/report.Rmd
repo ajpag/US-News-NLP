@@ -240,28 +240,58 @@ https://www.tidytextmining.com/topicmodeling.html
 
 Topics:
 
-- 1. Politics
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+library(knitr)
+topics_ <- data.frame(topic_number = 1:7,
+                      topic = c("Politics", "Reported deaths and cases",
+                                "China / Wuhan", "Outbreaks and infections by country",
+                                "Patients and Symptoms", "Vaccines and Research",
+                                "Business and Economy"))
+kable(topics_, caption = "Topics from LDA")
 
-- 2. Reported deaths and cases
+```
 
-- 3. China / Wuhan
-
-- 4. Outbreaks and infections by country
-
-- 5. Patients and symptoms
-
-- 6. Vaccines and research
-
-- 7. Business and Economy
 
 ![Topic Modeling: Top Words](../figures/lda_top_terms.png)
+
+# Measuring Bias Across News Sources
+
+Performing a chi-square test to measure differences in signifances across news sources,
+the following metrics were used. The chi-square test for all three metrics suggest 
+that there is a indeed a bias in article text across the news sources.
+
+## Topic Probabilities
 
 Following intuition, The Wall Street Journal has the highest average topic 
 probability for Business and Economy articles. It is interesting that Reuters has 
 the highest probability of China / Wuhan related articles. CNN has the lowest 
 probability of articles pertaining to vaccines and research.
 
+The chi-square test (*p < 1%*) indicates there are correlations across each news source in
+relation to average topic probabilities.
+
+*Note: Probabilities were multiplied by a factor of 100 prior to running the test*
+
 ![Topic Modeling Probabilities](../figures/topic_probabilities_news_source.png)
+
+## Average Sentiment
+
+The chi-square test (*p < 1%*) indicates there are correlations across each news source 
+in relation to average Afinn sentiment.
+
+*Note: Sentiment scores were multiplied by a factor of 100 and converted to positive integers prior to running the test*
+
+![Avg sentiment by sentence across articles](../figures/sentence_afinn_sentiment.png)
+
+## Word Count
+
+
+The chi-square test (*p < 1%*) indicates there are correlations across each news source 
+in relation to average word count.
+
+*Note: Average word counts were converted to positive integers prior to running the test*
+
+![Avg word count across articles](../figures/avg_word_count.png)
 
 # Classification
 

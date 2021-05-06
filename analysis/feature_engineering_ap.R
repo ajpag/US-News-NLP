@@ -84,7 +84,6 @@ plot_lda <- function(lda_df, n_terms = 10, plot_title = "") {
   return(p)
 }
 
-
 # plot top terms per topic
 p1 <- plot_lda(news_lda, 10, "Topic Modeling (LDA VEM): Top Terms")
 
