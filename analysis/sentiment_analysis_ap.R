@@ -17,24 +17,25 @@ figures_dir <- "../figures/"
 ################ SENTIMENT ANALYSIS ############################################
   
 # read cnn and reuters. Drop International Reuters news sources
-articles_cnn_reuters <- bind_rows(read_csv("../data/news_data_cnn.csv"), 
-                                  read_csv("../data/news_data_reuters.csv") %>% 
+articles_cnn_reuters <- bind_rows(read_csv("../data/news_data_cnn.csv"),
+                                  read_csv("../data/news_data_reuters.csv") %>%
                                     filter(
-                                      (articles.source_domain == "www.reuters.com") 
-                                      & 
+                                      (articles.source_domain == "www.reuters.com")
+                                      &
                                       (articles.source_name == "Reuters"))
 )
 
 
 # read wsj and bbc
-articles_bbc_wsj <- bind_rows(read_csv("../data/news_wsj.csv"),
-                              read_csv("../data/news_bbc.csv"))
+articles_bbc_wsj <- bind_rows(read_csv("../data/news_wsj_new.csv"),
+                              read_csv("../data/news_bbc.csv")) %>% 
+  select(-text_new)
 
 # remove first three columns and consolidate source names
-articles_bbc_wsj <- articles_bbc_wsj %>% 
-  select(-c(X1, X.1, X)) %>% 
-  mutate(articles.source_name = 
-           if_else(articles.source_name == "Wall Street Journal", 
+articles_bbc_wsj <- articles_bbc_wsj %>%
+  select(-c(X1, X.1, X, X.2)) %>%
+  mutate(articles.source_name =
+           if_else(articles.source_name == "Wall Street Journal",
                    "The Wall Street Journal",
                    articles.source_name))
 
