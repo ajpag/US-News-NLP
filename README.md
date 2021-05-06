@@ -62,3 +62,4 @@ To do:
 - Try LDA tuning to further optimize on number of topics
 - Use Lasso Regression for feature selection
 - Consider combining results of all models (hybrid model)
+- Add more sources for Background section
