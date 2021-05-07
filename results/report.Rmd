@@ -46,7 +46,7 @@ within COVID-19 that are published more in news sources over others. This would 
 identify if there are patterns that are predictive of which news source the article 
 came from.
 
-## Resarch Question
+## Research Question
 
 Are there underlying patterns in news articles related to COVID-19 across major news
 sources that are suggestive of bias, and are these patterns predictive of which news 
@@ -168,7 +168,7 @@ would require further analysis outside of this study.
 
 *Afinn lexicon: https://www.tidytextmining.com/sentiment.html*
 
-![Average Sentiment by Week](../figures/word_avg_sentiment_by_week_afinn.png)
+![Average Sentiment by Week](../figures/sentence_afinn_sentiment_week.png)
 
 Using the TF-IDF methodology, some interesting words shows up at the top of each 
 news source. For example, romance was the top word in BBC articles. There were 
@@ -308,7 +308,5 @@ in relation to average word count.
 ## Support Vector Machine
 
 ## Gradient Boosting Machine
-
-## Bayesian Additive Regression Trees
 
 # Results
