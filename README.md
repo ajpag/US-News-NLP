@@ -57,8 +57,15 @@ Engineered features using the following methodologies:
 - Keyword features based on prior studies from: Pew Research Center and SagePub
 - Topic Modeling average probabilities (Latent Dirichlet Allocation)
 
+## Measuring Bias Across News Sources
+
+Bias was measured by running chi-square tests on the following metrics, split by data source. 
+The p-values were < 1% for each of these methods, suggesting there are significant differences across each news source:
+- Topic Probabilities
+- Average Afinn sentiment (sentence)
+- Word count
+
 ## To do:
-- Measure bias from LDA topic probabilities, avg sentiment, and word count: Chi-Square test
 - Try LDA tuning to further optimize on number of topics (already tried 5 and there was too much overlap in top words)
 - Use Lasso Regression for feature selection
 - Consider combining results of all models (hybrid model)
