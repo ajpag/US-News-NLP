@@ -44,6 +44,15 @@ Key fields pulled from the GNews API and web scraping of full article text:
 - ```source name```
 - ```full article text```
 
+## Exploratory Data Analysis
+
+Key visualizations of the data are shown below.
+
+![words_per_article](https://user-images.githubusercontent.com/60185641/117392236-a4b14680-aebf-11eb-8894-5153134c8c3a.png)
+![top_words_with_sentiment](https://user-images.githubusercontent.com/60185641/117392241-a7ac3700-aebf-11eb-8d57-98765556cd92.png)
+![sentence_afinn_sentiment_week](https://user-images.githubusercontent.com/60185641/117392253-ada21800-aebf-11eb-8639-be4ef769ff40.png)
+
+
 ## Feature Engineering
 
 Engineered features using the following methodologies:
