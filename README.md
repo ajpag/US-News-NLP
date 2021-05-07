@@ -32,11 +32,11 @@ Amendement of the US Constitution in relation to the freedom of speech.
 
 ## Data sourcing
 - Pulled article urls and metadata from GNews API: https://gnewsapi.net/
-- Scraped > full article text across the following news sources:
-- 1. BBC:
-- 2. CNN:
-- 3. Reuters
-- 4. The Wall Street Journal
+- Scraped full article text across the following news sources:
+- BBC
+- CNN
+- Reuters
+- The Wall Street Journal
 
 ## Key Data fields
 Key fields pulled from the GNews API and web scraping of full article text:
@@ -64,6 +64,16 @@ The p-values were < 1% for each of these methods, suggesting there are significa
 - Topic Probabilities
 - Average Afinn sentiment (sentence)
 - Word count
+
+## Classification Modeling
+
+To assess which features were most predictive of identifying the correct news source for a given news article, the following models were run:
+Model | Accuracy | AUC
+--- | --- | ---
+Naive Bayes | |
+Logistic Regression| |
+Random Forest | |
+Gradient Boosting Machine | |
 
 ## To do:
 - Try LDA tuning to further optimize on number of topics (already tried 5 and there was too much overlap in top words)
