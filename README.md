@@ -9,9 +9,8 @@ influence on how we read and learn about the virus through a multitude of media 
 major sources include television, YouTube, social media forums, and major news companies. Major news
 companies in particular carry large influence based on the audiences it can reach. For example, Fox News
 Channel averaged 2.5 million primetime viewers (8pm - 11pm) in February 2021, and CNN averaged 1.7
-million during the same time period. Source: https://www.foxnews.com/media/fox-news-finishes-februarymost-watched-primetime-network.
-Since major news companies have a large influence in how information is commmunicated to its audiences, it
-is vital to quantify how different these sources are in relation to COVID-19 news. By measuring potential
+million during the same time period. Since major news companies have a large influence in how information is commmunicated to its audiences, 
+it is vital to quantify how different these sources are in relation to COVID-19 news. By measuring potential
 bias in relation to each source, this analysis examines how different major news sources are when reporting
 on COVID-19. It is also insightful to see if there are underlying patterns such as subtopics within COVID-19
 that are published more in news sources over others. This would help identify if there are patterns that are
