@@ -65,6 +65,11 @@ The p-values were < 1% for each of these methods, suggesting there are significa
 - Average Afinn sentiment (sentence)
 - Word count
 
+![topic_probabilities_news_source](https://user-images.githubusercontent.com/60185641/117390796-cceb7600-aebc-11eb-84a3-b2195cccceed.png)
+![sentence_afinn_sentiment](https://user-images.githubusercontent.com/60185641/117390821-d5dc4780-aebc-11eb-9e45-908b6f44456d.png)
+![avg_word_count](https://user-images.githubusercontent.com/60185641/117390831-da086500-aebc-11eb-8f49-8140c6ff0b00.png)
+
+
 ## Classification Modeling
 
 To assess which features were most predictive of identifying the correct news source for a given news article, the following models were run:
