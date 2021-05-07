@@ -1,14 +1,11 @@
 # not run
-setwd("C:/Users/apagta950/Documents/NYU/Courses/Spring 2021/MDML/Final Project/US-News-NLP/analysis")
+# setwd("C:/Users/apagta950/Documents/NYU/Courses/Spring 2021/MDML/Final Project/US-News-NLP/analysis")
 
-# library(anytime) # epoch to datetime
 library(dplyr)
 library(caret) # Gradient Boosting Machine  
 library(gbm) # need for feature importance
-library(lubridate)
 library(readr)
 library(pROC) # multi-class ROC and AUC
-library(tidyr)
 seed <- 14
 set.seed(seed)
 
@@ -21,11 +18,14 @@ articles <- read_csv(paste0(data_dir, "news_model_input.csv"))
 
 # filter to columns for modeling
 articles_input <- articles %>% 
-  select(c(document, articles.source_name, avg_sentiment_afinn_word, 
-           articles.published_timestamp, articles.published_datetime,
-           avg_sentiment_afinn_sent, word_count, word_count_sentiment,
-           published_hour_et, published_dow) | 
-           contains("topic")) %>% 
+  select(-c(datetime, timestamp, countArticles, articles.article_url,
+            articles.title, articles.description, 
+            articles.description_with_tag, articles.published_datetime,
+            articles.published_timestamp, articles.image_url,
+            articles.source_url, articles.source_domain, text,
+            avg_sentiment_afinn_sent, 
+            word_count, 
+            word_count_sentiment, published_hour_et)) %>% 
   drop_na()
 
 ####################### Assess Bias in Across News Sources #####################
@@ -135,16 +135,17 @@ bind_rows(articles_train %>% mutate(set = "train"),
   geom_bar(stat = "identity", position = "dodge") + 
   facet_wrap(~set)
 
-#################
-# GBM Model Fit #
-#################
+##################################
+# GBM Model: Topic Probabilities #
+##################################
+
+gbm_train1 <- articles_train %>% 
+  select(contains("topic") | 
+       c(avg_sentiment_afinn_word, published_dow, articles.source_name))
 
 # fit model
-gbm_fit <- train(articles.source_name ~ . - articles.published_datetime 
-                                          - articles.published_timestamp 
-                                          - document
-                                          - published_hour_et,
-               data = articles_train,
+gbm_fit <- train(articles.source_name ~ .,
+               data = gbm_train1,
                method = "gbm")
 
 # predictions on test set
@@ -152,26 +153,94 @@ gbm_preds <- predict(gbm_fit, articles_test)
 # probabilities on test set
 gbm_prob <- predict(gbm_fit, articles_test, type = "prob")
 
+###############################
+# GBM Model: Keyword Features #
+###############################
+
+gbm_train2 <- articles_train %>% 
+  select(contains("_sentiment") | 
+           c(published_dow, articles.source_name))
+
+# fit model
+gbm_fit2 <- train(articles.source_name ~ . - avg_sentiment_afinn_sent,
+                 data = gbm_train2,
+                 method = "gbm")
+
+# predictions on test set
+gbm_preds2 <- predict(gbm_fit2, articles_test)
+# probabilities on test set
+gbm_prob2 <- predict(gbm_fit2, articles_test, type = "prob")
+
+#####################################
+# GBM Model: Topic Keyword Features #
+#####################################
+
+gbm_train3 <- articles_train %>% 
+  select(contains("_words") | 
+           c(published_dow, articles.source_name, covid19,
+             scientist, republican, democrat))
+
+# fit model
+gbm_fit3 <- train(articles.source_name ~ .,
+                  data = gbm_train3,
+                  method = "gbm")
+
+# predictions on test set
+gbm_preds3 <- predict(gbm_fit3, articles_test)
+# probabilities on test set
+gbm_prob3 <- predict(gbm_fit3, articles_test, type = "prob")
+
+###########################
+# GBM Model: All features #
+###########################
+
+gbm_train4 <- articles_train %>% select(-document)
+
+# fit model
+gbm_fit4 <- train(articles.source_name ~ .,
+                  data = gbm_train4,
+                  method = "gbm")
+
+# predictions on test set
+gbm_preds4 <- predict(gbm_fit4, articles_test)
+# probabilities on test set
+gbm_prob4 <- predict(gbm_fit4, articles_test, type = "prob")
+
 ######################
 # Feature Importance #
 ######################
 
 # plot variable importance
 varImp(gbm_fit)
+varImp(gbm_fit2)
+varImp(gbm_fit3)
+varImp(gbm_fit4)
 
 ######################
 # Validation Metrics #
 ######################
 
 gbm_accuracy <- mean(gbm_preds == articles_test$articles.source_name)
-paste("GBM Accuracy:", round(gbm_accuracy, 3))
+gbm_accuracy2 <- mean(gbm_preds2 == articles_test$articles.source_name)
+gbm_accuracy3 <- mean(gbm_preds3 == articles_test$articles.source_name)
+gbm_accuracy4 <- mean(gbm_preds4 == articles_test$articles.source_name)
+
+paste("GBM Model 1 Accuracy (Topics):", round(gbm_accuracy, 3))
+paste("GBM Model 2 Accuracy (Keywords):", round(gbm_accuracy2, 3))
+paste("GBM Model 3 Accuracy (Topic Keywords):", round(gbm_accuracy3, 3))
+paste("GBM Model 4 Accuracy (All Features):", round(gbm_accuracy4, 3))
 
 #######
 # AUC #
 #######
 
 # auc
-multiclass.roc(articles_test$articles.source_name, as.vector(gbm_prob))
-#auc_test <- performance(rocr_test, measure = "auc")@y.values[[1]]
+auc_ <- multiclass.roc(articles_test$articles.source_name, gbm_prob)
+auc2 <- multiclass.roc(articles_test$articles.source_name, gbm_prob2)
+auc3 <- multiclass.roc(articles_test$articles.source_name, gbm_prob3)
+auc4 <- multiclass.roc(articles_test$articles.source_name, gbm_prob4)
 
-paste("Logistic Regression AUC:", auc_test)
+paste("GBM Model 1 AUC (Topics):", round(auc_$auc, 3))
+paste("GBM Model 2 AUC (Keywords):", round(auc2$auc, 3))
+paste("GBM Model 3 AUC (Topic Keywords):", round(auc3$auc, 3))
+paste("GBM Model 4 AUC (Topic Keywords):", round(auc4$auc, 3))
