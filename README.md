@@ -17,7 +17,7 @@ bias in relation to each source, this analysis examines how different major news
 on COVID-19. It is also insightful to see if there are underlying patterns such as subtopics within COVID-19
 that are published more in news sources over others. This would help identify if there are patterns that are
 predictive of which news source the article came from.
-### Resarch Question
+### Research Question
 Are there underlying patterns in news articles related to COVID-19 across major news sources that are
 suggestive of bias, and are these patterns predictive of which news source it is likely from?
 ### Use Cases
