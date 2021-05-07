@@ -70,6 +70,7 @@ The p-values were < 1% for each of these methods, suggesting there are significa
 To assess which features were most predictive of identifying the correct news source for a given news article, the following models were run:
 Model | Accuracy | AUC
 --- | --- | ---
+Support Vector Machine | |
 Naive Bayes | |
 Logistic Regression| |
 Random Forest | |
