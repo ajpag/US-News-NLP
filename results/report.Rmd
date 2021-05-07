@@ -157,7 +157,7 @@ article.
 
 BBC News had a larger variety of top words compared to the other news sources.
 
-![Words Per Article](../figures/top_words_with_sentiment.png)
+![Top Words with a sentiment](../figures/top_words_with_sentiment.png)
 
 All news sources had average weekly sentiment mainly hovering between -1 to 0, using 
 the Afinn lexicon. This means that average sentiment was slightly negative.
@@ -169,15 +169,6 @@ would require further analysis outside of this study.
 *Afinn lexicon: https://www.tidytextmining.com/sentiment.html*
 
 ![Average Sentiment by Week](../figures/sentence_afinn_sentiment_week.png)
-
-Using the TF-IDF methodology, some interesting words shows up at the top of each 
-news source. For example, romance was the top word in BBC articles. There were 
-3 BBC articles about online dating during the pandemic. Example article: 
-https://www.bbc.com/news/technology-55997611
-
-*TF-IDF: https://www.tidytextmining.com/tfidf.html*
-
-![Average Sentiment by Week](../figures/word_tfidf_top_words.png)
 
 # Feature Engineering
 

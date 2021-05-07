@@ -99,7 +99,7 @@ p2 <- words_long %>%
   group_by(articles.source_name) %>% 
   mutate(pct_of_total = count / sum(count)) %>% 
   arrange(desc(pct_of_total)) %>% 
-  head(100) %>% 
+  head(40) %>% 
   ggplot(aes(x = reorder(word, pct_of_total), y = pct_of_total)) + 
   geom_bar(stat = "identity", position = "dodge") + 
   coord_flip() + 
@@ -167,7 +167,7 @@ words_tf_idf <- words_long %>%
 # Highest words by tf_idf
 p6 <- words_tf_idf %>% 
   arrange(desc(tf_idf)) %>% 
-  head(70) %>% 
+  head(40) %>% 
   ggplot(aes(x = reorder(word, tf_idf), 
              y = tf_idf, 
              fill = articles.source_name)) +
@@ -340,5 +340,11 @@ for (i in seq_along(plot_titles)) {
                                 plot_titles[i],
                                 ".png",
                                 sep = ""), 
-         height = 10, width = 10)
+         #height = 10, width = 10
+         )
 }
+
+# make plot 2 larger
+ggsave(plot = p2, file = paste(figures_dir, plot_titles[2], ".png",
+                               sep = ""),
+       height = 4.5, width = 8)

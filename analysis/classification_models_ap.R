@@ -103,8 +103,7 @@ p1 <- articles_word_count %>%
 
 # save plot  
 ggsave(plot = p1, 
-       file = paste0(figures_dir, "avg_word_count.png"), 
-       width = 10, height = 10)
+       file = paste0(figures_dir, "avg_word_count.png"))
 
 
 # convert to matrix
