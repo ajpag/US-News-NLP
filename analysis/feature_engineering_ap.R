@@ -278,28 +278,48 @@ articles <- articles %>%
 
 # ============= these are new features related to other research papers ================ (Shim)
 
+# new features1
+# study by "Politicization and Polarization in COVID-19 News Coverage"
+covid19 <- c("corona", "coronavirus","covid")
+scientist <- c('scientist', 'research', 'professor', 'health official', 'doctor','dr', 'health commission','expert', 'health leader', 'health service','health authorit', 'world health organization', 'centers for disease control and prevention', 'cdc', 'national institutes of health', 'health and human services', 'mayo clinic', 'johns hopkins' , 'fauci', 'birx', 'tedros')
+republican <- c("republican","gop", 'conservative', "trump", "pence", "mcconnell","white house","administration")
+democrat <- c("democrat","liberal","progressive","pelosi" ,"schumer", "biden", "obama","newsom" , "whitmer", "cuomo" , "biden," ,"sanders")
+# new feature 2
+# study name "Polarization in elite communication on the COVID-19 pandemic"
+repub_words <- c("coronavirus","china","businesses","realdonaltrump","relief","inittogether","small","together", "cares", "great")
+demo_words <- c("health","need","crisis","public","workers","trump","must","pandemic","care","leave","paid","familiesfirst","people","sick","emergency")
+
+# new feature 3
+# research paper by Pew Research Center
+div_words1 <- c("social distance","gathering","avoid","large groups")
+div_words2 <- c("limit","carry-out","restaurant","restaurants")
+div_words3 <- c("closing","close","k-12","school")
+div_words4 <- c("race","racial","racism","blm")
+div_words5 <- c("climate","climate change","global warming","global climate change")
+
+
+
 all_news_class <- articles %>%
   mutate(text1 = tolower(text),
          # new features1
-         # study by "Politicization and Polarization in COVID-19 News Coverage"
-         covid19 = grepl(c("corona", "coronavirus","covid"), text1)*1,
-         scientist = grepl(c('scientist', 'research', 'professor', 'health official', 'doctor','dr', 'health commission','expert', 'health leader', 'health service','health authorit', 'world health organization', 'centers for disease control and prevention', 'cdc', 'national institutes of health', 'health and human services', 'mayo clinic', 'johns hopkins' , 'fauci', 'birx', 'tedros'), text1)*1,
-         republican = grepl(c("republican","gop", 'conservative', "trump", "pence", "mcconnell","white house","administration"), text1)*1,
-         democrat = grepl(c("democrat","liberal","progressive","pelosi" ,"schumer", "biden", "obama","newsom" ,"whitmer","cuomo","biden,","sanders"), text1)*1,
+         covid19 = sapply(strsplit(text1, covid19), length) / word_count ,
+         scientist = sapply(strsplit(text1, scientist), length) / word_count,
+         republican = sapply(strsplit(text1, republican), length) / word_count,
+         democrat = sapply(strsplit(text1, democrat), length) / word_count,
         # new feature 2
-        # study name "Polarization in elite communication on the COVID-19 pandemic"
-        repub_words = grepl(c("coronavirus","china","businesses","realdonaltrump","relief","inittogether","small","together", "cares","great"), text1)*1,
-        demo_words = grepl(c("health","need","crisis","public","workers","trump","must","pandemic","care","leave","paid","familiesfirst","people","sick","emergency"), text1)*1,
+        repub_words = sapply(strsplit(text1, repub_words), length) / word_count,
+        demo_words = sapply(strsplit(text1, demo_words ), length) / word_count,
         # new feature 3
-        # research paper by Pew Research Center
-        div_words1 = grepl(c("social distance","gathering","avoid","large groups"), text1)*1,
-        div_words2 = grepl(c("limit","carry-out","restaurant","restaurants"), text1)*1,
-        div_words3 = grepl(c("closing","close","k-12","school"), text1)*1,
-        div_words4 = grepl(c("race","racial","racism","blm"), text1)*1,
-        div_words5 = grepl(c("climate","climate change","global warming","global climate change"), text1)*1,
+        div_words1 = sapply(strsplit(text1, div_words1), length) / word_count,
+        div_words2 = sapply(strsplit(text1, div_words2), length) / word_count,
+        div_words3 = sapply(strsplit(text1, div_words3), length) / word_count,
+        div_words4 = sapply(strsplit(text1, div_words4), length) / word_count,
+        div_words5 = sapply(strsplit(text1, div_words5), length) / word_count
          ) %>% 
   select(-text1)
 # ============= ends here ================
+
+
 
 # write to csv
 write_csv(all_news_class, paste0(data_dir, "news_model_input.csv"))
