@@ -1,0 +1,8 @@
+model,test_accuracy,auc
+logreg_all,0.64,0.86
+rf_all,0.9,0.98
+logreg_all_political,0.65,0.82
+gbm_topic_lda,0.69,0.89
+gbm_keywords,0.66,0.86
+gbm_topic_keywods,0.43,0.7
+gbm_all_features,0.85,0.97
