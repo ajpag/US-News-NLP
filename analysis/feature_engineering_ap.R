@@ -105,6 +105,8 @@ articles <- articles %>% left_join(lda_probs)
 # Gibbs #
 #########
 
+# results were very similar to VEM
+
 # # try Gibbs method
 # news_lda_g <- LDA(news_dtm, k = topics, method = "Gibbs", 
 #                 control = list(seed = seed))
