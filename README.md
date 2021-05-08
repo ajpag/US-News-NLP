@@ -100,6 +100,10 @@ Gradient Boosting Machine | |
 
 ## Results
 
+### Conclusion and next steps
+
+### Limitations
+
 ## To do:
 - Try LDA tuning to further optimize on number of topics (already tried 5 and there was too much overlap in top words)
 - Use Lasso Regression for feature selection
