@@ -96,8 +96,6 @@ Logistic Regression| |
 Random Forest | |
 Gradient Boosting Machine | |
 
-## Best Model and Top Features
-
 ## Results
 
 ### Conclusion and next steps
