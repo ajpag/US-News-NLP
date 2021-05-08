@@ -14,7 +14,11 @@ output:
 # not run
 # setwd("C:/Users/apagta950/Documents/NYU/Courses/Spring 2021/MDML/Final Project/US-News-NLP/results")
 
+library(knitr)
+library(readr)
+
 knitr::opts_chunk$set(fig.pos = "!H", out.extra = "")
+model_results <- "../figures/gbm_results.csv"
 ```
 
 
@@ -286,18 +290,45 @@ in relation to average word count.
 
 # Classification
 
-## Feature Selection
+For each of the 5 algorithms run, 4 models were run using different sets of 
+features:
 
-### Lasso Regression
+- **Topic Modeling features**: per section 5.4 
 
-## Logistic Regression
+- **Keyword features**: per section 5.2
 
-## Random Forest
+- **Topic keyword features**: per section 5.3
 
-## Naive Bayes
+- All features
 
-## Support Vector Machine
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+kable(as.data.frame(read_csv(model_results)),
+      caption = "Classification Model Results")
+```
 
-## Gradient Boosting Machine
 
 # Results
+
+## Conclusion and Next Steps
+
+## Limitations:
+- Selection bias in news articles analyzed: Due to legal 
+restrictions, more conservative news sources, such as Fox News, were not scraped.
+
+- Context limitations in sentiment: The sentiment method used, Afinn, only parsed 
+words individually, and not into context of the entire article. So, the sentence 
+sentiment was calculated using the average sentiment of words.
+
+- Parsing limitations: There are many edge cases in which breaking down 
+articles by sentences did not parse successfully. For example, 
+```tidytext::unnest_functions()``` incorrectly parsed the following sentence into 
+two since ```Ms.``` has a period: 
+
+Original sentence:
+```"The manager's decision to send Ms. Coleman home for wearing the headscarf was due to a lack of training," Warren said.```
+
+Parsed sentence(s)
+
+- ```"The manager's decision to send Ms."```
+
+- ```"Coleman home for wearing the headscarf was due to a lack of training," Warren said."```

@@ -269,5 +269,3 @@ gbm_results <- data.frame(model = c("gbm_topic_lda", "gbm_keywords",
 
 # save results
 write_csv(gbm_results, paste0(figures_dir, "gbm_results.csv"))
-
-          
