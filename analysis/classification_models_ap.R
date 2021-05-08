@@ -23,7 +23,6 @@ articles_input <- articles %>%
             articles.description_with_tag, articles.published_datetime,
             articles.published_timestamp, articles.image_url,
             articles.source_url, articles.source_domain, text,
-            avg_sentiment_afinn_sent, 
             word_count, 
             word_count_sentiment, published_hour_et)) %>% 
   drop_na()
@@ -157,8 +156,7 @@ gbm_prob <- predict(gbm_fit, articles_test, type = "prob")
 ###############################
 
 gbm_train2 <- articles_train %>% 
-  select(contains("_sentiment") | 
-           c(published_dow, articles.source_name))
+  select(contains("_sentiment") | c(published_dow, articles.source_name))
 
 # fit model
 gbm_fit2 <- train(articles.source_name ~ . - avg_sentiment_afinn_sent,
@@ -243,3 +241,33 @@ paste("GBM Model 1 AUC (Topics):", round(auc_$auc, 3))
 paste("GBM Model 2 AUC (Keywords):", round(auc2$auc, 3))
 paste("GBM Model 3 AUC (Topic Keywords):", round(auc3$auc, 3))
 paste("GBM Model 4 AUC (Topic Keywords):", round(auc4$auc, 3))
+
+#############################
+# Training dataset accuracy #
+#############################
+
+# confusion matrix for training data
+cm1 <- as.matrix(caret::confusionMatrix(gbm_fit)$table)
+cm2 <- as.matrix(caret::confusionMatrix.train(gbm_fit2)$table)
+cm3 <- as.matrix(caret::confusionMatrix.train(gbm_fit3)$table)
+cm4 <- as.matrix(caret::confusionMatrix.train(gbm_fit4)$table)
+
+# training accuracy
+gbm1_train_acc <- sum(diag(cm1)) / sum(cm1)
+gbm2_train_acc <- sum(diag(cm2)) / sum(cm2)
+gbm3_train_acc <- sum(diag(cm3)) / sum(cm3)
+gbm4_train_acc <- sum(diag(cm4)) / sum(cm4)
+
+# results dataframe
+gbm_results <- data.frame(model = c("gbm_topic_lda", "gbm_keywords",
+                                    "gbm_topic_keywods", "gbm_all_features"),
+                          train_accuracy = round(c(gbm1_train_acc, gbm2_train_acc,
+                                             gbm3_train_acc, gbm4_train_acc), 2),
+                          test_accuracy = round(c(gbm_accuracy, gbm_accuracy2,
+                                       gbm_accuracy3, gbm_accuracy4), 2),
+                          auc = round(c(auc_$auc, auc2$auc, auc3$auc, auc4$auc), 2))
+
+# save results
+write_csv(gbm_results, paste0(figures_dir, "gbm_results.csv"))
+
+          

@@ -1,0 +1,5 @@
+model,train_accuracy,test_accuracy,auc
+gbm_topic_lda,0.65,0.69,0.89
+gbm_keywords,0.65,0.66,0.86
+gbm_topic_keywods,0.41,0.42,0.68
+gbm_all_features,0.8,0.83,0.96
