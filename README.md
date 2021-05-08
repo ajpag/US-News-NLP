@@ -2,7 +2,7 @@
 Natural language processing (sentiment analysis, topic modeling) and classification modeling on major news sources to measure bias on COVID-19 reporting.
 
 ## Directory Stucture
-```/results```: See ```report.pdf``` for analysis
+```/results```: See ```report.pdf``` for full analysis
 
 Order (final batch script to be added):
 
