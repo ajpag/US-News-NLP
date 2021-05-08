@@ -267,5 +267,194 @@ gbm_results <- data.frame(model = c("gbm_topic_lda", "gbm_keywords",
                                        gbm_accuracy3, gbm_accuracy4), 2),
                           auc = round(c(auc_$auc, auc2$auc, auc3$auc, auc4$auc), 2))
 
+
+######################################################
+#          prediction: logistic regression
+######################################################
+#================= 1. train and test =================
+# train test split
+set.seed(12345) ; library(ROCR) ; library(caret) ; library(nnet)  ; library(pROC)
+
+# check NA values / delete all
+colSums(is.na(df))
+df <- na.omit(df)
+
+# 80% train 20% test
+smp_size <- floor(0.8 * nrow(df))
+train_ind <- sample(seq_len(nrow(df)), size = smp_size)
+train <- df[train_ind, ]
+test <- df[-train_ind, ]
+
+#================= 2. logistic regression =================
+formula <- 'articles.source_name ~ prob_topic_1 + prob_topic_2 + prob_topic_3 + prob_topic_4 + prob_topic_5 + prob_topic_6 + prob_topic_7 +avg_sentiment_afinn_word + avg_sentiment_afinn_sent + published_hour_et + published_dow +Biden_sentiment + Trump_sentiment + stock_market_sentiment + financial_sentiment + death_sentiment + pandemic_sentiment + disease_sentiment + illness_sentiment + covid19 + scientist + republican+ democrat + repub_words + demo_words + div_words1 + div_words2 + div_words3 + div_words4 + div_words5'
+
+# Fit the model
+model <- nnet::multinom(formula, data = train)
+
+# Make predictions
+predicted.classes <- predict(model, newdata=test) #, type="prob"
+head(predicted.classes)
+
+# confusion matrix
+#table(predicted.classes , test$articles.source_name )
+confusionMatrix(factor(predicted.classes), factor(test$articles.source_name) )
+
+# Model accuracy (overall)
+length( test$articles.source_name[predicted.classes==test$articles.source_name] ) / length(test$articles.source_name )
+
+# AUC
+predicted.classes <- as.ordered(predicted.classes)
+predicted.classes.all <- predict(model, newdata=test, type="prob")
+predicted.classes.bbc <- as.numeric( predict(model, newdata=test, type="prob")[,1] ) # bbc
+predicted.classes.cnn <- as.numeric(predict(model, newdata=test, type="prob")[,2] )  # cnn
+predicted.classes.re <- as.numeric(predict(model, newdata=test, type="prob")[,3] )   # re
+predicted.classes.wsj <- as.numeric(predict(model, newdata=test, type="prob")[,4] )  # wsj
+# print
+all <- multiclass.roc(test$articles.source_name, predicted.classes.all)$auc[1]
+bbc <- multiclass.roc(test$articles.source_name, predicted.classes.bbc)$auc[1]
+cnn <- multiclass.roc(test$articles.source_name, predicted.classes.cnn)$auc[1]
+re <- multiclass.roc(test$articles.source_name, predicted.classes.re)$auc[1]
+wsj <- multiclass.roc(test$articles.source_name, predicted.classes.wsj)$auc[1]
+# print result
+paste("AUC of all is:", all)
+paste("AUC of BBC is:", bbc)
+paste("AUC of CNN is:", cnn)
+paste("AUC of Reuters is:", re)
+paste("AUC of WSJ is:", wsj)
+
+
+
+
+######################################################
+#          prediction : Random Forest
+######################################################
+#================= 1. train and test =================
+# use results from previous model 
+#================= 2. Random Forest =================
+# Training with Random forest model
+library(ranger)
+formula1 <- 'articles.source_name ~ prob_topic_1 + prob_topic_2 + prob_topic_3 + prob_topic_4 + prob_topic_5 + prob_topic_6 + prob_topic_7 +avg_sentiment_afinn_word + avg_sentiment_afinn_sent + published_hour_et +Biden_sentiment + Trump_sentiment + stock_market_sentiment + financial_sentiment + death_sentiment + pandemic_sentiment + disease_sentiment + illness_sentiment + covid19 + scientist + republican+ democrat + repub_words + demo_words + div_words1 + div_words2 + div_words3 + div_words4 + div_words5'
+
+rf_model <- ranger(formula = formula1,
+                    num.trees=1000,
+                    respect.unordered.factors=T, 
+                    probability=T,
+                    data=train)
+    
+# Predict the testing set with the trained model
+predictions2 <- predict(rf_model, test, type ="response")
+probabilities <- as.data.frame(predict(rf_model, data=test)$predictions)
+head(probabilities)
+
+#pre-process
+predict_class <- data.frame(max.col(probabilities) )
+colnames(predict_class) <- "class"
+predict_class <- predict_class %>%
+  mutate( class = case_when(class==1 ~ "BBC News",
+                            class==2 ~ "CNN",
+                            class==3 ~ "Reuters",
+                            class==4 ~ "The Wall Street Journal")
+                  )
+predict_class$class <- as.factor(predict_class$class)
+
+# confusion matrix
+library(caret)
+confusionMatrix(table(test$articles.source_name, predict_class$class ))
+
+# prediction and performance report
+modeling_data_rf <- test %>% 
+  mutate(probability = probabilities[,2],
+         #predict = max.col(probabilities)-1
+         predict = predict_class$class         )
+modeling_data_rf <- as.data.frame(modeling_data_rf)
+
+# AUC
+predicted.classes.all <- probabilities
+predicted.classes.bbc <- probabilities[,1]  # bbc
+predicted.classes.cnn <- probabilities[,2] # cnn
+predicted.classes.re <-  probabilities[,3]  # re
+predicted.classes.wsj <- probabilities[,4] # wsj
+all.rf <- multiclass.roc(test$articles.source_name, predicted.classes.all)$auc[1]
+bbc.rf <- multiclass.roc(test$articles.source_name, predicted.classes.bbc)$auc[1]
+cnn.rf <- multiclass.roc(test$articles.source_name, predicted.classes.cnn)$auc[1]
+re.rf <- multiclass.roc(test$articles.source_name, predicted.classes.re)$auc[1]
+wsj.rf <- multiclass.roc(test$articles.source_name, predicted.classes.wsj)$auc[1]
+
+# print result
+paste("AUC of all (RF) is:", all.rf)
+paste("AUC of BBC (RF) is:", bbc.rf)
+paste("AUC of CNN (RF) is:", cnn.rf)
+paste("AUC of Reuters (RF) is:", re.rf)
+paste("AUC of WSJ (RF) is:", wsj.rf)
+
+
+
+
+######################################################
+#    prediction of "political_class" : liberal, middle, and conservative
+#    Using Logistic-regression
+######################################################
+
+df_new <- read.csv("./data/news_model_input.csv") %>% 
+  select(-datetime, -timestamp, -countArticles, -articles.article_url, -articles.description, -articles.description_with_tag, -articles.published_timestamp,  - articles.image_url, -articles.source_url, -articles.source_domain , -document) %>%
+  mutate(political_class = case_when(articles.source_name=="BBC News" ~ "liberal",
+                                     articles.source_name=="CNN" ~ "liberal",
+                                     articles.source_name=="Reuters" ~ "middle",
+                                     articles.source_name=="The Wall Street Journal" ~ "conservative")
+         )
+#head(df_new)
+#table(df_new$political_class)
+#================= 1. train and test =================
+# train test split
+set.seed(12345) ; library(ROCR) ; library(caret) ; library(nnet)  ; library(pROC)
+
+# check NA values / delete all
+colSums(is.na(df_new))
+df_new <- na.omit(df_new)
+
+# 80% train 20% test
+smp_size <- floor(0.8 * nrow(df_new))
+train_ind <- sample(seq_len(nrow(df_new)), size = smp_size)
+train.new <- df_new[train_ind, ]
+test.new <- df_new[-train_ind, ]
+
+#================= 2. logistic regression =================
+df_new$political_class <- as.factor(df_new$political_class)
+formula2 <- 'political_class ~ prob_topic_1 + prob_topic_2 + prob_topic_3 + prob_topic_4 + prob_topic_5 + prob_topic_6 + prob_topic_7 + avg_sentiment_afinn_word + avg_sentiment_afinn_sent + published_hour_et + published_dow + Biden_sentiment + Trump_sentiment + stock_market_sentiment + financial_sentiment + death_sentiment + pandemic_sentiment + disease_sentiment + illness_sentiment + covid19 + scientist + republican+ democrat + repub_words + demo_words + div_words1 + div_words2 + div_words3 + div_words4 + div_words5'
+
+# Fit the model
+model4pol <- nnet::multinom(formula2, data = train.new)
+
+# Make predictions
+predicted.classes <- predict(model4pol, newdata=test.new) #, type="prob"
+
+# confusion matrix
+#table(predicted.classes , test$articles.source_name )
+confusionMatrix(factor(predicted.classes), factor(test.new$political_class) )
+table( factor(predicted.classes), factor(test.new$political_class)  )
+
+# AUC
+predicted.classes <- as.ordered(predicted.classes)
+predicted.classes.all <- predict(model4pol, newdata=test.new, type="prob")
+predicted.classes.cons <- as.numeric( predict(model4pol, newdata=test.new, type="prob")[,1] ) # convervative
+predicted.classes.liber <- as.numeric(predict(model4pol, newdata=test.new, type="prob")[,2] )  # liberal
+predicted.classes.mid <- as.numeric(predict(model4pol, newdata=test.new, type="prob")[,3] )   # middle
+#predicted.classes.wsj <- as.numeric(predict(model4pol, newdata=test.new, type="prob")[,4] )  # wsj
+all.pol <- multiclass.roc(test.new$political_class, predicted.classes.all)$auc[1]
+cons <- multiclass.roc(test.new$political_class, predicted.classes.cons)$auc[1]
+lib <- multiclass.roc(test.new$political_class, predicted.classes.liber)$auc[1]
+mid <- multiclass.roc(test.new$political_class, predicted.classes.mid)$auc[1]
+
+# print result
+paste("AUC of overall is:", all.pol)
+paste("AUC of conservative is:", cons)
+paste("AUC of liberal is:", lib)
+paste("AUC of middle is:", mid)
+
+
+#==================================================
+
+
+
 # save results
 write_csv(gbm_results, paste0(figures_dir, "gbm_results.csv"))
