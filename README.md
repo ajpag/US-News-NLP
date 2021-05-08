@@ -7,7 +7,7 @@ Natural language processing (sentiment analysis, topic modeling) and classificat
 Order (final batch script to be added):
 
 1.) ```/scripts```: 
--```gnews_ingest_cnn_reuters_ap.R``` and ```Scrap_and_clean_BBC_WSJ.R```
+- ```gnews_ingest_cnn_reuters_ap.R``` and ```Scrap_and_clean_BBC_WSJ.R```
 - ```combine_news_sources.R```
 
 2.) ```/analysis```
