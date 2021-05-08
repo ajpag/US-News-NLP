@@ -8,6 +8,7 @@ library(nnet) # multinomial regression
 library(ranger) # random forest
 library(readr)
 library(pROC) # multi-class ROC and AUC
+library(tidyr)
 seed <- 14
 set.seed(seed)
 
