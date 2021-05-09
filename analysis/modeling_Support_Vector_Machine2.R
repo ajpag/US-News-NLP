@@ -250,5 +250,173 @@ prob3_svm <- attr(pred_mod3, "probabilities")
 
 AUC_3_svm <- multiclass.roc(mod3_test$articles.source_name, prob3_svm)
 
+#Model 4: Optimization model 2
+
+#Data for model
+
+mod4_data <- mod1_data %>% 
+  dplyr::mutate(source_name1 = as.character(articles.source_name)) #Code new variable
+
+mod4_data$source_name1[mod4_data$source_name1 != "BBC News"] <- "Others_not_BBC"
+
+mod4_data$source_name1 <- as.factor(mod4_data$source_name1)
+
+#Split data to train and test subsets
+
+split_size_mod4 <-  floor(nrow(mod4_data)*0.80)
+
+mod4_train <- mod4_data %>%
+  slice(1:split_size_mod4) 
+
+mod4_test <- mod4_data %>%
+  slice(split_size_mod4 + 1:n())
+
+#Balancing train dataset
+#Using ROSE package to oversampling
+#https://www.analyticsvidhya.com/blog/2016/03/practical-guide-deal-imbalanced-classification-problems/
+
+mod4_balanced_train <- ovun.sample(source_name1 ~., data = mod4_train, method = "over",
+                                   N = sum(mod4_train$source_name1 == "Others_not_BBC")*2)$data 
+
+mod4_balanced_train$source_name1 <- relevel(mod4_balanced_train$source_name1, "BBC News") 
+
+#Fit model BBC against all others
+
+mod4a <- e1071::svm(source_name1 ~ avg_sentiment_afinn_sent + prob_topic_1 + prob_topic_2 + prob_topic_3 + prob_topic_4 + prob_topic_5 + prob_topic_6 + prob_topic_7 + published_dow,
+                    data = mod4_balanced_train, probability = TRUE)
+  
+
+#Predict classes for train and test datasets 
+
+pred_mod4a_train <- predict(mod4a, mod4_balanced_train, probability = TRUE)
+pred_mod4a_test <- predict(mod4a, mod4_test, probability = TRUE)
+
+
+#Include predicted classes in the train dataset
+
+mod4_balanced_train$pred4a <- pred_mod4a_train
+mod4_test$pred4a <- pred_mod4a_test
+
+
+#AUC A
+test.pred4a <- prediction(attr(pred_mod4a_test, "probabilities")[ ,1], mod4_test$source_name1)
+test.perf4a <- performance(test.pred4a, "auc")
+cat('the test auc score is ', test.perf4a@y.values[[1]], "\n")
+
+#Confusion matrix
+
+confusionMatrix(pred_mod4a_test, mod4_test$source_name1)
+
+
+#New train dataset to fit others except BBC News 
+
+mod4_trainb <- mod4_balanced_train %>%
+  filter(pred4a == "Others_not_BBC") %>%
+  mutate(source_name2 = as.character(articles.source_name))
+
+mod4_trainb$source_name2[mod4_trainb$source_name2 != "CNN"] <- "Others_not_CNN"
+mod4_trainb$source_name2 <- as.factor(mod4_trainb$source_name2)
+
+length(mod4_trainb$source_name2)
+sum(mod4_trainb$source_name2 == "Others_not_CNN")
+
+mod4_balanced_trainb <- ovun.sample(source_name2 ~., data = mod4_trainb, 
+                                    method = "over",
+                                    N = sum(mod4_trainb$source_name2 == "Others_not_CNN")*2)$data 
+table(mod4_balanced_trainb$source_name2)
+
+mod4_balanced_trainb$source_name2 <- relevel(mod4_balanced_trainb$source_name2, "CNN")
+
+#Fit model CNN against all others
+
+mod4b <- e1071::svm(source_name2 ~ avg_sentiment_afinn_sent + prob_topic_1 + prob_topic_2 + prob_topic_3 + prob_topic_4 + prob_topic_5 + prob_topic_6 + prob_topic_7 + published_dow, 
+                          data = mod4_balanced_trainb, probability = TRUE)
+
+
+#New test dataset to predict
+
+mod4_testb <- mod4_test %>%
+  filter(pred4a == "Others_not_BBC") %>%
+  mutate(source_name2 = as.character(articles.source_name))
+
+mod4_testb$source_name2[mod4_testb$source_name2 != "CNN"] <- "Others_not_CNN"
+
+mod4_testb$source_name2 <- as.factor(mod4_testb$source_name2)
+
+
+#Predict classes
+
+pred_mod4b_train <- predict(mod4b,mod4_balanced_trainb, probability = TRUE)
+pred_mod4b_test <- predict(mod4b, mod4_testb, probability = TRUE)
+
+#Include predicted classes in the train and test b dataset
+
+mod4_balanced_trainb$pred4b <- pred_mod4b_train
+mod4_testb$pred4b <- pred_mod4b_test
+
+#AUC B
+test.pred4b <- prediction(attr(pred_mod4b_test, "probabilities")[ ,1], mod4_testb$source_name2)
+test.perf4b <- performance(test.pred4b, "auc")
+cat('the test auc score is ', test.perf4b@y.values[[1]], "\n")
+
+#Confusion matrix
+
+confusionMatrix(pred_mod4b_test, mod4_testb$source_name2)
+
+#New train dataset to fit others except CNN and BBC news
+
+mod4_trainc <- mod4_balanced_trainb %>%
+  filter(pred4b == "Others_not_CNN") %>%
+  mutate(source_name3 = as.character(articles.source_name))
+
+mod4_trainc$source_name3[mod4_trainc$source_name3 != "Reuters"] <- "Others_not_Reuters"
+mod4_trainc$source_name3 <- as.factor(mod4_trainc$source_name3)
+
+length(mod4_trainc$source_name3)
+sum(mod4_trainc$source_name3 == "Others_not_Reuters")
+
+mod4_balanced_trainc <- ovun.sample(source_name3 ~., data = mod4_trainc, method = "over",
+                                    N = sum(mod4_trainc$source_name3 == "Others_not_Reuters")*2)$data 
+table(mod4_balanced_trainc$source_name3)
+
+#Fit model CNN against all others
+
+mod4c <- e1071::svm(source_name3 ~ avg_sentiment_afinn_sent + prob_topic_1 + prob_topic_2 + prob_topic_3 + prob_topic_4 + prob_topic_5 + prob_topic_6 + prob_topic_7 + published_dow, 
+                          data = mod4_balanced_trainc, probability = TRUE)
+
+#New test dataset to predict
+
+mod4_testc <- mod4_testb %>%
+  filter(pred4b == "Others_not_CNN") %>%
+  mutate(source_name3 = as.character(articles.source_name))
+
+mod4_testc$source_name3[mod4_testc$source_name3 != "Reuters"] <- "Others_not_Reuters"
+
+mod4_testc$source_name3 <- as.factor(mod4_testc$source_name3)
+
+
+#Predict classes
+
+pred_mod4c_train <- predict(mod4c, mod4_balanced_trainc, probability = TRUE)
+pred_mod4c_test <- predict(mod4c, mod4_testc, probability = TRUE)
+
+#Include predicted classes in the train and test c dataset
+
+mod4_balanced_trainc$pred4c <- pred_mod4c_train
+mod4_testc$pred4c <- pred_mod4c_test
+
+
+#AUC C
+test.pred4c <- prediction(attr(pred_mod4c_test, "probabilities")[ ,2], mod4_testc$source_name3)
+test.perf4c <- performance(test.pred4c, "auc")
+cat('the test auc score is ', test.perf4c@y.values[[1]], "\n")
+
+#Confusion matrix
+
+mod4c_mat <- confusionMatrix(pred_mod4c_test, mod4_testc$source_name3)
+precision <- mod4c_mat$byClass["Pos Pred Value"]
+recall <- mod4c_mat$byClass["Sensitivity"]
+
+
 
 
