@@ -418,19 +418,36 @@ kable(as.data.frame(read_csv(model_results)),
 
 # Reference
 
-J. Green, J. Edgerton, D. Naftel, K. Shoub, S. J. Cranmer, Elusive consensus: Polarization in elite communication on the COVID-19 pandemic. Sci. Adv. 6, eabc2717 (2020). Available at https://advances.sciencemag.org/content/6/28/eabc2717/tab-pdf
+1/ Flood, B. (2021, March 2). Fox News finishes February as most-watched primetime network. Fox News Live. https://www.foxnews.com/media/fox-news-finishes-february-most-watched-primetime-network
 
-P.Sol Hart, S. Chinn, S. Soroka, Politicization and Polarization in COVID-19 News Coverage, Sage journals, Volume: 42 issue: 5, page(s): 679-697. Available at https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7447862/pdf/10.1177_1075547020950735.pdf
+2/ King, G., Schneer, B., & White, A. (2017). How the news media activate public expression and influence national agendas. American Association for the Advancement of Science. Vol.358 (6364), pp.776-780. https://science.sciencemag.org/content/358/6364/776
 
-K. Schaeffer, Despite wide partisan gaps in views of many aspects of the pandemic, some common ground exists, Pew Research Center (2021). Available at https://www.pewresearch.org/fact-tank/2021/03/24/despite-wide-partisan-gaps-in-views-of-many-aspects-of-the-pandemic-some-common-ground-exists/
+3/ Holman, E., Garfin, D., & Silver, R. (2014). Media’s role in broadcasting acute stress following the Boston Marathon bombings. Proceedings of the National Academy of Sciences of the United States of America. Vol.111 (1), pp.93- 98.  https://doi.org/10.1073/pnas.1316265110 
 
-Aslam, F., Awan, T.M., Syed, J.H. et al. Sentiments and emotions evoked by news headlines of coronavirus disease (COVID-19) outbreak. Humanit Soc Sci Commun 7, 23 (2020). https://doi.org/10.1057/s41599-020-0523-3. 
+4/ Sue & Bill Gross School of Nursing, UC Irvine (2020, May 7). How (and why) coronavirus is changing our sense of time. University of California News. https://www.universityofcalifornia.edu/news/how-and-why-coronavirus-changing-our-sense-time
 
-Rustam F, Khalid M, Aslam W, Rupapara V, Mehmood A, Choi GS (2021) A performance comparison of supervised machine learning models for Covid-19 tweets sentiment analysis. PLoS ONE 16(2): e0245909. https://doi.org/10.1371/journal.pone.0245909. 
+5/ Gorvett, Z. (2020, May 12). How the news changes the way we think and behave. BBC news. https://www.bbc.com/future/article/20200512-how-the-news-changes-the-way-we-think-and-behave
 
-News as a Source: Choosing & Using Sources: A Guide to Academic Research, Pressbooks, Ohio State University, Accessible at: https://ohiostate.pressbooks.pub/choosingsources/chapter/news-as-a-source/
+6/ (2013). Journalism Essentials. American Press Institute. https://www.americanpressinstitute.org/journalism-essentials/bias-objectivity/understanding-bias/
 
-B. Sacerdote, R Sehgal, M. Cook, Why Is All COVID-19 News Bad News?, National Bureau of Economic Research, Working Paper, Working Paper Series(28110), Nov 2020. Accessible at: http://www.nber.org/papers/w28110
+7/ Mitchell, A., et.al. (2014). Political Polarization & Media Habits. Pew Research Center. https://www.journalism.org/2014/10/21/political-polarization-media-habits/
+
+8/ Hart, P., Chinn, S., & Soroka, S. (2020). Politicization and Polarization in COVID-19 News Coverage. SAGE journals. Vol.42 (5). https://journals.sagepub.com/doi/10.1177/1075547020950735
+
+9/ J. Green, et. al. (2020). Elusive consensus: Polarization in elite communication on the COVID-19 pandemic. American Association for the Advancement of Science. Vol.6 (28). https://advances.sciencemag.org/content/6/28/eabc2717
+
+10/ Schaeffer, K. (2021). Despite wide partisan gaps in views of many aspects of the pandemic, some common ground exists. Pew Research Center. https://www.pewresearch.org/fact-tank/2021/03/24/despite-wide-partisan-gaps-in-views-of-many-aspects-of-the-pandemic-some-common-ground-exists/
+
+11/ Aslam, F., et. al. (2021) Sentiments and emotions evoked by news headlines of coronavirus disease (COVID-19) outbreak. Humanities and Social Science Communications. Vol.7 (23). https://doi.org/10.1057/s41599-020-0523-3
+
+16/ Rustam F, et. al. (2021) A performance comparison of supervised machine learning models for Covid-19 tweets sentiment analysis. PLOS ONE. Vol.16 (2). https://doi.org/10.1371/journal.pone.0245909
+
+17/ News as a Source: Choosing & Using Sources: A Guide to Academic Research. Pressbooks, Ohio State University. https://ohiostate.pressbooks.pub/choosingsources/chapter/news-as-a-source/
+
+18/ Sacerdote, B., Sehgal, R., & Cook, M. (2020). Why Is All COVID-19 News Bad News? National Bureau of Economic Research, Working Paper, Working Paper Series(28110). http://www.nber.org/papers/w28110
+
+19/ Slinge, J. & Robinson, D. Text Mining with R: A Tidy Approach. https://www.tidytextmining.com/topicmodeling.html
+
 
 
 
