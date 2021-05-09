@@ -1,6 +1,6 @@
 ---
 title: "Measuring Bias in COVID-19 News Articles"
-author: "Andrew Pagtakhan, Kwan Bo Shim, Jazmin Trejo"
+author: "Andrew Pagtakhan, Kwan Bo Shim, Cinthia Jazmin Trejo Medina"
 date: "May 10th, 2021"
 output:
   pdf_document:
