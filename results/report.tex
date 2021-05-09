@@ -1,0 +1,586 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\hypersetup{
+  pdftitle={Measuring Bias in COVID-19 News Articles},
+  pdfauthor={Andrew Pagtakhan, Kwan Bo Shim, Cinthia Jazmin Trejo Medina},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+\urlstyle{same} % disable monospaced font for URLs
+\usepackage[margin=1in]{geometry}
+\usepackage{longtable,booktabs}
+% Correct order of tables after \paragraph or \subparagraph
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
+\makeatother
+% Allow footnotes in longtable head/foot
+\IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
+\makesavenoteenv{longtable}
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{5}
+\usepackage{float}
+
+\title{Measuring Bias in COVID-19 News Articles}
+\author{Andrew Pagtakhan, Kwan Bo Shim, Cinthia Jazmin Trejo Medina}
+\date{May 10th, 2021}
+
+\begin{document}
+\maketitle
+
+{
+\setcounter{tocdepth}{3}
+\tableofcontents
+}
+\hypertarget{preface}{%
+\section{Preface}\label{preface}}
+
+The full code and dataset can be found here:
+\url{https://github.com/ajpag/US-News-NLP}
+
+All analysis was completed in R.
+
+\hypertarget{research-question}{%
+\section{Research Question}\label{research-question}}
+
+\hypertarget{background}{%
+\subsection{Background}\label{background}}
+
+The means in which informaton is communicated with regards to the
+COVID-19 pandemic has had major influence on how we read and learn about
+the virus through a multitude of media outlets. Some of these major
+sources include television, YouTube, social media forums, and major news
+companies. Major news companies in particular carry large influence
+based on the audiences it can reach. For example, Fox News Channel
+averaged 2.5 million primetime viewers (8pm - 11pm) in February 2021,
+and CNN averaged 1.7 million during the same time period. \emph{Source:
+\url{https://www.foxnews.com/media/fox-news-finishes-february-most-watched-primetime-network}}.
+
+According to King G. \& et. al., ``\ldots the exposure to news media
+causes Americans to take public stands on specific issues, join national
+policy conversation, and express themselves publicly''. Furthermore,
+Holman E. \& et. al, suggest a correlation between raising level of
+stress and prolonged media exposure to ``community-based traumas (e.g.,
+mass shootings, natural disasters''. Recently, Holman has suggested the
+COVID-19 is a particular case to study; since multiple stressors have
+arose at the same time. To mention some: financial crisis, elections,
+health crisis, among others. It can be said that news can influence the
+decisions, general views and metal health of Americans. \emph{Source:
+\url{https://science.sciencemag.org/content/358/6364/776} }Source:
+\url{https://www.pnas.org/content/111/1/93} \emph{Source:
+\url{https://www.universityofcalifornia.edu/news/how-and-why-coronavirus-changing-our-sense-time}
+}Source:
+\url{https://www.bbc.com/future/article/20200512-how-the-news-changes-the-way-we-think-and-behave}
+
+I would like to connect this ideas, but I am unsure how to do
+it\ldots\#\#\#\#\#\#\#\#\#\#\#JTM
+
+Since major news companies have a large influence in how information is
+commmunicated to its audiences, it is vital to quantify how different
+these sources are in relation to COVID-19 news. By measuring potential
+bias in relation to each source, this analysis examines how different
+major news sources are when reporting on COVID-19. It is also insightful
+to see if there are underlying patterns such as subtopics within
+COVID-19 that are published more in news sources over others. This would
+help identify if there are patterns that are predictive of which news
+source the article came from.
+
+\hypertarget{research-question-1}{%
+\subsection{Research Question}\label{research-question-1}}
+
+Are there underlying patterns in news articles related to COVID-19
+across major news sources that suggest bias, and are these patterns
+predictive of which news source it is likely from?
+
+I think we should think further what is the importance of predicting the
+source. If it is because it help us evaluate the patterns, probably they
+are not the question but the methodology to anwer our
+question\ldots\#\#\#\#\#\#\#\#\#\#\#JTM
+
+\hypertarget{use-cases}{%
+\subsection{Use Cases}\label{use-cases}}
+
+By quantifying underlying differences on COVID-19 reporting and
+examining the predictive power of these patterns to identify the news
+source, this study can be useful for a number of use cases. For example,
+understanding biases in article text can help the reader understand
+inherent idealogical leanings towards certain news sources, which can
+help equip them with greater understanding and critical examination of
+news consumption. \#\#\#\#\#In the same way, selective news consumption
+could potentially lead to less stress impact due to news
+sources.\#\#\#\#\#
+
+From a policy perspective, greater impact and studies could be conducted
+to place more standardized regulations in an effort to influence more
+objective reporting. We acknowledge this second use case can be
+difficult from business and philosophical perspectives, especially in
+relation to the First Amendement of the US Constitution in relation to
+the freedom of speech.\\
+\#\#\#\#\#\# I think this statement can be less extreme, such as just
+having transparency towards the bias that each news source could
+have\ldots{} \#\#\#\#\#\# I like this article:
+\url{https://www.americanpressinstitute.org/journalism-essentials/bias-objectivity/understanding-bias/}
+and this statement: \#\#\#\#\#\# What if journalists acknowledged that
+bias does exist, that it is built into the choices they make when
+deciding what to leave in and what to leave out? That bias is embedded
+in the culture and language of the society on which the journalist
+reports? And that ``news judgment'' does reflect the journalist's
+background as well as the news organization's mission and business
+model? \#\#\#\#\#\# I think that acknowledging is a step to give
+information to the consumer when choosing which news to read
+\#\#\#\#\#\#\#\#\#\#\#JTM
+
+\hypertarget{methodology}{%
+\subsection{Methodology}\label{methodology}}
+
+\hypertarget{data-sourcing}{%
+\subsubsection{Data Sourcing}\label{data-sourcing}}
+
+In order to choose major news sources to analyze, the figure below
+created by the Pew Research Center shows where on the US political
+spectrum various news companies fall. In order to get a mix of sources
+across the conservative and liberal spectrum, while balancing
+limitations of computing resources, the following news sources were used
+to procure a dataset.
+
+\begin{figure}
+\centering
+\includegraphics{../figures/PJ_14.10.21_mediaPolarization-08.png}
+\caption{Source: Pew Research Center}
+\end{figure}
+
+\emph{Source:
+\url{https://www.journalism.org/2014/10/21/political-polarization-media-habits/pj_14-10-21_mediapolarization-08/}}
+
+\begin{itemize}
+\item
+  BBC
+\item
+  CNN
+\item
+  The Wall Street Journal
+\item
+  Reuters
+\end{itemize}
+
+\emph{Note: Due to legal restrictions, Fox News data was not scraped}
+
+\hypertarget{data-cleaning}{%
+\section{Data Cleaning}\label{data-cleaning}}
+
+Leveraging the \textbf{\href{https://gnewsapi.net/}{GNews API}}, news
+article data related to COVID-19 were pulled for the following major
+news sources noted in the previous section (filtered to US articles).
+
+\hypertarget{gnews-api}{%
+\subsection{GNews API}\label{gnews-api}}
+
+A total of 5,360 articles between the time period 1/1/2020 - 4/9/2021
+were called from the API (20 articles per week and news source, for 67
+weeks). The API call returned 3,454 records for article-related data.
+Below are some of the key fields from the API call, with an example:
+
+\begin{itemize}
+\item
+  \texttt{article\ url}:
+  \url{https://www.cnn.com/2021/02/08/health/covid-19-antigen-tests-states-cnn-analysis/index.html}
+\item
+  \texttt{article\ description}: ``Covid-19 antigen tests not counted
+  among cases in some states, CNN analysis shows - CNN''
+\item
+  \texttt{date\ and\ time\ of\ article\ publication}:
+  2021-02-08T08:00:00Z
+\item
+  \texttt{article\ source\ name}: CNN
+\end{itemize}
+
+\hypertarget{web-scraping}{%
+\subsection{Web Scraping}\label{web-scraping}}
+
+After gathering the article URLs, the full news text for each article
+was pulled. Each data source carried unique idiosyncrasies in its html
+structure. The next section highlights unique aspects web scraping each
+data source.
+
+\hypertarget{bbc}{%
+\subsubsection{BBC}\label{bbc}}
+
+\hypertarget{cnn}{%
+\subsubsection{CNN}\label{cnn}}
+
+There were two distinct HTML structures. One for the first sentence, and
+another for the remainder of the article. Additional cleaning needed to
+be done to remove the ``(CNN)'' and ``(CNN Business)'' text at the
+beginning of each article, as well as additional escape characters
+scattered throughout the article.
+
+\hypertarget{reuters}{%
+\subsubsection{Reuters}\label{reuters}}
+
+This was relatively streamlined compared to the other news sources. One
+unique aspect of Reuters was that a number of their articles were not
+text articles in the traditional sense, but slideshows. For example this
+article:
+
+\url{https://www.reuters.com/news/picture/coronavirus-outbreak-spreads-in-china-idUSRTS2ZART}
+
+\hypertarget{the-wall-street-journal}{%
+\subsubsection{The Wall Street Journal}\label{the-wall-street-journal}}
+
+\hypertarget{exploratory-data-analysis}{%
+\section{Exploratory Data Analysis}\label{exploratory-data-analysis}}
+
+\hypertarget{sentiment-analysis}{%
+\subsection{Sentiment Analysis}\label{sentiment-analysis}}
+
+To better understand the data, sentiment analysis utilizing various
+lexicons were explored. Key visualizations of the data are illustrated:
+
+BBC had the least average words per article, whereas CNN had the most
+words per article.
+
+\begin{figure}
+\centering
+\includegraphics{../figures/words_per_article.png}
+\caption{Words Per Article}
+\end{figure}
+
+BBC News had a larger variety of top words compared to the other news
+sources.
+
+\begin{figure}
+\centering
+\includegraphics{../figures/top_words_with_sentiment.png}
+\caption{Top Words with a sentiment}
+\end{figure}
+
+All news sources had average weekly sentiment mainly hovering between -1
+to 0, using the Afinn lexicon. This means that average sentiment was
+slightly negative.
+
+The Wall Street Journal had the largest range in average weekly
+sentiment. It is plausible there is some correlation between this
+sentiment and the stock market, and would require further analysis
+outside of this study.
+
+\emph{Afinn lexicon:
+\url{https://www.tidytextmining.com/sentiment.html}}
+
+\begin{figure}
+\centering
+\includegraphics{../figures/sentence_afinn_sentiment_week.png}
+\caption{Average Sentiment by Week}
+\end{figure}
+
+\hypertarget{feature-engineering}{%
+\section{Feature Engineering}\label{feature-engineering}}
+
+In order to create features to build classification models for
+predicting a news source based on text, the below features were
+generated.
+
+\hypertarget{average-sentiment-and-word-counts}{%
+\subsection{Average Sentiment and Word
+counts}\label{average-sentiment-and-word-counts}}
+
+One feature was generated for each article:
+
+\begin{itemize}
+\tightlist
+\item
+  average sentiment by word
+\item
+  average sentiment by sentence
+\item
+  word count
+\item
+  word count with a sentiment
+\end{itemize}
+
+\hypertarget{keyword-features}{%
+\subsection{Keyword features}\label{keyword-features}}
+
+As a baseline, keyword features based on the researchers' prior
+knowledge on the following topics was used to generate average Afinn
+sentiment for articles. One feature was generated for each term below
+(noted in quotes).
+
+\begin{itemize}
+\item
+  Politics: ``Trump'', ``Biden''
+\item
+  Business: ``stock market'', ``financial''
+\item
+  Pandemic: ``death'', ``pandemic'', ``disease'', ``illness''
+\end{itemize}
+
+\hypertarget{topic-features-from-prior-research}{%
+\subsection{Topic features from prior
+research}\label{topic-features-from-prior-research}}
+
+Leveraging prior studies, the following features were generated by topic
+using keyword. Specific keywords used for each topic can be found here:
+
+\url{https://github.com/ajpag/US-News-NLP/blob/53faa3e31d901386b12ea0459586ac6bd0785f1e/analysis/feature_engineering_ap.R\#L280}
+
+Source: ``Politicization and Polarization in COVID-19 News Coverage''
+\url{https://journals.sagepub.com/doi/full/10.1177/1075547020950735}
+
+\begin{itemize}
+\item
+  COVID 19
+\item
+  Scientist
+\item
+  Republican
+\item
+  Democrat
+\end{itemize}
+
+Source: ``Polarization in elite communication on the COVID-19 pandemic''
+\url{https://advances.sciencemag.org/content/6/28/eabc2717}
+
+\begin{itemize}
+\item
+  Republican Words
+\item
+  Democrat Words
+\end{itemize}
+
+\hypertarget{topic-modeling-latent-dirichlet-allocation}{%
+\subsection{Topic Modeling: Latent Dirichlet
+Allocation}\label{topic-modeling-latent-dirichlet-allocation}}
+
+To assess commonalities in topics and article text across articles,
+Latend Dirichlet Allocation was applied. After experimentation, it was
+decided that 7 topics was the optimal number, based on interpretabilty
+and overlap of topics. The VEM method was used:
+\url{https://www.tidytextmining.com/topicmodeling.html}
+
+Topics:
+
+\begin{longtable}[]{@{}rl@{}}
+\caption{Topics from LDA}\tabularnewline
+\toprule
+topic\_number & topic\tabularnewline
+\midrule
+\endfirsthead
+\toprule
+topic\_number & topic\tabularnewline
+\midrule
+\endhead
+1 & Politics\tabularnewline
+2 & Reported deaths and cases\tabularnewline
+3 & China / Wuhan\tabularnewline
+4 & Outbreaks and infections by country\tabularnewline
+5 & Patients and Symptoms\tabularnewline
+6 & Vaccines and Research\tabularnewline
+7 & Business and Economy\tabularnewline
+\bottomrule
+\end{longtable}
+
+\begin{figure}
+\centering
+\includegraphics{../figures/lda_top_terms.png}
+\caption{Topic Modeling: Top Words}
+\end{figure}
+
+\hypertarget{measuring-bias-across-news-sources}{%
+\section{Measuring Bias Across News
+Sources}\label{measuring-bias-across-news-sources}}
+
+Performing a chi-square test to measure differences in signifances
+across news sources, the following metrics were used. The chi-square
+test for all three metrics suggest that there is a indeed a bias in
+article text across the news sources.
+
+\hypertarget{topic-probabilities}{%
+\subsection{Topic Probabilities}\label{topic-probabilities}}
+
+Following intuition, The Wall Street Journal has the highest average
+topic probability for Business and Economy articles. It is interesting
+that Reuters has the highest probability of China / Wuhan related
+articles. CNN has the lowest probability of articles pertaining to
+vaccines and research.
+
+The chi-square test (\emph{p \textless{} 1\%}) indicates there are
+correlations across each news source in relation to average topic
+probabilities.
+
+\emph{Note: Probabilities were multiplied by a factor of 100 prior to
+running the test}
+
+\begin{figure}
+\centering
+\includegraphics{../figures/topic_probabilities_news_source.png}
+\caption{Topic Modeling Probabilities}
+\end{figure}
+
+\hypertarget{average-sentiment}{%
+\subsection{Average Sentiment}\label{average-sentiment}}
+
+The chi-square test (\emph{p \textless{} 1\%}) indicates there are
+correlations across each news source in relation to average Afinn
+sentiment.
+
+\emph{Note: Sentiment scores were multiplied by a factor of 100 and
+converted to positive integers prior to running the test}
+
+\begin{figure}
+\centering
+\includegraphics{../figures/sentence_afinn_sentiment.png}
+\caption{Avg sentiment by sentence across articles}
+\end{figure}
+
+\hypertarget{word-count}{%
+\subsection{Word Count}\label{word-count}}
+
+The chi-square test (\emph{p \textless{} 1\%}) indicates there are
+correlations across each news source in relation to average word count.
+
+\emph{Note: Average word counts were converted to positive integers
+prior to running the test}
+
+\begin{figure}
+\centering
+\includegraphics{../figures/avg_word_count.png}
+\caption{Avg word count across articles}
+\end{figure}
+
+\hypertarget{classification}{%
+\section{Classification}\label{classification}}
+
+For each of the 5 algorithms run, 4 models were run using different sets
+of features:
+
+\begin{itemize}
+\item
+  \textbf{Topic Modeling features}: per section 5.4
+\item
+  \textbf{Keyword features}: per section 5.2
+\item
+  \textbf{Topic keyword features}: per section 5.3
+\item
+  All features
+\end{itemize}
+
+\begin{longtable}[]{@{}lrrr@{}}
+\caption{Classification Model Results}\tabularnewline
+\toprule
+model & train\_accuracy & test\_accuracy & auc\tabularnewline
+\midrule
+\endfirsthead
+\toprule
+model & train\_accuracy & test\_accuracy & auc\tabularnewline
+\midrule
+\endhead
+gbm\_topic\_lda & 0.65 & 0.68 & 0.89\tabularnewline
+gbm\_keywords & 0.42 & 0.45 & 0.71\tabularnewline
+gbm\_topic\_keywods & 0.60 & 0.61 & 0.84\tabularnewline
+gbm\_all\_features & 0.75 & 0.80 & 0.94\tabularnewline
+\bottomrule
+\end{longtable}
+
+\hypertarget{results}{%
+\section{Results}\label{results}}
+
+\hypertarget{conclusion-and-next-steps}{%
+\subsection{Conclusion and Next Steps}\label{conclusion-and-next-steps}}
+
+Maybe we could divide this section in 4 paragraphs \#\#\#\#\#\# JTM
+
+Paragraph 1: There is different patterns accross news sources chi-sq
+\#\#\#\#\#\# JTM
+
+Paragraph 2: Summary of the results of all the models \#\#\#\#\#\# JTM
+
+Paragraph 3: Explain why we think the best algorithm is working and why
+the least one is performing that way \#\#\#\#\#\# JTM
+
+Paragraph 4: Follow-up analysis: WSJ negative sentiment associated with
+stock marcket, Add information of more conservative sources, expand news
+without COVID-19 filter? \#\#\#\#\#\# JTM
+
+\hypertarget{limitations}{%
+\subsection{Limitations:}\label{limitations}}
+
+\begin{itemize}
+\item
+  Selection bias in news articles analyzed: Due to legal restrictions,
+  more conservative news sources, such as Fox News, were not scraped.
+  Also due to legal restrictions, the articles of The Wall Street
+  Journal were not able to be fully scrapped.
+\item
+  Context limitations in sentiment: The sentiment method used, Afinn,
+  only parsed words individually, and not into context of the entire
+  article. So, the sentence sentiment was calculated using the average
+  sentiment of words.
+\item
+  Parsing limitations: There are many edge cases in which breaking down
+  articles by sentences did not parse successfully. For example,
+  \texttt{tidytext::unnest\_functions()} incorrectly parsed the
+  following sentence into two since \texttt{Ms.} has a period:
+\end{itemize}
+
+Original sentence:
+\texttt{"The\ manager\textquotesingle{}s\ decision\ to\ send\ Ms.\ Coleman\ home\ for\ wearing\ the\ headscarf\ was\ due\ to\ a\ lack\ of\ training,"\ Warren\ said.}
+
+Parsed sentence(s)
+
+\begin{itemize}
+\item
+  \texttt{"The\ manager\textquotesingle{}s\ decision\ to\ send\ Ms."}
+\item
+  \texttt{"Coleman\ home\ for\ wearing\ the\ headscarf\ was\ due\ to\ a\ lack\ of\ training,"\ Warren\ said."}
+\end{itemize}
+
+\end{document}
