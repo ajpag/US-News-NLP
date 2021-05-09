@@ -141,7 +141,7 @@ AUC_2 <- multiclass.roc(mod2_test$articles.source_name, prob2)
 #Data for model
 
 mod3_data <- predictors %>% 
-  dplyr::select(articles.source_name, word_count, covid19, scientist, republican, 
+  dplyr::select(articles.source_name, covid19, scientist, republican, 
                 democrat, repub_words, demo_words, div_words1, div_words2, div_words3,
                 div_words4, div_words5, published_dow) %>%
   dplyr::mutate(articles.source_name = as.factor(articles.source_name),
