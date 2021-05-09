@@ -141,32 +141,36 @@ articles <- articles %>% left_join(lda_probs)
 # Tokenize Words #
 ##################
 
-tokenize_words <- function(df, text) {
-  # tokenize text by word and add sentiments
-  # text: column to tokenize
-  words <- df %>% 
-    unnest_tokens(word, text) %>% 
-    left_join(get_sentiments(lexicon = "bing") %>% 
-                mutate(sentiment_bing = sentiment) %>% 
-                select(-sentiment)) %>% 
-    left_join(get_sentiments(lexicon = "afinn") %>% 
-                mutate(sentiment_afinn = value) %>% 
-                select(-value)) %>% 
-    left_join(get_sentiments(lexicon = "loughran") %>% 
-                mutate(sentiment_loughran = sentiment) %>% 
-                select(-sentiment)) %>% 
-    left_join(get_sentiments(lexicon = "nrc") %>% 
-                mutate(sentiment_nrc = sentiment) %>% 
-                select(-sentiment))
-  return(words)
-}
+# tokenize_words <- function(df, text) {
+#   # tokenize text by word and add sentiments
+#   # text: column to tokenize
+#   words <- df %>% 
+#     unnest_tokens(word, text) %>% 
+#     left_join(get_sentiments(lexicon = "bing") %>% 
+#                 mutate(sentiment_bing = sentiment) %>% 
+#                 select(-sentiment)) %>% 
+#     left_join(get_sentiments(lexicon = "afinn") %>% 
+#                 mutate(sentiment_afinn = value) %>% 
+#                 select(-value)) %>% 
+#     left_join(get_sentiments(lexicon = "loughran") %>% 
+#                 mutate(sentiment_loughran = sentiment) %>% 
+#                 select(-sentiment)) %>% 
+#     left_join(get_sentiments(lexicon = "nrc") %>% 
+#                 mutate(sentiment_nrc = sentiment) %>% 
+#                 select(-sentiment))
+#   return(words)
+# }
 
 #####################
 # Sentiment by word #
 #####################
 
 # tokenize text
-words <- tokenize_words(articles, text)
+words <- articles %>% 
+  unnest_tokens(word, text) %>%
+  left_join(get_sentiments("afinn")) %>% 
+  mutate(sentiment_afinn = value) %>% 
+  select(-value)
 
 # calculate average afinn sentiment per word and article
 avg_sentiment_afinn_word <- words %>% 
@@ -231,7 +235,7 @@ articles %>%
   theme(legend.position = "bottom")
 
 # plot topic probabilities by news source
-p_topic <- articles %>% 
+p_topic <- articles %>%
   select(articles.source_name | contains("topic")) %>% 
   pivot_longer(cols = -articles.source_name) %>% 
   drop_na() %>% 
