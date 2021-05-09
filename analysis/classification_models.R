@@ -122,7 +122,18 @@ articles_word_count_mat <- as.matrix(articles_word_count$avg_word_count_chi)
 rownames(articles_word_count_mat) <- articles_word_count$articles.source_name
 
 # chi-square test
-chisq.test(articles_word_count_mat)
+print(chisq.test(articles_word_count_mat))
+
+# summarise chi-square test results
+
+chisq_results <- data.frame(chi_sq_test_metric = c("topic_probabilities", 
+                                                   "afinn_sentiment_sentence", 
+                                                   "word_count"),
+                            p_value = c(chisq.test(articles_sc_mat)$p.value,
+                                        chisq.test(articles_sentiment_sc_mat)$p.value,
+                                        chisq.test(articles_word_count_mat)$p.value))
+
+write_csv(chisq_results, paste0(figures_dir, "chi_sq_test_results.csv"))
 
 ############# Classification Modeling: Gradient Boosting Machine ###############
 
