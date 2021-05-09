@@ -31,6 +31,12 @@ All analysis was completed in R.
 
 # Research Question
 
+## Research Question
+
+Are there underlying patterns in news articles related to COVID-19 across major news
+sources that suggest bias, and are these patterns predictive of which news 
+source it is likely from?
+
 ## Background
 
 The means in which informaton is communicated with regards to the COVID-19 pandemic
@@ -51,12 +57,6 @@ to COVID-19 news. By measuring potential bias in relation to each source, this a
 major news sources are when reporting on COVID-19. It also explores underlying patterns 
 such as subtopics within COVID-19 that are published more in news sources over others. And if these patterns
 are predictive of which news source the article came from. 
-
-## Research Question
-
-Are there underlying patterns in news articles related to COVID-19 across major news
-sources that suggest bias, and are these patterns predictive of which news 
-source it is likely from?
 
 ## Use Cases
 
