@@ -19,6 +19,7 @@ library(e1071)
 seed <- 14
 set.seed(seed)
 conflict_prefer("select", "dplyr")
+conflict_prefer("filter", "dplyr")
 
 # Purpose: Predict the news source
 

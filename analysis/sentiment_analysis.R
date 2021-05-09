@@ -10,6 +10,8 @@ library(stringr)
 library(tidyr)
 library(tidytext)
 library(topicmodels)
+conflict_prefer("select", "dplyr")
+conflict_prefer("filter", "dplyr")
 seed <- 14
 
 figures_dir <- "../figures/"
@@ -52,28 +54,11 @@ articles %>%
   summarise(articles = n()) %>% 
   arrange(desc(articles))
 
-tokenize_words <- function(df, text) {
-  # tokenize words and add sentiments given news dataframe
-  # text: column to tokenize
-  words <- df %>% 
-    unnest_tokens(word, text) %>% 
-    left_join(get_sentiments(lexicon = "bing") %>% 
-                mutate(sentiment_bing = sentiment) %>% 
-                select(-sentiment)) %>% 
-    left_join(get_sentiments(lexicon = "afinn") %>% 
-                mutate(sentiment_afinn = as.factor(value)) %>% 
-                select(-value)) %>% 
-    left_join(get_sentiments(lexicon = "loughran") %>% 
-                mutate(sentiment_loughran = sentiment) %>% 
-                select(-sentiment)) %>% 
-    left_join(get_sentiments(lexicon = "nrc") %>% 
-                mutate(sentiment_nrc = sentiment) %>% 
-                select(-sentiment))
-  return(words)
-}
-
 # baseline: tokenize words
-words <- tokenize_words(articles, text)
+words <- articles %>% 
+  unnest_tokens(word, text) %>% 
+  left_join(get_sentiments("afinn")) %>% 
+  mutate(sentiment_afinn = value)
 
 # words per article
 p1 <- words %>% 
@@ -99,8 +84,8 @@ p2 <- words_long %>%
   group_by(articles.source_name) %>% 
   mutate(pct_of_total = count / sum(count)) %>% 
   arrange(desc(pct_of_total)) %>% 
-  head(40) %>% 
-  ggplot(aes(x = reorder(word, pct_of_total), y = pct_of_total)) + 
+  top_n(n = 10) %>% 
+  ggplot(aes(x = reorder(word, count), y = count)) + 
   geom_bar(stat = "identity", position = "dodge") + 
   coord_flip() + 
   facet_wrap(~articles.source_name, scales = "free") +
@@ -132,11 +117,12 @@ p4 <- words_long %>%
   filter(lexicon == "sentiment_afinn") %>% 
   group_by(date, articles.source_name) %>% 
   summarise(avg_sentiment = mean(sentiment)) %>% 
-  ggplot(aes(x = date, y = avg_sentiment, color = articles.source_name)) +
+  ggplot(aes(x = date, y = avg_sentiment)) +
   geom_line() + 
   theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
   labs(title = "Average Sentiment by Week") + 
-  theme(legend.position = "bottom")
+  theme(legend.position = "bottom") + 
+  facet_wrap(~articles.source_name)
 
 #######################################
 # Baseline: Sentiment by Word TF-IDF #
@@ -167,7 +153,8 @@ words_tf_idf <- words_long %>%
 # Highest words by tf_idf
 p6 <- words_tf_idf %>% 
   arrange(desc(tf_idf)) %>% 
-  head(40) %>% 
+  group_by(articles.source_name) %>% 
+  top_n(10) %>% 
   ggplot(aes(x = reorder(word, tf_idf), 
              y = tf_idf, 
              fill = articles.source_name)) +
@@ -196,18 +183,18 @@ get_sentence_sentiment <- function(articles) {
   # add sentiment for each word
   sentence_sentiment <- sentences %>% 
     unnest_tokens(word, sentence, drop = FALSE) %>% 
-    left_join(get_sentiments(lexicon = "bing") %>% 
-                mutate(sentiment_bing = sentiment) %>% 
-                select(-sentiment)) %>% 
     left_join(get_sentiments(lexicon = "afinn") %>% 
-                mutate(sentiment_afinn = as.factor(value)) %>% 
-                select(-value)) %>% 
-    left_join(get_sentiments(lexicon = "loughran") %>% 
-                mutate(sentiment_loughran = sentiment) %>% 
-                select(-sentiment)) %>% 
-    left_join(get_sentiments(lexicon = "nrc") %>% 
-                mutate(sentiment_nrc = sentiment) %>% 
-                select(-sentiment))
+                mutate(sentiment_afinn = value)) %>% 
+                select(-value) #%>% 
+    # left_join(get_sentiments(lexicon = "bing") %>% 
+    #             mutate(sentiment_afinn = as.factor(value)) %>% 
+    #             select(-value)) %>% 
+    # left_join(get_sentiments(lexicon = "loughran") %>% 
+    #             mutate(sentiment_loughran = sentiment) %>% 
+    #             select(-sentiment)) %>% 
+    # left_join(get_sentiments(lexicon = "nrc") %>% 
+    #             mutate(sentiment_nrc = sentiment) %>% 
+    #             select(-sentiment))
   
   # convert to long format for plotting
   sentence_long <- sentence_sentiment %>% 
@@ -340,7 +327,7 @@ for (i in seq_along(plot_titles)) {
                                 plot_titles[i],
                                 ".png",
                                 sep = ""), 
-         #height = 10, width = 10
+         height = 4, width = 7
          )
 }
 
@@ -348,3 +335,4 @@ for (i in seq_along(plot_titles)) {
 ggsave(plot = p2, file = paste(figures_dir, plot_titles[2], ".png",
                                sep = ""),
        height = 4.5, width = 8)
+
