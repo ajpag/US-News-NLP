@@ -388,18 +388,22 @@ rf_feature_df <- data.frame(features = names(rf_feature_imp),
                             importance = rf_feature_imp)
 
 
-# plot
+# plot top 10
 p_rf_feat_imp <- rf_feature_df %>% 
-  ggplot(aes(x = reorder(feature, importance), y = importance)) +
+  arrange(desc(importance)) %>% 
+  head(10) %>%  
+  ggplot(aes(x = reorder(features, importance), y = importance)) +
   geom_bar(stat = "identity") + 
-  labs(title = "Random Forest: Feature Importance", 
-       subtitle = "All Features Model") + 
+  labs(title = "Random Forest: Top 10 Features by Importance", 
+       subtitle = "All Features Model",
+       y = "feature") + 
   coord_flip()
 
 # save results
 ggsave(plot = p_rf_feat_imp, 
        file = paste0(figures_dir, "rf_feature_importance.png"),
-       width = 5, height = 8)
+       # width = 5, height = 8
+       )
 
 # Predict the testing set with the trained model
 predictions2.1 <- predict(rf_model1, articles_test, type ="response")
