@@ -39,6 +39,7 @@ articles_input <- articles %>%
             word_count_sentiment, published_hour_et)) %>% 
   drop_na()
 
+
 ####################### Assess Bias Across News Sources #####################
 
 ########################################
@@ -368,8 +369,12 @@ paste("AUC of using paper keywords feature is:", lr_model_paper_keywords)
 ######################################################
 formula1 <- 'articles.source_name ~ prob_topic_1 + prob_topic_2 + prob_topic_3 + prob_topic_4 + prob_topic_5 + prob_topic_6 + prob_topic_7 +avg_sentiment_afinn_word + published_dow +Biden_sentiment + Trump_sentiment + stock_market_sentiment + financial_sentiment + death_sentiment + pandemic_sentiment + disease_sentiment + illness_sentiment + covid19 + scientist + republican+ democrat + repub_words + demo_words + div_words1 + div_words2 + div_words3 + div_words4 + div_words5'
 
-rf_model1 <- ranger(formula = formula_all, num.trees=1000,
-                    respect.unordered.factors=T, probability=T, data=articles_train)
+rf_model1 <- ranger(formula = formula_all, 
+                    num.trees=1000,
+                    respect.unordered.factors=T, 
+                    probability=T,
+                    importance = "impurity",
+                    data=articles_train)
 rf_model2 <- ranger(formula = formula_topics, num.trees=1000,
                     respect.unordered.factors=T, probability=T, data=articles_train)
 rf_model3 <- ranger(formula = formula_keywords, num.trees=1000,
@@ -377,16 +382,24 @@ rf_model3 <- ranger(formula = formula_keywords, num.trees=1000,
 rf_model4 <- ranger(formula = formula_paper_topics, num.trees=1000,
                     respect.unordered.factors=T, probability=T, data=articles_train)
     
-# re-run to get feature importance
-ctrl <- trainControl(method = 'cv', number = 10, classProbs = TRUE,
-                      verboseIter = FALSE)
-rfFit <- train(articles.source_name ~ ., 
-               data = articles_train %>% 
-                 mutate(articles.source_name = as.factor(articles.source_name),
-                        published_dow = as.factor(published_dow)),
-               method = "ranger",
-               importance = "impurity", 
-               trControl = ctrl)
+# feature importance of best model
+rf_feature_imp <- importance(rf_model1)
+rf_feature_df <- data.frame(features = names(rf_feature_imp),
+                            importance = rf_feature_imp)
+
+
+# plot
+p_rf_feat_imp <- rf_feature_df %>% 
+  ggplot(aes(x = reorder(feature, importance), y = importance)) +
+  geom_bar(stat = "identity") + 
+  labs(title = "Random Forest: Feature Importance", 
+       subtitle = "All Features Model") + 
+  coord_flip()
+
+# save results
+ggsave(plot = p_rf_feat_imp, 
+       file = paste0(figures_dir, "rf_feature_importance.png"),
+       width = 5, height = 8)
 
 # Predict the testing set with the trained model
 predictions2.1 <- predict(rf_model1, articles_test, type ="response")
