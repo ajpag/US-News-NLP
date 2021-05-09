@@ -42,9 +42,9 @@ averaged 1.7 million during the same time period.
 
 *Source: https://www.foxnews.com/media/fox-news-finishes-february-most-watched-primetime-network*.
 
-According to King G. & et. al., *"...the exposure to news media causes Americans to take public stands on specific issues, join national policy conversation, and express themselves publicly"*. Furthermore, Holman E. & et. al, suggest a correlation between raising level of stress and  
+According to King G.$^{2/}$ & et. al., *"...the exposure to news media causes Americans to take public stands on specific issues, join national policy conversation, and express themselves publicly"*. Furthermore, Holman E.$^{3/}$ & et. al, suggest a correlation between raising level of stress and  
 prolonged media exposure to "community-based traumas (e.g., mass shootings, natural disasters". 
-Recently, Holman has suggested the COVID-19 is a particular case to study; since multiple stressors
+Recently, Holman$^{4/}$ has suggested the COVID-19 is a particular case to study; since multiple stressors
 have arose at the same time. To mention some: financial crisis, elections, health crisis, among others.It can be said that news can influence the decisions, general views and metal health of Americans.
 
 *Source: https://science.sciencemag.org/content/358/6364/776*
@@ -57,10 +57,10 @@ have arose at the same time. To mention some: financial crisis, elections, healt
 
 
 The large influence that major news companies have on how information is commmunicated to its audiences, and 
-the impact news have on its readers. Makes it vital to quantify how different these sources are in relation 
+the impact news have on its readers makes it vital to quantify how different these sources are in relation 
 to COVID-19 news. By measuring potential bias in relation to each source, this analysis examines how different 
-major news sources are when reporting on COVID-19. It is also insightful to see if there are underlying patterns 
-such as subtopics within COVID-19 that are published more in news sources over others. And if this patterns
+major news sources are when reporting on COVID-19. It also explores underlying patterns 
+such as subtopics within COVID-19 that are published more in news sources over others. And if these patterns
 are predictive of which news source the article came from. 
 
 ## Research Question
