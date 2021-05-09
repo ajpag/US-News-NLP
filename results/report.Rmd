@@ -400,9 +400,8 @@ A number of follow up studies can be conducted to further quantify bias across n
 
 - Engineer additional features, such as subsections articles belong to, e.g. (Politics, Business, Health, etc.)
 
-- Expand study to international sources to study how sentiment varies across countries
+- Expand study to international sources to study how sentiment varies across countries)
 
-*add labels to chart*
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}
 kable(as.data.frame(read_csv(model_results)),
       caption = "Classification Model Results")
