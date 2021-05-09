@@ -1442,15 +1442,15 @@ p_results <- results %>%
   pivot_longer(cols = c(test_accuracy, auc), names_to = "metric") %>% 
   ggplot(aes(x = reorder(model, value), y = value)) + 
   geom_bar(stat = "identity", position = "dodge") + 
-  facet_wrap(~metric) + 
-  geom_text(aes(label = round(value, 2)), hjust = -.25#, size = 3
-            ) +
+  facet_wrap(~metric, ncol = 1) + 
+  geom_text(aes(label = round(value, 2)), hjust = -.25, size = 7) +
   coord_flip() + 
   theme(axis.text = element_text(size = 20),
-        axis.title = element_text(size = 15),
-        strip.text.x = element_text(size = 15))
+        axis.title = element_text(size = 20),
+        strip.text.x = element_text(size = 20))
   labs(title = "Model Results")
 
 ggsave(plot = p_results, file = paste0(figures_dir, "model_results.png"),
-       width = 18, height = 10
+       width = 18, height = 15
        )
+  
