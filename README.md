@@ -12,8 +12,8 @@ Order (final batch script to be added):
 
 2.) ```/analysis```
 - ```sentiment_analysis.R```
-- ```feature_engineering_ap.R```
-- ```classification_models_ap.R```
+- ```feature_engineering.R```
+- ```classification_models.R```
 
 ## Research Question
 
