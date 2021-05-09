@@ -410,3 +410,20 @@ kable(as.data.frame(read_csv(model_results)),
 ![Model Results](../figures/model_results.png)
 
 # Reference
+
+J. Green, J. Edgerton, D. Naftel, K. Shoub, S. J. Cranmer, Elusive consensus: Polarization in elite communication on the COVID-19 pandemic. Sci. Adv. 6, eabc2717 (2020). Available at https://advances.sciencemag.org/content/6/28/eabc2717/tab-pdf
+
+P.Sol Hart, S. Chinn, S. Soroka, Politicization and Polarization in COVID-19 News Coverage, Sage journals, Volume: 42 issue: 5, page(s): 679-697. Available at https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7447862/pdf/10.1177_1075547020950735.pdf
+
+K. Schaeffer, Despite wide partisan gaps in views of many aspects of the pandemic, some common ground exists, Pew Research Center (2021). Available at https://www.pewresearch.org/fact-tank/2021/03/24/despite-wide-partisan-gaps-in-views-of-many-aspects-of-the-pandemic-some-common-ground-exists/
+
+Aslam, F., Awan, T.M., Syed, J.H. et al. Sentiments and emotions evoked by news headlines of coronavirus disease (COVID-19) outbreak. Humanit Soc Sci Commun 7, 23 (2020). https://doi.org/10.1057/s41599-020-0523-3. 
+
+Rustam F, Khalid M, Aslam W, Rupapara V, Mehmood A, Choi GS (2021) A performance comparison of supervised machine learning models for Covid-19 tweets sentiment analysis. PLoS ONE 16(2): e0245909. https://doi.org/10.1371/journal.pone.0245909. 
+
+News as a Source: Choosing & Using Sources: A Guide to Academic Research, Pressbooks, Ohio State University, Accessible at: https://ohiostate.pressbooks.pub/choosingsources/chapter/news-as-a-source/
+
+B. Sacerdote, R Sehgal, M. Cook, Why Is All COVID-19 News Bad News?, National Bureau of Economic Research, Working Paper, Working Paper Series(28110), Nov 2020. Accessible at: http://www.nber.org/papers/w28110
+
+
+
