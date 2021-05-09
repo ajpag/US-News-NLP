@@ -8,6 +8,7 @@ library(pROC)
 library(ROSE)
 library(ROCR)
 
+set.seed(0)
 
 #Read raw data from github
 predictors <- "https://raw.githubusercontent.com/ajpag/US-News-NLP/main/data/news_model_input.csv?token=ATPY7SVJZK5RWFQG6M6252LAS4BKU"
@@ -17,7 +18,6 @@ predictors <-  predictors %>%
 
 #Major assumption of Naive Bayes is that there are independence in the predictors
 
-set.seed(0)
 
 #Model 0:
 
