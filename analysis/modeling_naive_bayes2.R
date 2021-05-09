@@ -17,6 +17,80 @@ predictors <-  predictors %>%
 
 #Major assumption of Naive Bayes is that there are independence in the predictors
 
+set.seed(0)
+
+#Model 0:
+
+#average sentiment by sentence
+#prob topic 1:7
+#Biden_sentiment
+#Trump_sentiment
+#stock_market_sentiment
+#financial_sentiment
+#death_sentiment
+#pandemic_sentiment
+#disease_sentiment
+#illness_sentiment
+#publish dow
+#covid19
+#scientist
+#republican
+#democrat
+#repub_words
+#demo_words
+#div_words1
+#div_words2
+#div_words3
+#div_words4
+#div_words5
+
+#Data for model 
+
+
+mod0_data <- predictors %>% 
+  dplyr::select(articles.source_name, avg_sentiment_afinn_sent,
+                prob_topic_1, prob_topic_2, prob_topic_3, prob_topic_4,
+                prob_topic_5, prob_topic_6, prob_topic_7, Biden_sentiment, Trump_sentiment, 
+                stock_market_sentiment, financial_sentiment, death_sentiment,
+                pandemic_sentiment, disease_sentiment, illness_sentiment, covid19, scientist, republican, 
+                democrat, repub_words, demo_words, div_words1, div_words2, div_words3,
+                div_words4, div_words5, published_dow) %>% #select variables for the model
+  dplyr::mutate(articles.source_name = as.factor(articles.source_name),
+                published_dow = as.factor(published_dow)) #Code factor variables
+
+mod0_data <- mod0_data[complete.cases(mod0_data), ]
+
+#Split data to train and test subsets
+
+split_size_mod0 <-  floor(nrow(mod0_data)*.80) #80% train dataset
+
+mod0_train <- mod0_data %>%
+  slice(1:split_size_mod1) 
+
+mod0_test <- mod0_data %>%
+  slice(split_size_mod0 + 1:n())
+
+#Fit model 0 in train subset
+
+mod0 <- klaR::NaiveBayes(articles.source_name ~ ., 
+                         data = mod0_train, usekernel = FALSE, fL = 0)
+
+#Predict test subset
+
+pred_mod0 <- predict(mod0, mod0_test)
+
+#Confusion matrix (accuracy, precision, recall)
+
+mat_mod0 <- confusionMatrix(pred_mod0$class, mod0_test$articles.source_name)
+accuracy_mod0 <- mat_mod0$overall[1]
+#Precision by class compare: "Pos Pred Value"
+#Recall by class compare: "Sensitivity"
+
+#AUC
+
+prob0 <- as.data.frame(pred_mod0$posterior)
+AUC_0 <- multiclass.roc(mod0_test$articles.source_name, prob0)
+
 #Model 1:
 
 #average sentiment by sentence
