@@ -41,6 +41,20 @@ averaged 2.5 million primetime viewers (8pm - 11pm) in February 2021, and CNN
 averaged 1.7 million during the same time period.
 *Source: https://www.foxnews.com/media/fox-news-finishes-february-most-watched-primetime-network*.
 
+According to King G. & et. al., "...the exposure to news media causes Americans to take public
+stands on specific issues, join national policy conversation, and express themselves publicly".
+Furthermore, Holman E. & et. al, suggest a correlation between raising level of stress and 
+prolonged media exposure to "community-based traumas (e.g., mass shootings, natural disasters". 
+Recently, Holman has suggested the COVID-19 is a particular case to study; since multiple stressors
+have arose at the same time. To mention some: financial crisis, elections, health crisis, among others.
+It can be said that news can influence the decisions, general views and metal health of Americans.
+*Source: https://science.sciencemag.org/content/358/6364/776
+*Source: https://www.pnas.org/content/111/1/93
+*Source: https://www.universityofcalifornia.edu/news/how-and-why-coronavirus-changing-our-sense-time
+*Source: https://www.bbc.com/future/article/20200512-how-the-news-changes-the-way-we-think-and-behave
+
+###### I would like to connect this ideas, but I am unsure how to do it...###########JTM
+
 Since major news companies have a large influence in how information is commmunicated 
 to its audiences, it is vital to quantify how different these sources are in relation 
 to COVID-19 news. By measuring potential bias in relation to each source, this 
@@ -48,13 +62,15 @@ analysis examines how different major news sources are when reporting on COVID-1
 It is also insightful to see if there are underlying patterns such as subtopics 
 within COVID-19 that are published more in news sources over others. This would help 
 identify if there are patterns that are predictive of which news source the article 
-came from.
+came from. 
 
 ## Research Question
 
 Are there underlying patterns in news articles related to COVID-19 across major news
-sources that are suggestive of bias, and are these patterns predictive of which news 
+sources that suggest bias, and are these patterns predictive of which news 
 source it is likely from?
+
+###### I think we should think further what is the importance of predicting the source. If it is because it help us evaluate the patterns, probably they are not the question but the methodology to anwer our question...###########JTM
 
 ## Use Cases
 
@@ -63,11 +79,18 @@ predictive power of these patterns to identify the news source, this study can b
 useful for a number of use cases. For example, understanding biases in article text 
 can help the reader understand inherent idealogical leanings towards certain news 
 sources, which can help equip them with greater understanding and critical 
-examination of news consumption. From a policy perspective, greater impact and 
+examination of news consumption. #####In the same way, selective news consumption could
+potentially lead to less stress impact due to news sources.#####
+
+From a policy perspective, greater impact and 
 studies could be conducted to place more standardized regulations in an effort 
 to influence more objective reporting. We acknowledge this second use case can 
 be difficult from business and philosophical perspectives, especially in relation 
-to the First Amendement of the US Constitution in relation to the freedom of speech.
+to the First Amendement of the US Constitution in relation to the freedom of speech.  
+###### I think this statement can be less extreme, such as just having transparency towards the bias that each news source could have...
+###### I like this article: https://www.americanpressinstitute.org/journalism-essentials/bias-objectivity/understanding-bias/ and this statement:
+###### What if journalists acknowledged that bias does exist, that it is built into the choices they make when deciding what to leave in and what to leave out? That bias is embedded in the culture and language of the society on which the journalist reports? And that “news judgment” does reflect the journalist’s background as well as the news organization’s mission and business model? 
+###### I think that acknowledging is a step to give information to the consumer when choosing which news to read ###########JTM
 
 ## Methodology
 
@@ -77,7 +100,7 @@ In order to choose major news sources to analyze, the figure below  created by
 the Pew Research Center shows where on the US political spectrum various 
 news companies fall. In order to get a mix of sources across the conservative and 
 liberal spectrum, while balancing limitations of computing resources, the following 
-news sources were used to procure a dataset.
+news sources were used to procure a dataset. 
 
 ![Source: Pew Research Center](../figures/PJ_14.10.21_mediaPolarization-08.png)
 
@@ -134,7 +157,7 @@ highlights unique aspects web scraping each data source.
 
 There were two distinct HTML structures. One for the first sentence, and another 
 for the remainder of the article. Additional cleaning needed to be done to remove 
-the "(CNN)" text at the beginning of each article, as well as additional escape 
+the "(CNN)" and "(CNN Business)" text at the beginning of each article, as well as additional escape 
 characters scattered throughout the article.
 
 ### Reuters
@@ -198,7 +221,7 @@ feature was generated for each term below (noted in quotes).
 
 - Business: "stock market", "financial"
 
-- Pandemic: "Death", "Pandemic", "Disease", "Illness"
+- Pandemic: "death", "pandemic", "disease", "illness"
 
 ## Topic features from prior research
 
@@ -311,13 +334,22 @@ kable(as.data.frame(read_csv(model_results)),
 
 ## Conclusion and Next Steps
 
+###### Maybe we could divide this section in 4 paragraphs ###### JTM
+###### Paragraph 1: There is different patterns accross news sources chi-sq ###### JTM
+###### Paragraph 2: Summary of the results of all the models ###### JTM
+###### Paragraph 3: Explain why we think the best algorithm is working and why the least one is performing that way ###### JTM
+###### Paragraph 4: Follow-up analysis: WSJ negative sentiment associated with stock marcket, Add information of more conservative sources, expand news without COVID-19 filter? ###### JTM
+
+
 ## Limitations:
 - Selection bias in news articles analyzed: Due to legal 
 restrictions, more conservative news sources, such as Fox News, were not scraped.
+Also due to legal restrictions, the articles of The Wall Street Journal were not 
+able to be fully scrapped. 
 
 - Context limitations in sentiment: The sentiment method used, Afinn, only parsed 
 words individually, and not into context of the entire article. So, the sentence 
-sentiment was calculated using the average sentiment of words.
+sentiment was calculated using the average sentiment of words. 
 
 - Parsing limitations: There are many edge cases in which breaking down 
 articles by sentences did not parse successfully. For example, 
