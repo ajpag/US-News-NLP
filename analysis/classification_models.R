@@ -1,5 +1,5 @@
 # not run
-setwd("C:/CUsers/apagta950/Documents/NYU/Courses/Spring 2021/MDML/Final Project/US-News-NLP/analysis")
+# setwd("C:/CUsers/apagta950/Documents/NYU/Courses/Spring 2021/MDML/Final Project/US-News-NLP/analysis")
 
 library(conflicted)
 library(dplyr)
