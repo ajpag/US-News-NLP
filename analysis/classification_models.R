@@ -1,7 +1,7 @@
 # not run
 # setwd("C:/CUsers/apagta950/Documents/NYU/Courses/Spring 2021/MDML/Final Project/US-News-NLP/analysis")
 
-library(conflicted)
+# library(conflicted)
 library(dplyr)
 library(MASS)
 library(caret) # Gradient Boosting Machine  
@@ -1418,12 +1418,15 @@ results <- bind_rows(lr_rf_results, svm_results, gbm_results, nb_results) %>%
 # write results
 write_csv(results, "../figures/model_results.csv")
 
+results <- read_csv("../figures/model_results.csv")
+
 # plot results
 p_results <- results %>% 
   pivot_longer(cols = c(test_accuracy, auc), names_to = "metric") %>% 
   ggplot(aes(x = reorder(model, value), y = value)) + 
   geom_bar(stat = "identity", position = "dodge") + 
-  facet_wrap(~metric) +
+  facet_wrap(~metric) + 
+  geom_text(aes(label = round(value, 2)), hjust = -.25) +
   coord_flip() + 
   labs(title = "Model Results")
 
