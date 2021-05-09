@@ -1,7 +1,9 @@
 # not run
-setwd("C:/Users/apagta950/Documents/NYU/Courses/Spring 2021/MDML/Final Project/US-News-NLP/analysis")
+setwd("C:/CUsers/apagta950/Documents/NYU/Courses/Spring 2021/MDML/Final Project/US-News-NLP/analysis")
 
-# library(dplyr)
+library(conflicted)
+library(dplyr)
+library(MASS)
 library(caret) # Gradient Boosting Machine  
 library(gbm) # need for feature importance
 library(nnet) # multinomial regression
@@ -16,6 +18,7 @@ library(ROSE)
 library(e1071)
 seed <- 14
 set.seed(seed)
+conflict_prefer("select", "dplyr")
 
 # Purpose: Predict the news source
 
