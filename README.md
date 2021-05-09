@@ -130,12 +130,8 @@ these two algorithms can split the data, it does not perform as well.
 ![model_results](https://user-images.githubusercontent.com/60185641/117584315-3d231300-b0da-11eb-8123-5f1ea459a002.png)
 
 
-### Conclusion and next steps
+### Conclusion
 
 ### Limitations
 
-## To do:
-- Try LDA tuning to further optimize on number of topics (already tried 5 and there was too much overlap in top words)
-- Use Lasso Regression for feature selection
-- Consider combining results of all models (hybrid model)
-- Add more sources for Background section
+### Next steps
