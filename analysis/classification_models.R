@@ -1,7 +1,7 @@
 # not run
-# setwd("C:/CUsers/apagta950/Documents/NYU/Courses/Spring 2021/MDML/Final Project/US-News-NLP/analysis")
+# setwd("C:/Users/apagta950/Documents/NYU/Courses/Spring 2021/MDML/Final Project/US-News-NLP/analysis")
 
-# library(conflicted)
+library(conflicted)
 library(dplyr)
 library(MASS)
 library(caret) # Gradient Boosting Machine  
@@ -1435,7 +1435,7 @@ results <- bind_rows(lr_rf_results, svm_results, gbm_results, nb_results) %>%
 # write results
 write_csv(results, "../figures/model_results.csv")
 
-# results <- read_csv("../figures/model_results.csv")
+# results <- readr::read_csv("../figures/model_results.csv")
 
 # plot results
 p_results <- results %>% 
@@ -1443,9 +1443,14 @@ p_results <- results %>%
   ggplot(aes(x = reorder(model, value), y = value)) + 
   geom_bar(stat = "identity", position = "dodge") + 
   facet_wrap(~metric) + 
-  geom_text(aes(label = round(value, 2)), hjust = -.25, size = 3) +
-  coord_flip() +
+  geom_text(aes(label = round(value, 2)), hjust = -.25#, size = 3
+            ) +
+  coord_flip() + 
+  theme(axis.text = element_text(size = 20),
+        axis.title = element_text(size = 15),
+        strip.text.x = element_text(size = 15))
   labs(title = "Model Results")
 
 ggsave(plot = p_results, file = paste0(figures_dir, "model_results.png"),
-       width = 14, height = 5)
+       width = 18, height = 10
+       )

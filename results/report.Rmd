@@ -281,6 +281,11 @@ Performing a chi-square test to measure differences in signifances across news s
 the following metrics were used. The chi-square test for all three metrics suggest 
 that there is a indeed a bias in article text across the news sources.
 
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+knitr::kable(as.data.frame(read_csv("../figures/chi_sq_test_results.csv")),
+      caption = "Chi Square Test Results")
+```
+
 ## Topic Probabilities
 
 Following intuition, The Wall Street Journal has the highest average topic 
@@ -359,7 +364,7 @@ which best split Wall Street Journal from the other news sources.
 
 ![Avg word count across articles](../figures/rf_feature_importance.png)
 
-### Limitations:
+### Limitations
 - Selection bias in news articles analyzed: Due to legal 
 restrictions, more conservative news sources, such as Fox News, were not scraped.
 Also due to legal restrictions, the articles of The Wall Street Journal were not 
@@ -409,10 +414,13 @@ A number of follow up studies can be conducted to further quantify bias across n
 
 - Expand study to international sources to study how sentiment varies across countries)
 
-```{r, echo=FALSE, warning=FALSE, message=FALSE}
-kable(as.data.frame(read_csv(model_results)),
+
+```{r, include = FALSE, echo=FALSE, warning=FALSE, message=FALSE}
+knitr::kable(as.data.frame(read_csv("../figures/model_results.csv")),
       caption = "Classification Model Results")
 ```
+
+
 
 ![Model Results](../figures/model_results.png)
 
@@ -449,7 +457,3 @@ $^{13}$ News as a Source: Choosing & Using Sources: A Guide to Academic Research
 $^{14}$ Sacerdote, B., Sehgal, R., & Cook, M. (2020). Why Is All COVID-19 News Bad News? National Bureau of Economic Research, Working Paper, Working Paper Series(28110). http://www.nber.org/papers/w28110
 
 $^{15}$ Slinge, J. & Robinson, D. Text Mining with R: A Tidy Approach. https://www.tidytextmining.com/topicmodeling.html
-
-
-
-
