@@ -8,6 +8,7 @@ library(pROC)
 library(ROCR)
 library(ROSE)
 
+set.seed(0)
 
 #Read raw data from github
 predictors <- "https://raw.githubusercontent.com/ajpag/US-News-NLP/main/data/news_model_input.csv?token=ATPY7SX4262MWXJPOSABARDAS4TKS"
@@ -15,6 +16,77 @@ predictors <- readr::read_csv(predictors)
 predictors <-  predictors %>% 
   slice(sample(1:n())) #Shuffle data 
 
+#Model 0:
+
+#average sentiment by sentence
+#prob topic 1:7
+#Biden_sentiment
+#Trump_sentiment
+#stock_market_sentiment
+#financial_sentiment
+#death_sentiment
+#pandemic_sentiment
+#disease_sentiment
+#illness_sentiment
+#publish dow
+#covid19
+#scientist
+#republican
+#democrat
+#repub_words
+#demo_words
+#div_words1
+#div_words2
+#div_words3
+#div_words4
+#div_words5
+
+#Data for model 
+
+
+mod0_data <- predictors %>% 
+  dplyr::select(articles.source_name, avg_sentiment_afinn_sent,
+                prob_topic_1, prob_topic_2, prob_topic_3, prob_topic_4,
+                prob_topic_5, prob_topic_6, prob_topic_7, Biden_sentiment, Trump_sentiment, 
+                stock_market_sentiment, financial_sentiment, death_sentiment,
+                pandemic_sentiment, disease_sentiment, illness_sentiment, covid19, scientist, republican, 
+                democrat, repub_words, demo_words, div_words1, div_words2, div_words3,
+                div_words4, div_words5, published_dow) %>% #select variables for the model
+  dplyr::mutate(articles.source_name = as.factor(articles.source_name),
+                published_dow = as.factor(published_dow)) #Code factor variables
+
+mod0_data <- mod0_data[complete.cases(mod0_data), ]
+
+#Split data to train and test subsets
+
+split_size_mod0 <-  floor(nrow(mod0_data)*.80)
+
+mod0_train <- mod0_data %>%
+  slice(1:split_size_mod0) 
+
+mod0_test <- mod0_data %>%
+  slice(split_size_mod0 + 1:n())
+
+#Fit model 0 in train subset
+
+mod0 <- e1071::svm(articles.source_name ~ ., data = mod0_train, probability = TRUE)
+
+#plot(mod0, mod0_train, prob_topic_2 ~ prob_topic_4)
+
+#Predict test subset
+
+pred_mod0 <- predict(mod0, mod0_test, probability = TRUE)
+
+
+#Confusion matrix
+
+confusionMatrix(pred_mod0, mod0_test$articles.source_name)
+
+#AUC
+
+prob0_svm <- attr(pred_mod0, "probabilities")
+
+AUC_0_svm <- multiclass.roc(mod0_test$articles.source_name, prob0_svm)
 
 #Model 1:
 
