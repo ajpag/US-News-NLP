@@ -281,14 +281,22 @@ write_csv(gbm_results, paste0(figures_dir, "gbm_results.csv"))
 ######################################################
 
 #================= 2. logistic regression =================
-formula <- 'articles.source_name ~ prob_topic_1 + prob_topic_2 + prob_topic_3 + prob_topic_4 + prob_topic_5 + prob_topic_6 + prob_topic_7 + avg_sentiment_afinn_word + published_dow +Biden_sentiment + Trump_sentiment + stock_market_sentiment + financial_sentiment + death_sentiment + pandemic_sentiment + disease_sentiment + illness_sentiment + covid19 + scientist + republican+ democrat + repub_words + demo_words + div_words1 + div_words2 + div_words3 + div_words4 + div_words5'
+formula_all <- 'articles.source_name ~ prob_topic_1 + prob_topic_2 + prob_topic_3 + prob_topic_4 + prob_topic_5 + prob_topic_6 + prob_topic_7 +avg_sentiment_afinn_word + avg_sentiment_afinn_sent + published_hour_et + published_dow +Biden_sentiment + Trump_sentiment + stock_market_sentiment + financial_sentiment + death_sentiment + pandemic_sentiment + disease_sentiment + illness_sentiment + covid19 + scientist + republican+ democrat + repub_words + demo_words + div_words1 + div_words2 + div_words3 + div_words4 + div_words5'
+formula_topics <- 'articles.source_name ~ prob_topic_1 + prob_topic_2 + prob_topic_3 + prob_topic_4 + prob_topic_5 + prob_topic_6 + prob_topic_7'
+formula_keywords <- 'articles.source_name ~ Biden_sentiment + Trump_sentiment + stock_market_sentiment + financial_sentiment + death_sentiment + pandemic_sentiment + disease_sentiment + illness_sentiment + published_dow'
+formula_paper_topics <- 'articles.source_name ~ covid19 + scientist + republican+ democrat + repub_words + demo_words + div_words1 + div_words2 + div_words3 + div_words4 + div_words5'
 
 # Fit the model
-model <- nnet::multinom(formula, data = articles_train)
+model1 <- nnet::multinom(formula_all, data = train)
+model2 <- nnet::multinom(formula_topics, data = train)
+model3 <- nnet::multinom(formula_keywords, data = train)
+model4 <- nnet::multinom(formula_paper_topics, data = train)
 
 # Make predictions
-predicted.classes <- predict(model, newdata=articles_test) #, type="prob"
-head(predicted.classes)
+predicted.classes1 <- predict(model1, newdata=test) #, type="prob"
+predicted.classes2 <- predict(model2, newdata=test)
+predicted.classes3 <- predict(model3, newdata=test)
+predicted.classes4 <- predict(model4, newdata=test)
 
 # confusion matrix
 #table(predicted.classes , test$articles.source_name )
@@ -300,18 +308,32 @@ lr_all_acc <- length( articles_test$articles.source_name[predicted.classes==arti
 # AUC
 predicted.classes <- as.ordered(predicted.classes)
 predicted.classes.all <- predict(model, newdata=articles_test, type="prob")
+
+predicted.classes.1 <- predict(model1, newdata=test, type="prob")
+predicted.classes.2 <- predict(model2, newdata=test, type="prob")
+predicted.classes.3 <- predict(model3, newdata=test, type="prob")
+predicted.classes.4 <- predict(model4, newdata=test, type="prob")
+
 # predicted.classes.bbc <- as.numeric( predict(model, newdata=articles_test, type="prob")[,1] ) # bbc
 # predicted.classes.cnn <- as.numeric(predict(model, newdata=articles_test, type="prob")[,2] )  # cnn
 # predicted.classes.re <- as.numeric(predict(model, newdata=articles_test, type="prob")[,3] )   # re
 # predicted.classes.wsj <- as.numeric(predict(model, newdata=articles_test, type="prob")[,4] )  # wsj
 # print
 lr_all_auc <- multiclass.roc(articles_test$articles.source_name, predicted.classes.all)$auc[1]
+model_all <- multiclass.roc(test$articles.source_name, predicted.classes.1)$auc[1]
+model_topics <- multiclass.roc(test$articles.source_name, predicted.classes.2)$auc[1]
+model_keywords<- multiclass.roc(test$articles.source_name, predicted.classes.3)$auc[1]
+model_paper_keywords <- multiclass.roc(test$articles.source_name, predicted.classes.4)$auc[1]
 # bbc <- multiclass.roc(articles_test$articles.source_name, predicted.classes.bbc)$auc[1]
 # cnn <- multiclass.roc(articles_test$articles.source_name, predicted.classes.cnn)$auc[1]
 # re <- multiclass.roc(articles_test$articles.source_name, predicted.classes.re)$auc[1]
 # wsj <- multiclass.roc(articles_test$articles.source_name, predicted.classes.wsj)$auc[1]
 # print result
 paste("AUC of all is:", lr_all_auc)
+paste("AUC of using all feature is:", model_all)
+paste("AUC of using topic featuresis:", model_topics)
+paste("AUC of using keywords feature is:", model_keywords)
+paste("AUC of using paper keywords feature is:", model_paper_keywords)
 # paste("AUC of BBC is:", bbc)
 # paste("AUC of CNN is:", cnn)
 # paste("AUC of Reuters is:", re)
@@ -321,30 +343,64 @@ paste("AUC of all is:", lr_all_auc)
 ######################################################
 #          prediction : Random Forest
 ######################################################
+formula1 <- 'articles.source_name ~ prob_topic_1 + prob_topic_2 + prob_topic_3 + prob_topic_4 + prob_topic_5 + prob_topic_6 + prob_topic_7 +avg_sentiment_afinn_word + avg_sentiment_afinn_sent + published_hour_et +Biden_sentiment + Trump_sentiment + stock_market_sentiment + financial_sentiment + death_sentiment + pandemic_sentiment + disease_sentiment + illness_sentiment + covid19 + scientist + republican+ democrat + repub_words + demo_words + div_words1 + div_words2 + div_words3 + div_words4 + div_words5'
 
-formula1 <- 'articles.source_name ~ prob_topic_1 + prob_topic_2 + prob_topic_3 + prob_topic_4 + prob_topic_5 + prob_topic_6 + prob_topic_7 +avg_sentiment_afinn_word +Biden_sentiment + Trump_sentiment + stock_market_sentiment + financial_sentiment + death_sentiment + pandemic_sentiment + disease_sentiment + illness_sentiment + covid19 + scientist + republican+ democrat + repub_words + demo_words + div_words1 + div_words2 + div_words3 + div_words4 + div_words5'
-
-rf_model <- ranger(formula = formula1,
-                    num.trees=1000,
-                    respect.unordered.factors=T, 
-                    probability=T,
-                    data=articles_train)
+rf_model1 <- ranger(formula = formula_all, num.trees=1000,
+                    respect.unordered.factors=T, probability=T, data=train)
+rf_model2 <- ranger(formula = formula_topics, num.trees=1000,
+                    respect.unordered.factors=T, probability=T, data=train)
+rf_model3 <- ranger(formula = formula_keywords, num.trees=1000,
+                    respect.unordered.factors=T, probability=T, data=train)
+rf_model4 <- ranger(formula = formula_paper_topics, num.trees=1000,
+                    respect.unordered.factors=T, probability=T, data=train)
     
 # Predict the testing set with the trained model
-predictions2 <- predict(rf_model, articles_test, type ="response")
-probabilities <- as.data.frame(predict(rf_model, data=articles_test)$predictions)
-head(probabilities)
+predictions2.1 <- predict(rf_model1, test, type ="response")
+predictions2.2 <- predict(rf_model2, test, type ="response")
+predictions2.3 <- predict(rf_model3, test, type ="response")
+predictions2.4 <- predict(rf_model4, test, type ="response")
+probabilities1 <- as.data.frame(predict(rf_model1, data=test)$predictions)
+probabilities2 <- as.data.frame(predict(rf_model2, data=test)$predictions)
+probabilities3 <- as.data.frame(predict(rf_model3, data=test)$predictions)
+probabilities4 <- as.data.frame(predict(rf_model4, data=test)$predictions)
 
 #pre-process
-predict_class <- data.frame(max.col(probabilities) )
-colnames(predict_class) <- "class"
-predict_class <- predict_class %>%
+#pre-process
+predict_class1 <- data.frame(max.col(probabilities1) )
+predict_class2 <- data.frame(max.col(probabilities2) )
+predict_class3 <- data.frame(max.col(probabilities3) )
+predict_class4 <- data.frame(max.col(probabilities4) )
+
+colnames(predict_class1) <- "class"
+colnames(predict_class2) <- "class"
+colnames(predict_class3) <- "class"
+colnames(predict_class4) <- "class"
+
+predict_class1 <- predict_class1 %>%
   mutate( class = case_when(class==1 ~ "BBC News",
                             class==2 ~ "CNN",
                             class==3 ~ "Reuters",
-                            class==4 ~ "The Wall Street Journal")
-                  )
-predict_class$class <- as.factor(predict_class$class)
+                            class==4 ~ "The Wall Street Journal") )
+predict_class2 <- predict_class2 %>%
+  mutate( class = case_when(class==1 ~ "BBC News",
+                            class==2 ~ "CNN",
+                            class==3 ~ "Reuters",
+                            class==4 ~ "The Wall Street Journal")  )
+predict_class3 <- predict_class3 %>%
+  mutate( class = case_when(class==1 ~ "BBC News",
+                            class==2 ~ "CNN",
+                            class==3 ~ "Reuters",
+                            class==4 ~ "The Wall Street Journal") )
+predict_class4 <- predict_class4 %>%
+  mutate( class = case_when(class==1 ~ "BBC News",
+                            class==2 ~ "CNN",
+                            class==3 ~ "Reuters",
+                            class==4 ~ "The Wall Street Journal"))
+
+predict_class1$class <- as.factor(predict_class1$class)
+predict_class2$class <- as.factor(predict_class2$class)
+predict_class3$class <- as.factor(predict_class3$class)
+predict_class4$class <- as.factor(predict_class4$class)
 
 # confusion matrix
 rf_cm <- confusionMatrix(table(articles_test$articles.source_name, predict_class$class))$table
@@ -360,22 +416,27 @@ modeling_data_rf <- as.data.frame(modeling_data_rf)
 
 # AUC
 predicted.classes.all <- probabilities
-# predicted.classes.bbc <- probabilities[,1]  # bbc
-# predicted.classes.cnn <- probabilities[,2] # cnn
-# predicted.classes.re <-  probabilities[,3]  # re
-# predicted.classes.wsj <- probabilities[,4] # wsj
+predicted.classes.all <- probabilities1
+predicted.classes.2 <- probabilities2
+predicted.classes.3 <- probabilities3
+predicted.classes.4 <- probabilities4
+
 rf_all_auc <- multiclass.roc(articles_test$articles.source_name, predicted.classes.all)$auc[1]
-# bbc.rf <- multiclass.roc(test$articles.source_name, predicted.classes.bbc)$auc[1]
-# cnn.rf <- multiclass.roc(test$articles.source_name, predicted.classes.cnn)$auc[1]
-# re.rf <- multiclass.roc(test$articles.source_name, predicted.classes.re)$auc[1]
-# wsj.rf <- multiclass.roc(test$articles.source_name, predicted.classes.wsj)$auc[1]
+all.rf <- multiclass.roc(test$articles.source_name, predicted.classes.all)$auc[1]
+topic.rf <- multiclass.roc(test$articles.source_name, predicted.classes.2)$auc[1]
+keyword.rf <- multiclass.roc(test$articles.source_name, predicted.classes.3)$auc[1]
+paper_key.rf <- multiclass.roc(test$articles.source_name, predicted.classes.4)$auc[1]
+
 
 # print result
 paste("AUC of all (RF) is:", rf_all_auc)
-# paste("AUC of BBC (RF) is:", bbc.rf)
-# paste("AUC of CNN (RF) is:", cnn.rf)
-# paste("AUC of Reuters (RF) is:", re.rf)
-# paste("AUC of WSJ (RF) is:", wsj.rf)
+paste("AUC of all (RF) is:", all.rf)
+paste("AUC of topic (RF) is:", topic.rf)
+paste("AUC of keyword (RF) is:", keyword.rf)
+paste("AUC of paper keywords (RF) is:", paper_key.rf)
+
+
+
 
 ######################################################
 #    prediction of "political_class" : liberal, middle, and conservative
