@@ -127,7 +127,7 @@ as opposed to multi-class problems
 the data to accurately classify the news source. Since the data does not have clear patterns that 
 these two algorithms can split the data, it does not perform as well.
 
-![model_results](https://user-images.githubusercontent.com/60185641/117584315-3d231300-b0da-11eb-8123-5f1ea459a002.png)
+![model_results](https://user-images.githubusercontent.com/60185641/117589400-3787f600-b0f7-11eb-8280-e6f5a0035048.png)
 
 
 ### Conclusion
