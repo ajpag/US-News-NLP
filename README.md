@@ -88,6 +88,9 @@ Topic Number | Topic
 6 | Vaccines and research
 7 | Business and economy
 
+![lda_top_terms](https://user-images.githubusercontent.com/60185641/117580170-a730bd80-b0c4-11eb-99cd-4ce763fe32d9.png)
+
+
 ## Measuring Bias Across News Sources
 
 Bias was measured by running chi-square tests on the following metrics, split by data source. 
