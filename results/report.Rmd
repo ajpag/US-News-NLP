@@ -89,7 +89,7 @@ In order to make inform decisions on which news sources to read.
 
 ## Data Sourcing
 
-In order to choose major news sources to analyze, the figure below  created by 
+In order to choose major news sources to analyze, the figure belowcreated by 
 the Pew Research Center shows where on the US political spectrum various 
 news companies fall. In order to get a mix of sources across the conservative and 
 liberal spectrum, while balancing limitations of computing resources, the following 
@@ -107,19 +107,9 @@ news sources were used to procure a dataset.
 
 - Reuters
 
-*Note: Due to legal restrictions, Fox News data was not scraped*
-
-```{r setup, include=FALSE}
-setwd("C:/Users/apagta950/Documents/NYU/Courses/Spring 2021/MDML/Final Project/US-News-NLP/results")
-knitr::opts_chunk$set(echo = TRUE)
-```
-
-## Data Cleaning
-
 Leveraging the **[GNews API](https://gnewsapi.net/)**, news article data related 
 to COVID-19 were pulled for the following major news sources noted in the 
 previous section (filtered to US articles).
-
 ### GNews API
 
 A total of 5,360 articles between the time period 1/1/2020 - 4/9/2021 were called from 
@@ -136,25 +126,32 @@ API call, with an example:
 
 - ```article source name```: CNN
 
-### Web Scraping
+*Note: Due to legal restrictions, Fox News data was not pulled*
+
+```{r setup, include=FALSE}
+setwd("C:/Users/apagta950/Documents/NYU/Courses/Spring 2021/MDML/Final Project/US-News-NLP/results")
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Data Cleaning: Web scraping
 
 After gathering the article URLs, the full news text for each article was pulled. Each
 data source carried unique idiosyncrasies in its html structure. The next section 
 highlights unique aspects web scraping each data source. 
 
-#### BBC
+### BBC
 
 BBC news articles used different HTML structures based on each section. Hence, we have used keyword function in “Gnews API” to extract articles only in “news” tab. It allows to scrap all body text, but also advertisement as well as unnecessary information. As a result, it was necessary to remove irrelevant lines and words to prevent these features from affecting on our analysis.
 
 
-#### CNN
+### CNN
 
 There were two distinct HTML structures. One for the first sentence, and another 
 for the remainder of the article. Additional cleaning needed to be done to remove 
 the "(CNN)" and "(CNN Business)" text at the beginning of each article, as well as additional escape
 characters scattered throughout the article.
 
-#### Reuters
+### Reuters
 
 This was relatively streamlined compared to the other news sources. One unique 
 aspect of Reuters was that a number of their articles were not text articles in the 
@@ -162,16 +159,11 @@ traditional sense, but slideshows. For example this article:
 
 https://www.reuters.com/news/picture/coronavirus-outbreak-spreads-in-china-idUSRTS2ZART
 
-#### The Wall Street Journal
+### The Wall Street Journal
 
 Our original plan was to extract articles from conservative newspaper, “Fox news”. However, we have changed it to Wall Street Journal as “Fox news” updated their Terms of Use which strictly forbidden to use *“…any automated means, including "robots," "spiders," or "offline readers"…”*.One downside of using Wall Street Journal was that it is a subscribe-based website; it allows ordinary viewers to extract a fraction of articles. It explains the small amount of average word count per article comparing to other newspapers such as BBC or CNN.Similar to BBC, scraped body text contained lots of irrelevant information and it is removed with further cleaning process.
 
-
-# Methodology
-
-## Exploratory Data Analysis
-
-### Sentiment Analysis
+# Exploratory Data Analysis
 
 To better understand the data, sentiment analysis utilizing various lexicons were 
 explored. Key visualizations of the data are illustrated:
@@ -195,12 +187,12 @@ would require further analysis outside of this study.
 
 ![Average Sentiment by Week](../figures/sentence_afinn_sentiment_week.png)
 
-## Feature Engineering
+# Feature Engineering
 
 In order to create features to build classification models for predicting a 
 news source based on text, the below features were generated.
 
-### Average Sentiment and Word counts
+## Average Sentiment and Word counts
 
 One feature was generated for each article:
 
@@ -209,7 +201,7 @@ One feature was generated for each article:
 - word count
 - word count with a sentiment
 
-### Keyword features
+## Keyword features
 
 As a baseline, keyword features based on the researchers' assumptions on the 
 following topics was used to generate average Afinn sentiment for articles. One 
@@ -221,7 +213,7 @@ feature was generated for each term below (noted in quotes).
 
 - Pandemic: "death", "pandemic", "disease", "illness"
 
-### Topic features from prior research
+## Topic features from prior research
 
 We have introduced several new features which has been defined and researched previous published papers to increase our model’s predictability:
 
@@ -364,7 +356,7 @@ which best split Wall Street Journal from the other news sources.
 
 ![Avg word count across articles](../figures/rf_feature_importance.png)
 
-### Limitations
+## Limitations
 - Selection bias in news articles analyzed: Due to legal 
 restrictions, more conservative news sources, such as Fox News, were not scraped.
 Also due to legal restrictions, the articles of The Wall Street Journal were not 
@@ -396,7 +388,7 @@ Parsed sentence(s)
 
 -	Finally, negativity in newspaper may not be a good indicator to predict the news sources as major U.S. media outlet are more likely to have negative content comparing to any other major media outlet outside the U.S., according to the study done by B. Sacerdote, R Sehgal, and M Cook [14]. As the study used covid-19 related newspaper from 2020 with 9.4 million news stores, it is worth to consider the finding when we interpret the sentiment analysis result.
 
-### Next Steps
+## Next Steps
 
 A number of follow up studies can be conducted to further quantify bias across news sources. Examples:
 
