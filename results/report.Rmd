@@ -68,20 +68,16 @@ sources, which can help equip them with greater understanding and critical
 examination of news consumption. In the same way, selective news consumption could
 potentially lead to less stress impact due to news sources.
 
-From a policy perspective, greater impact and studies could be done to influence transparency$^{6/}$ in reporting across the news companies.
-In order to make inform decisions on which news sources to read. 
-
-*Source: https://www.americanpressinstitute.org/journalism-essentials/bias-objectivity/understanding-bias/*
+From a policy perspective, greater impact and studies could be done to influence greater transparency$^{6/}$ in reporting across the news companies.
 
 # Data
 
 ## Data Sourcing
 
-In order to choose major news sources to analyze, the figure belowcreated by 
+In order to choose major news sources to analyze, the figure below created by 
 the Pew Research Center shows where on the US political spectrum various 
-news companies fall. In order to get a mix of sources across the conservative and 
-liberal spectrum, while balancing limitations of computing resources, the following 
-news sources were used to procure a dataset. 
+news companies fall. In order to get a mix of sources across the conservative and liberal spectrum, while balancing limitations of computing resources, API 
+availabilities, and web scraping feasibility, the following news sources were used to procure a dataset. 
 
 ![Source: Pew Research Center](../figures/PJ_14.10.21_mediaPolarization-08.png)
 
@@ -96,13 +92,12 @@ news sources were used to procure a dataset.
 - Reuters
 
 Leveraging the **[GNews API](https://gnewsapi.net/)**, news article data related 
-to COVID-19 were pulled for the following major news sources noted in the 
+to COVID-19 were pulled for the major news sources noted in the 
 previous section (filtered to US articles).
-### GNews API
 
 A total of 5,360 articles between the time period 1/1/2020 - 4/9/2021 were called from 
 the API (20 articles per week and news source, for 67 weeks). The API call returned 
-3,454 records for article-related data. Below are some of the key fields from the 
+3,454 records for article-related data (due to data and REST API query limitations). Below are some of the key fields from the 
 API call, with an example:
 
 - ```article url```: https://www.cnn.com/2021/02/08/health/covid-19-antigen-tests-states-cnn-analysis/index.html
