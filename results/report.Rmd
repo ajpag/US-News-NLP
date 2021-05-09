@@ -18,7 +18,7 @@ library(knitr)
 library(readr)
 
 knitr::opts_chunk$set(fig.pos = "!H", out.extra = "")
-model_results <- "../figures/gbm_results.csv"
+model_results <- "../figures/model_results.csv"
 ```
 
 

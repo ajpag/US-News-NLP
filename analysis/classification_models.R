@@ -1,7 +1,7 @@
 # not run
-# setwd("C:/Users/apagta950/Documents/NYU/Courses/Spring 2021/MDML/Final Project/US-News-NLP/analysis")
+setwd("C:/Users/apagta950/Documents/NYU/Courses/Spring 2021/MDML/Final Project/US-News-NLP/analysis")
 
-library(dplyr)
+# library(dplyr)
 library(caret) # Gradient Boosting Machine  
 library(gbm) # need for feature importance
 library(nnet) # multinomial regression
@@ -1386,6 +1386,20 @@ svm_results = data.frame(model = c("svm_all", "svm_topic", "svm_keywords", "svm_
 
 ########## Write results ############
 
+results <- bind_rows(lr_rf_results, svm_results, gbm_results, nb_results) %>% 
+  arrange(desc(test_accuracy))
+
 # write results
-write_csv(bind_rows(lr_rf_results, svm_results, gbm_results, nb_results) %>% 
-            arrange(desc(test_accuracy)), "../figures/model_results.csv")
+write_csv(results, "../figures/model_results.csv")
+
+# plot results
+p_results <- results %>% 
+  pivot_longer(cols = c(test_accuracy, auc), names_to = "metric") %>% 
+  ggplot(aes(x = reorder(model, value), y = value)) + 
+  geom_bar(stat = "identity", position = "dodge") + 
+  facet_wrap(~metric) +
+  coord_flip() + 
+  labs(title = "Model Results")
+
+ggsave(plot = p_results, file = paste0(figures_dir, "model_results.png"),
+       width = 8, height = 4)
