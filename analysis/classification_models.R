@@ -281,38 +281,41 @@ write_csv(gbm_results, paste0(figures_dir, "gbm_results.csv"))
 ######################################################
 
 #================= 2. logistic regression =================
-formula_all <- 'articles.source_name ~ prob_topic_1 + prob_topic_2 + prob_topic_3 + prob_topic_4 + prob_topic_5 + prob_topic_6 + prob_topic_7 +avg_sentiment_afinn_word + avg_sentiment_afinn_sent + published_hour_et + published_dow +Biden_sentiment + Trump_sentiment + stock_market_sentiment + financial_sentiment + death_sentiment + pandemic_sentiment + disease_sentiment + illness_sentiment + covid19 + scientist + republican+ democrat + repub_words + demo_words + div_words1 + div_words2 + div_words3 + div_words4 + div_words5'
+formula_all <- 'articles.source_name ~ prob_topic_1 + prob_topic_2 + prob_topic_3 + prob_topic_4 + prob_topic_5 + prob_topic_6 + prob_topic_7 +avg_sentiment_afinn_word + + published_dow +Biden_sentiment + Trump_sentiment + stock_market_sentiment + financial_sentiment + death_sentiment + pandemic_sentiment + disease_sentiment + illness_sentiment + covid19 + scientist + republican+ democrat + repub_words + demo_words + div_words1 + div_words2 + div_words3 + div_words4 + div_words5'
 formula_topics <- 'articles.source_name ~ prob_topic_1 + prob_topic_2 + prob_topic_3 + prob_topic_4 + prob_topic_5 + prob_topic_6 + prob_topic_7'
 formula_keywords <- 'articles.source_name ~ Biden_sentiment + Trump_sentiment + stock_market_sentiment + financial_sentiment + death_sentiment + pandemic_sentiment + disease_sentiment + illness_sentiment + published_dow'
 formula_paper_topics <- 'articles.source_name ~ covid19 + scientist + republican+ democrat + repub_words + demo_words + div_words1 + div_words2 + div_words3 + div_words4 + div_words5'
 
 # Fit the model
-model1 <- nnet::multinom(formula_all, data = train)
-model2 <- nnet::multinom(formula_topics, data = train)
-model3 <- nnet::multinom(formula_keywords, data = train)
-model4 <- nnet::multinom(formula_paper_topics, data = train)
+model1 <- nnet::multinom(formula_all, data = articles_train)
+model2 <- nnet::multinom(formula_topics, data = articles_train)
+model3 <- nnet::multinom(formula_keywords, data = articles_train)
+model4 <- nnet::multinom(formula_paper_topics, data = articles_train)
 
 # Make predictions
-predicted.classes1 <- predict(model1, newdata=test) #, type="prob"
-predicted.classes2 <- predict(model2, newdata=test)
-predicted.classes3 <- predict(model3, newdata=test)
-predicted.classes4 <- predict(model4, newdata=test)
+predicted.classes1 <- predict(model1, newdata=articles_test) #, type="prob"
+predicted.classes2 <- predict(model2, newdata=articles_test)
+predicted.classes3 <- predict(model3, newdata=articles_test)
+predicted.classes4 <- predict(model4, newdata=articles_test)
 
 # confusion matrix
 #table(predicted.classes , test$articles.source_name )
 # confusionMatrix(factor(predicted.classes), factor(test$articles.source_name) )
 
 # Model accuracy (overall)
-lr_all_acc <- length( articles_test$articles.source_name[predicted.classes==articles_test$articles.source_name] ) / length(articles_test$articles.source_name )
+lr_all_acc <- length( articles_test$articles.source_name[predicted.classes1==articles_test$articles.source_name] ) / length(articles_test$articles.source_name )
+lr_topic_acc <- length( articles_test$articles.source_name[predicted.classes2==articles_test$articles.source_name] ) / length(articles_test$articles.source_name )
+lr_keywords_acc <- length( articles_test$articles.source_name[predicted.classes3==articles_test$articles.source_name] ) / length(articles_test$articles.source_name )
+lr_paper_topic_acc <- length( articles_test$articles.source_name[predicted.classes4==articles_test$articles.source_name] ) / length(articles_test$articles.source_name )
 
 # AUC
 predicted.classes <- as.ordered(predicted.classes)
-predicted.classes.all <- predict(model, newdata=articles_test, type="prob")
+predicted.classes.all <- predict(model1, newdata=articles_test, type="prob")
 
-predicted.classes.1 <- predict(model1, newdata=test, type="prob")
-predicted.classes.2 <- predict(model2, newdata=test, type="prob")
-predicted.classes.3 <- predict(model3, newdata=test, type="prob")
-predicted.classes.4 <- predict(model4, newdata=test, type="prob")
+predicted.classes.1 <- predict(model1, newdata=articles_test, type="prob")
+predicted.classes.2 <- predict(model2, newdata=articles_test, type="prob")
+predicted.classes.3 <- predict(model3, newdata=articles_test, type="prob")
+predicted.classes.4 <- predict(model4, newdata=articles_test, type="prob")
 
 # predicted.classes.bbc <- as.numeric( predict(model, newdata=articles_test, type="prob")[,1] ) # bbc
 # predicted.classes.cnn <- as.numeric(predict(model, newdata=articles_test, type="prob")[,2] )  # cnn
@@ -320,20 +323,20 @@ predicted.classes.4 <- predict(model4, newdata=test, type="prob")
 # predicted.classes.wsj <- as.numeric(predict(model, newdata=articles_test, type="prob")[,4] )  # wsj
 # print
 lr_all_auc <- multiclass.roc(articles_test$articles.source_name, predicted.classes.all)$auc[1]
-model_all <- multiclass.roc(test$articles.source_name, predicted.classes.1)$auc[1]
-model_topics <- multiclass.roc(test$articles.source_name, predicted.classes.2)$auc[1]
-model_keywords<- multiclass.roc(test$articles.source_name, predicted.classes.3)$auc[1]
-model_paper_keywords <- multiclass.roc(test$articles.source_name, predicted.classes.4)$auc[1]
+# model_all <- multiclass.roc(articles_test$articles.source_name, predicted.classes.1)$auc[1]
+lr_model_topics_auc <- multiclass.roc(articles_test$articles.source_name, predicted.classes.2)$auc[1]
+lr_model_keywords_auc<- multiclass.roc(articles_test$articles.source_name, predicted.classes.3)$auc[1]
+lr_model_paper_keywords_auc <- multiclass.roc(articles_test$articles.source_name, predicted.classes.4)$auc[1]
 # bbc <- multiclass.roc(articles_test$articles.source_name, predicted.classes.bbc)$auc[1]
 # cnn <- multiclass.roc(articles_test$articles.source_name, predicted.classes.cnn)$auc[1]
 # re <- multiclass.roc(articles_test$articles.source_name, predicted.classes.re)$auc[1]
 # wsj <- multiclass.roc(articles_test$articles.source_name, predicted.classes.wsj)$auc[1]
 # print result
 paste("AUC of all is:", lr_all_auc)
-paste("AUC of using all feature is:", model_all)
-paste("AUC of using topic featuresis:", model_topics)
-paste("AUC of using keywords feature is:", model_keywords)
-paste("AUC of using paper keywords feature is:", model_paper_keywords)
+# paste("AUC of using all feature is:", model_all)
+paste("AUC of using topic featuresis:", lr_model_topics_auc)
+paste("AUC of using keywords feature is:", lr_model_keywords_auc)
+paste("AUC of using paper keywords feature is:", lr_model_paper_keywords)
 # paste("AUC of BBC is:", bbc)
 # paste("AUC of CNN is:", cnn)
 # paste("AUC of Reuters is:", re)
@@ -343,26 +346,26 @@ paste("AUC of using paper keywords feature is:", model_paper_keywords)
 ######################################################
 #          prediction : Random Forest
 ######################################################
-formula1 <- 'articles.source_name ~ prob_topic_1 + prob_topic_2 + prob_topic_3 + prob_topic_4 + prob_topic_5 + prob_topic_6 + prob_topic_7 +avg_sentiment_afinn_word + avg_sentiment_afinn_sent + published_hour_et +Biden_sentiment + Trump_sentiment + stock_market_sentiment + financial_sentiment + death_sentiment + pandemic_sentiment + disease_sentiment + illness_sentiment + covid19 + scientist + republican+ democrat + repub_words + demo_words + div_words1 + div_words2 + div_words3 + div_words4 + div_words5'
+formula1 <- 'articles.source_name ~ prob_topic_1 + prob_topic_2 + prob_topic_3 + prob_topic_4 + prob_topic_5 + prob_topic_6 + prob_topic_7 +avg_sentiment_afinn_word + published_dow +Biden_sentiment + Trump_sentiment + stock_market_sentiment + financial_sentiment + death_sentiment + pandemic_sentiment + disease_sentiment + illness_sentiment + covid19 + scientist + republican+ democrat + repub_words + demo_words + div_words1 + div_words2 + div_words3 + div_words4 + div_words5'
 
 rf_model1 <- ranger(formula = formula_all, num.trees=1000,
-                    respect.unordered.factors=T, probability=T, data=train)
+                    respect.unordered.factors=T, probability=T, data=articles_train)
 rf_model2 <- ranger(formula = formula_topics, num.trees=1000,
-                    respect.unordered.factors=T, probability=T, data=train)
+                    respect.unordered.factors=T, probability=T, data=articles_train)
 rf_model3 <- ranger(formula = formula_keywords, num.trees=1000,
-                    respect.unordered.factors=T, probability=T, data=train)
+                    respect.unordered.factors=T, probability=T, data=articles_train)
 rf_model4 <- ranger(formula = formula_paper_topics, num.trees=1000,
-                    respect.unordered.factors=T, probability=T, data=train)
+                    respect.unordered.factors=T, probability=T, data=articles_train)
     
 # Predict the testing set with the trained model
-predictions2.1 <- predict(rf_model1, test, type ="response")
-predictions2.2 <- predict(rf_model2, test, type ="response")
-predictions2.3 <- predict(rf_model3, test, type ="response")
-predictions2.4 <- predict(rf_model4, test, type ="response")
-probabilities1 <- as.data.frame(predict(rf_model1, data=test)$predictions)
-probabilities2 <- as.data.frame(predict(rf_model2, data=test)$predictions)
-probabilities3 <- as.data.frame(predict(rf_model3, data=test)$predictions)
-probabilities4 <- as.data.frame(predict(rf_model4, data=test)$predictions)
+predictions2.1 <- predict(rf_model1, articles_test, type ="response")
+predictions2.2 <- predict(rf_model2, articles_test, type ="response")
+predictions2.3 <- predict(rf_model3, articles_test, type ="response")
+predictions2.4 <- predict(rf_model4, articles_test, type ="response")
+probabilities1 <- as.data.frame(predict(rf_model1, data=articles_test)$predictions)
+probabilities2 <- as.data.frame(predict(rf_model2, data=articles_test)$predictions)
+probabilities3 <- as.data.frame(predict(rf_model3, data=articles_test)$predictions)
+probabilities4 <- as.data.frame(predict(rf_model4, data=articles_test)$predictions)
 
 #pre-process
 #pre-process
@@ -403,37 +406,45 @@ predict_class3$class <- as.factor(predict_class3$class)
 predict_class4$class <- as.factor(predict_class4$class)
 
 # confusion matrix
-rf_cm <- confusionMatrix(table(articles_test$articles.source_name, predict_class$class))$table
+rf_all_cm <- confusionMatrix(table(articles_test$articles.source_name, predict_class1$class))$table
+rf_topic_cm <- confusionMatrix(table(articles_test$articles.source_name, predict_class2$class))$table
+rf_keywords_cm <- confusionMatrix(table(articles_test$articles.source_name, predict_class3$class))$table
+rf_paper_cm <- confusionMatrix(table(articles_test$articles.source_name, predict_class4$class))$table
+
 
 rf_all_acc <- sum(diag(rf_cm)) / sum(rf_cm)
+rf_topic_acc <- sum(diag(rf_topic_cm)) / sum(rf_topic_cm)
+rf_keywords_acc <- sum(diag(rf_keywords_cm)) / sum(rf_keywords_cm)
+rf_paper_acc <- sum(diag(rf_paper_cm)) / sum(rf_paper_cm)
+
 
 # prediction and performance report
 modeling_data_rf <- articles_test %>% 
-  mutate(probability = probabilities[,2],
+  mutate(probability = probabilities1[,2],
          #predict = max.col(probabilities)-1
-         predict = predict_class$class         )
+         predict = predict_class1$class         )
 modeling_data_rf <- as.data.frame(modeling_data_rf)
 
 # AUC
-predicted.classes.all <- probabilities
+# predicted.classes.all <- probabilities
 predicted.classes.all <- probabilities1
 predicted.classes.2 <- probabilities2
 predicted.classes.3 <- probabilities3
 predicted.classes.4 <- probabilities4
 
 rf_all_auc <- multiclass.roc(articles_test$articles.source_name, predicted.classes.all)$auc[1]
-all.rf <- multiclass.roc(test$articles.source_name, predicted.classes.all)$auc[1]
-topic.rf <- multiclass.roc(test$articles.source_name, predicted.classes.2)$auc[1]
-keyword.rf <- multiclass.roc(test$articles.source_name, predicted.classes.3)$auc[1]
-paper_key.rf <- multiclass.roc(test$articles.source_name, predicted.classes.4)$auc[1]
+# rf_all_auc <- multiclass.roc(articles_test$articles.source_name, predicted.classes.all)$auc[1]
+rf_topic_auc <- multiclass.roc(articles_test$articles.source_name, predicted.classes.2)$auc[1]
+rf_keyword_auc <- multiclass.roc(articles_test$articles.source_name, predicted.classes.3)$auc[1]
+rf_paper_key_auc <- multiclass.roc(articles_test$articles.source_name, predicted.classes.4)$auc[1]
 
 
 # print result
 paste("AUC of all (RF) is:", rf_all_auc)
-paste("AUC of all (RF) is:", all.rf)
-paste("AUC of topic (RF) is:", topic.rf)
-paste("AUC of keyword (RF) is:", keyword.rf)
-paste("AUC of paper keywords (RF) is:", paper_key.rf)
+paste("AUC of all (RF) is:", rf_all_acc)
+paste("AUC of topic (RF) is:", rf_topic_auc)
+paste("AUC of keyword (RF) is:", rf_keyword_auc)
+paste("AUC of paper keywords (RF) is:", rf_paper_key_auc)
 
 
 
@@ -509,14 +520,32 @@ paste("AUC of overall is:", lr_pol_all_auc)
 # paste("AUC of liberal is:", lib)
 # paste("AUC of middle is:", mid)
 
+
 # store results in dataframe
-lr_rf_results <- data.frame(model = c("logreg_all", "rf_all", "logreg_all_political"),
-                            test_accuracy = round(c(lr_all_acc, rf_all_acc, lr_pol_acc), 2),
-                            auc = round(c(lr_all_auc, rf_all_auc, lr_pol_all_auc), 2))
+lr_rf_results <- data.frame(model = c("logreg_all", "logreg_topic", "logreg_keyword",
+                                      "logreg_paper", "rf_all", "rf_topic", "rf_keyword",
+                                      "rf_paper", "logreg_all_political"),
+                            test_accuracy = round(c(lr_all_acc,lr_topic_acc, lr_keywords_acc,
+                                                    lr_paper_topic_acc,
+                                                    rf_all_acc, rf_topic_acc, rf_keywords_acc,
+                                                    rf_paper_acc,
+                                                    lr_pol_acc), 2),
+                            auc = round(c(lr_all_auc, lr_model_topics_auc, lr_model_keywords_auc,
+                                          lr_model_paper_keywords_auc,
+                                          rf_all_auc, rf_topic_auc, rf_keywords_acc,
+                                          rf_paper_key_auc,
+                                          lr_pol_all_auc), 2))
 
 #==================================================
 
 gbm_results <- gbm_results %>% select(-train_accuracy)
+
+######################## Naive Bayes ###########################################
+
+
+
+######################## Supprot Vector Machine ################################
+
 
 # write results
 write_csv(bind_rows(lr_rf_results, gbm_results), "../figures/model_results.csv")
