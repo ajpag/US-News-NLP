@@ -61,9 +61,9 @@ Key fields pulled from the GNews API and web scraping of full article text:
 
 Key visualizations of the data are shown below.
 
-![words_per_article](https://user-images.githubusercontent.com/60185641/117392236-a4b14680-aebf-11eb-8894-5153134c8c3a.png)
-![top_words_with_sentiment](https://user-images.githubusercontent.com/60185641/117392241-a7ac3700-aebf-11eb-8d57-98765556cd92.png)
-![sentence_afinn_sentiment_week](https://user-images.githubusercontent.com/60185641/117392253-ada21800-aebf-11eb-8639-be4ef769ff40.png)
+![words_per_article](https://user-images.githubusercontent.com/60185641/117580019-cda22900-b0c3-11eb-804a-e8f375804db3.png)
+![top_words_with_sentiment](https://user-images.githubusercontent.com/60185641/117580022-d266dd00-b0c3-11eb-8cc3-f3c7ce6a25ca.png)
+![sentence_afinn_sentiment_week](https://user-images.githubusercontent.com/60185641/117580027-d85cbe00-b0c3-11eb-883d-38ee9567057b.png)
 
 
 ## Feature Engineering
@@ -84,6 +84,10 @@ The p-values were < 1% for each of these methods, suggesting there are significa
 - Topic Probabilities
 - Average Afinn sentiment (sentence)
 - Word count
+
+![topic_probabilities_news_source](https://user-images.githubusercontent.com/60185641/117580042-ead6f780-b0c3-11eb-92ae-3736bde75dca.png)
+![sentence_afinn_sentiment](https://user-images.githubusercontent.com/60185641/117580071-04783f00-b0c4-11eb-94ce-8bf273fb66b1.png)
+![avg_word_count](https://user-images.githubusercontent.com/60185641/117580055-f4f8f600-b0c3-11eb-838d-57d1fc9afacd.png)
 
 ## Classification Modeling
 
