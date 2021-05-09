@@ -329,6 +329,7 @@ kable(as.data.frame(read_csv(model_results)),
       caption = "Classification Model Results")
 ```
 
+![Model Results](../figures/model_results.png)
 
 # Results
 
