@@ -65,7 +65,7 @@ mod0_data <- mod0_data[complete.cases(mod0_data), ]
 split_size_mod0 <-  floor(nrow(mod0_data)*.80) #80% train dataset
 
 mod0_train <- mod0_data %>%
-  slice(1:split_size_mod1) 
+  slice(1:split_size_mod0) 
 
 mod0_test <- mod0_data %>%
   slice(split_size_mod0 + 1:n())
