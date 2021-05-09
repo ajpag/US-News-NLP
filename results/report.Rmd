@@ -39,19 +39,21 @@ media forums, and major news companies. Major news companies in particular carry
 influence based on the audiences it can reach. For example, Fox News Channel 
 averaged 2.5 million primetime viewers (8pm - 11pm) in February 2021, and CNN 
 averaged 1.7 million during the same time period.
+
 *Source: https://www.foxnews.com/media/fox-news-finishes-february-most-watched-primetime-network*.
 
-According to King G. & et. al., "...the exposure to news media causes Americans to take public
-stands on specific issues, join national policy conversation, and express themselves publicly".
-Furthermore, Holman E. & et. al, suggest a correlation between raising level of stress and 
+According to King G. & et. al., *"...the exposure to news media causes Americans to take public stands on specific issues, join national policy conversation, and express themselves publicly"*. Furthermore, Holman E. & et. al, suggest a correlation between raising level of stress and  
 prolonged media exposure to "community-based traumas (e.g., mass shootings, natural disasters". 
 Recently, Holman has suggested the COVID-19 is a particular case to study; since multiple stressors
-have arose at the same time. To mention some: financial crisis, elections, health crisis, among others.
-It can be said that news can influence the decisions, general views and metal health of Americans.
-*Source: https://science.sciencemag.org/content/358/6364/776
-*Source: https://www.pnas.org/content/111/1/93
-*Source: https://www.universityofcalifornia.edu/news/how-and-why-coronavirus-changing-our-sense-time
-*Source: https://www.bbc.com/future/article/20200512-how-the-news-changes-the-way-we-think-and-behave
+have arose at the same time. To mention some: financial crisis, elections, health crisis, among others.It can be said that news can influence the decisions, general views and metal health of Americans.
+
+*Source: https://science.sciencemag.org/content/358/6364/776*
+
+*Source: https://www.pnas.org/content/111/1/93*
+
+*Source: https://www.universityofcalifornia.edu/news/how-and-why-coronavirus-changing-our-sense-time*
+
+  *Source: https://www.bbc.com/future/article/20200512-how-the-news-changes-the-way-we-think-and-behave*
 
 
 The large influence that major news companies have on how information is commmunicated to its audiences, and 
@@ -74,18 +76,12 @@ predictive power of these patterns to identify the news source, this study can b
 useful for a number of cases. For example, understanding biases in article text 
 can help the reader understand inherent idealogical leanings towards certain news 
 sources, which can help equip them with greater understanding and critical 
-examination of news consumption. #####In the same way, selective news consumption could
-potentially lead to less stress impact due to news sources.#####
+examination of news consumption. In the same way, selective news consumption could
+potentially lead to less stress impact due to news sources.
 
-From a policy perspective, greater impact and 
-studies could be conducted to place more standardized regulations in an effort 
-to influence more objective reporting. We acknowledge this second use case can 
-be difficult from business and philosophical perspectives, especially in relation 
-to the First Amendement of the US Constitution in relation to the freedom of speech.  
-###### I think this statement can be less extreme, such as just having transparency towards the bias that each news source could have...
-###### I like this article: https://www.americanpressinstitute.org/journalism-essentials/bias-objectivity/understanding-bias/ and this statement:
-###### What if journalists acknowledged that bias does exist, that it is built into the choices they make when deciding what to leave in and what to leave out? That bias is embedded in the culture and language of the society on which the journalist reports? And that “news judgment” does reflect the journalist’s background as well as the news organization’s mission and business model? 
-###### I think that acknowledging is a step to give information to the consumer when choosing which news to read ###########JTM
+From a policy perspective, greater impact and studies could be done to influence transparency in reporting across the news companies.
+
+*Source: https://www.americanpressinstitute.org/journalism-essentials/bias-objectivity/understanding-bias/*
 
 ## Methodology
 
@@ -146,13 +142,14 @@ highlights unique aspects web scraping each data source.
 
 ### BBC
 
+BBC news articles used different HTML structures based on each section. Hence, we have used keyword function in “Gnews API” to extract articles only in “news” tab. It allows to scrap all body text, but also advertisement as well as unnecessary information. As a result, it was necessary to remove irrelevant lines and words to prevent these features from affecting on our analysis.
 
 
 ### CNN
 
 There were two distinct HTML structures. One for the first sentence, and another 
 for the remainder of the article. Additional cleaning needed to be done to remove 
-the "(CNN)" and "(CNN Business)" text at the beginning of each article, as well as additional escape 
+the "(CNN)" and "(CNN Business)" text at the beginning of each article, as well as additional escape
 characters scattered throughout the article.
 
 ### Reuters
@@ -165,9 +162,15 @@ https://www.reuters.com/news/picture/coronavirus-outbreak-spreads-in-china-idUSR
 
 ### The Wall Street Journal
 
+Our original plan was to extract articles from conservative newspaper, “Fox news”. However, we have changed it to Wall Street Journal as “Fox news” updated their Terms of Use which strictly forbidden to use *“…any automated means, including "robots," "spiders," or "offline readers"…”*.One downside of using Wall Street Journal was that it is a subscribe-based website; it allows ordinary viewers to extract a fraction of articles. It explains the small amount of average word count per article comparing to other newspapers such as BBC or CNN.Similar to BBC, scraped body text contained lots of irrelevant information and it is removed with further cleaning process.
+
+
+
 # Exploratory Data Analysis
 
 ## Sentiment Analysis
+
+# Add reason for Afinn lexicon
 
 To better understand the data, sentiment analysis utilizing various lexicons were 
 explored. Key visualizations of the data are illustrated:
@@ -208,7 +211,7 @@ One feature was generated for each article:
 
 ## Keyword features
 
-As a baseline, keyword features based on the researchers' prior knowledge on the 
+As a baseline, keyword features based on the researchers' assumptions on the 
 following topics was used to generate average Afinn sentiment for articles. One 
 feature was generated for each term below (noted in quotes).
 
@@ -220,10 +223,15 @@ feature was generated for each term below (noted in quotes).
 
 ## Topic features from prior research
 
-Leveraging prior studies, the following features were generated by topic using 
-keyword. Specific keywords used for each topic can be found here:
+We have introduced several new features which has been defined and researched previous published papers to increase our model’s predictability:
 
-https://github.com/ajpag/US-News-NLP/blob/53faa3e31d901386b12ea0459586ac6bd0785f1e/analysis/feature_engineering_ap.R#L280
+- First paper by Hart, Chinn and Soroka  introduced a dictionary, which assembled major words with the most relevant vocabularies such as Covid-19, Scientist, Republican and Democrat, to explore politicization and polarization in pandemic news in the U.S. newspapers from March to May 2020. 
+
+- Second paper by Green et al demonstrated that absolute difference in the proportion of words used by political party using Tweet data from January to March 2020.
+
+-	Final paper by Schaeffer also shows the difference in views on various topic based on their political stands from January and Feb 2021.
+
+The new features will compute the frequency of these list of words used in each article. Since these features are not extracted nor inferred from our collected article data but rather the result from a broader analysis, we can expect that these features can enhance our model’s performance on the dataset that we did not use.
 
 Source: "Politicization and Polarization in COVID-19 News Coverage"
 https://journals.sagepub.com/doi/full/10.1177/1075547020950735
@@ -319,12 +327,6 @@ features:
 
 - All features
 
-```{r, echo=FALSE, warning=FALSE, message=FALSE}
-kable(as.data.frame(read_csv(model_results)),
-      caption = "Classification Model Results")
-```
-
-![Model Results](../figures/model_results.png)
 
 # Results
 
@@ -332,12 +334,27 @@ kable(as.data.frame(read_csv(model_results)),
 
 ###### Maybe we could divide this section in 4 paragraphs ###### JTM
 ###### Paragraph 1: There is different patterns accross news sources chi-sq ###### JTM
-###### Paragraph 2: Summary of the results of all the models ###### JTM
-###### Paragraph 3: Explain why we think the best algorithm is working and why the least one is performing that way ###### JTM
-###### Paragraph 4: Follow-up analysis: WSJ negative sentiment associated with stock marcket, Add information of more conservative sources, expand news without COVID-19 filter? ###### JTM
+[Andrew]
 
 
-## Limitations:
+Of all the models we ran, the random forest using all features performed the best (90% accuracy, 
+98%). The models that performed least favorably were Naive Bayes and Support Vector Machine. 
+The random forest model performed the best because it is a non-parametric model without strong 
+assumptions. Since the news sources have inherent topics they are more likely to write about, such as business for WSJ, the random forest can model these patterns more strongly vs. other models such 
+as logistic regression.
+
+Naive Bayes and Support Vector Machine did not perform well for a number of reasons:
+
+- Strong assumptions: Naive Bayes assumes independence of features, which is not the case in our data
+
+- Binary vs. Multi-class predictions: The two models are better suited for binary classifications, 
+as opposed to multi-class problems
+
+- Boundary splitting: Naive Bayes and SVM perform better when the data structure naturally splits 
+the data to accurately classify the news source. Since the data does not have clear patterns that 
+these two algorithms can split the data, it does not perform as well.
+
+### Limitations:
 - Selection bias in news articles analyzed: Due to legal 
 restrictions, more conservative news sources, such as Fox News, were not scraped.
 Also due to legal restrictions, the articles of The Wall Street Journal were not 
@@ -360,3 +377,39 @@ Parsed sentence(s)
 - ```"The manager's decision to send Ms."```
 
 - ```"Coleman home for wearing the headscarf was due to a lack of training," Warren said."```
+
+-	Calculating sentiment scores from news articles to predict the publisher may not be an effective mechanism. Our research question hypothesized that the average sentiment of articles from each newspaper on a single phenomenon is not equal. It is true that each newspaper has its own perspectives in general. However, it is difficult to detect and to measure these patterns based on each article’s sentiment; news articles are mostly written with an objective and logical tone. It would be more comprehensible if we focus on the headline of the articles  or data from social network service such as Facebook or Twitter as they are more likely to include emotional words. In this paper, the researchers used machine learning models that we used to predict three major sentiments based on Twitter data with a higher accuracy.  
+
+-	Another issue is related to newspaper’s several differences in their nature. Firstly, Wall Street Journal is a newspaper specialized in business and economic issues, unlike BBC or CNN newspapers, which cover general topics. Moreover, Wall Street Journal and CNN are based on the United States whereas Reuters and BBC News based in the United Kingdom. Finally, BBC and CNN are regarded as broadcast news sites which implies that some articles are from press services such as Reuters and AP News . Inequality in different data sources may explain the topic modeling features carry the highest significance in prediction.
+
+-	Furthermore, the data size was limited. We have collected 700-800 articles per newspaper with covid-19 topic from 2020 to 2021. But since we did not specify the section and as a result there might be a tendency that the newspaper with a more articles related to culture, entertainment, and leisure have a more positive sentiment score. Since the number of articles was not large enough so that few positive sentiment article contents with irrelevant topic was enough to impact on the general sentiment analysis.  It is expected to reduce such noise by increasing data size or using more specific keyword as well as section types.
+
+-	Finally, negativity in newspaper may not be a good indicator to predict the news sources as major U.S. media outlet are more likely to have negative content comparing to any other major media outlet outside the U.S., according to the study done by B. Sacerdote, R Sehgal, and M Cook. As the study used covid-19 related newspaper from 2020 with 9.4 million news stores, it is worth to consider the finding when we interpret the sentiment analysis result.
+
+### Next Steps
+
+A number of follow up studies can be conducted to further quantify bias across news sources. Examples:
+
+- Further studies on how sentiment differs on subtopics across news sources, such as business 
+
+- Conduct longitudinal studies to see how consumers react to different news sources (A/B testing)
+
+- Incorporate more conservative news sources and compare bias
+
+- Increase number of articles
+
+- Add additonal sources to capture sentiment from consumers such as social media (YouTube, Twitter)
+
+- Engineer additional features, such as subsections articles belong to, e.g. (Politics, Business, Health, etc.)
+
+- Expand study to international sources to study how sentiment varies across countries
+
+*add labels to chart*
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+kable(as.data.frame(read_csv(model_results)),
+      caption = "Classification Model Results")
+```
+
+![Model Results](../figures/model_results.png)
+
+# Reference

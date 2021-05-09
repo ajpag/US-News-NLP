@@ -377,6 +377,17 @@ rf_model3 <- ranger(formula = formula_keywords, num.trees=1000,
 rf_model4 <- ranger(formula = formula_paper_topics, num.trees=1000,
                     respect.unordered.factors=T, probability=T, data=articles_train)
     
+# re-run to get feature importance
+ctrl <- trainControl(method = 'cv', number = 10, classProbs = TRUE,
+                      verboseIter = FALSE)
+rfFit <- train(articles.source_name ~ ., 
+               data = articles_train %>% 
+                 mutate(articles.source_name = as.factor(articles.source_name),
+                        published_dow = as.factor(published_dow)),
+               method = "ranger",
+               importance = "impurity", 
+               trControl = ctrl)
+
 # Predict the testing set with the trained model
 predictions2.1 <- predict(rf_model1, articles_test, type ="response")
 predictions2.2 <- predict(rf_model2, articles_test, type ="response")
