@@ -105,6 +105,14 @@ The p-values were < 1% for each of these methods, suggesting there are significa
 
 ## Classification Modeling
 
+For each algorithm listed below, four sets of models were run: a.) all features, b.) topic modeling features, c.) keyword features, d.) topic keyword features based on previous reseach papers:
+
+- Naive Bayes
+- Support Vector Machine
+- Logistic Regression
+- Random Forest
+- Gradient Boosting Machine
+
 Of all the models run, the random forest utilizing all features performed the best. Since the news sources have inherent topics they are more likely to write about, 
 such as business for WSJ, the random forest can model these patterns more strongly vs. other models such as logistic regression.
 
