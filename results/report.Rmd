@@ -330,12 +330,10 @@ features:
 
 # Results
 
-## Conclusion and Next Steps
+## Conclusion
 
-###### Maybe we could divide this section in 4 paragraphs ###### JTM
-###### Paragraph 1: There is different patterns accross news sources chi-sq ###### JTM
-[Andrew]
-
+Assessing bias using the chi-square test per section 7 suggests that there is strong evidence 
+that the article text varies significantly across news sources.
 
 Of all the models we ran, the random forest using all features performed the best (90% accuracy, 
 98%). The models that performed least favorably were Naive Bayes and Support Vector Machine. 
