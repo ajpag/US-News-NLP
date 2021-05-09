@@ -77,6 +77,17 @@ Engineered features using the following methodologies:
 - Keyword features based on prior studies from: Pew Research Center and SagePub
 - Topic Modeling average probabilities (Latent Dirichlet Allocation)
 
+LDA Topics (k = 7):
+Topic Number | Topic
+--- | --- |
+1 | Politics 
+2 | Reported cases and deaths
+3 | China / Wuhan
+4 | Outbreaks and infections by country
+5 | Patients and symptoms
+6 | Vaccines and research
+7 | Business and economy
+
 ## Measuring Bias Across News Sources
 
 Bias was measured by running chi-square tests on the following metrics, split by data source. 
