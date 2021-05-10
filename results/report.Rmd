@@ -170,8 +170,8 @@ would require further analysis outside of this study.
 
 The analysis was made with three sets of features in order to evaluate the bias and  different patterns 
 accross all the news sources. The purpose of each set of features was to explain a different dimension in 
-which the news sources might be differentiated. The three dimensions modeled were: topic content, sentiment
-based on key words, and vocabulary used among conservative and liberal sources. 
+which the news sources might be differentiated. The three dimensions modeled were: sentiment based on key words, 
+vocabulary previously studied in other papers, and topic content. 
 
 The analysis was split in two. First, the bias accross sources was measured with a chi-squared test in each 
 of the explained dimension. Second, the patterns were analyzed through different classification algorithms.
@@ -179,7 +179,7 @@ of the explained dimension. Second, the patterns were analyzed through different
 ## Feature Engineering
 
 In order to create features to build classification models for predicting a 
-news source based on text, the below features were generated.
+news source based on text and measure bias accross sources, the below features were generated.
 
 ### Average Sentiment and Word counts
 
@@ -193,7 +193,7 @@ One feature was generated for each article:
 ### Keyword features
 
 As a baseline, keyword features based on the researchers' assumptions on the 
-following topics was used to generate average Afinn sentiment for articles. One 
+following topics was used to generate average Afinn sentiment by word for each article. One 
 feature was generated for each term below (noted in quotes).
 
 - Politics: "Trump", "Biden"
@@ -204,15 +204,15 @@ feature was generated for each term below (noted in quotes).
 
 ### Topic features from prior research
 
-We have introduced several new features which has been defined and researched previous published papers to increase our model’s predictability:
+In order to evaluate existing literature on politization and polarization, features based on previous published papers were generated.
 
-- First paper by Hart, Chinn and Soroka[8] introduced a dictionary, which assembled major words with the most relevant vocabularies such as Covid-19, Scientist, Republican and Democrat, to explore politicization and polarization in pandemic news in the U.S. newspapers from March to May 2020. 
+- First paper by Hart, Chinn and Soroka$^{8/}$ introduced a dictionary, which assembled major words with the most relevant vocabularies such as Covid-19, Scientist, Republican and Democrat, to explore politicization and polarization in pandemic news in the U.S. newspapers from March to May 2020. 
 
-- Second paper by Green et al[9] demonstrated that absolute difference in the proportion of words used by political party using Tweet data from January to March 2020.
+- Second paper by Green et al$^{9/}$ demonstrated an absolute difference in the proportion of words used by political party using Tweet data from January to March 2020.
 
--	Final research by Schaeffer[10] also shows the difference in views on various topic based on their political stands from January and Feb 2021.
+-	Final research by Schaeffer$^{10/}$ also shows the difference in views on various topics based on their political stands from January and Feb 2021.
 
-The new features will compute the frequency of these list of words used in each article. Since these features are not extracted nor inferred from our collected article data but rather the result from a broader analysis, we can expect that these features can enhance our model’s performance on the dataset that we did not use.
+The new features computed the frequency of these list of words used in each article. Since these features are not extracted nor inferred from the collected article data but from a broader analysis, it can be expected that these features can enhance our model’s performance.
 
 Source: "Politicization and Polarization in COVID-19 News Coverage"
 https://journals.sagepub.com/doi/full/10.1177/1075547020950735
