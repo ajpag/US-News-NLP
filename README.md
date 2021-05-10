@@ -22,26 +22,47 @@ See ```/results/report.pdf``` for full analysis
 The means in which informaton is communicated with regards to the COVID-19 pandemic has had major
 influence on how we read and learn about the virus through a multitude of media outlets. Some of these
 major sources include television, YouTube, social media forums, and major news companies. Major news
-companies in particular carry large influence based on the audiences it can reach. For example, Fox News
+companies in particular carry large influence based on the audiences it can reach. For example1, Fox News
 Channel averaged 2.5 million primetime viewers (8pm - 11pm) in February 2021, and CNN averaged 1.7
-million during the same time period. Since major news companies have a large influence in how information is commmunicated to its audiences, 
-it is vital to quantify how different these sources are in relation to COVID-19 news. By measuring potential
-bias in relation to each source, this analysis examines how different major news sources are when reporting
-on COVID-19. It is also insightful to see if there are underlying patterns such as subtopics within COVID-19
-that are published more in news sources over others. This would help identify if there are patterns that are
+million during the same time period.
+
+According to King G.$^1$ & et. al., *“. . . the exposure to news media causes Americans to take public stands on
+specific issues, join national policy conversation, and express themselves publicly”. Furthermore, Holman E.3 &
+et. al, suggest a correlation between raising level of stress and prolonged media exposure to “community-based
+traumas (e.g., mass shootings, natural disasters)”*. Recently, Holman$^2$ has suggested that COVID-19 is a
+particular case to study since multiple stressors have arose at the same time. To mention a few stressors:
+financial crisis, elections, and health crisis, among others. It can be said that news can influence the decisions,
+general views and mental health of Americans.
+
+The large influence that major news companies have on how information is commmunicated to its audiences,
+and the impact news have on its readers makes it vital to quantify how different these sources are in relation
+to COVID-19 news. By measuring potential bias in relation to each source, this analysis examines how
+different major news sources are when reporting on COVID-19. It also explores underlying patterns such as
+subtopics within COVID-19 that are published more in news sources over others. And if these patterns are
 predictive of which news source the article came from.
+
+$^1$ King, G., Schneer, B., & White, A. (2017). How the news media activate public expression and influence
+national agendas. American Association for the Advancement of Science. Vol.358 (6364), pp.776-780.
+https://science.sciencemag.org/content/358/6364/776
+
+$^2$ 3 Holman, E., Garfin, D., & Silver, R. (2014). Media’s role in broadcasting acute stress following the Boston
+Marathon bombings. Proceedings of the National Academy of Sciences of the United States of America.
+Vol.111 (1), pp.93- 98. https://doi.org/10.1073/pnas.1316265110
+
 ### Research Question
 Are there underlying patterns in news articles related to COVID-19 across major news sources that are
 suggestive of bias, and are these patterns predictive of which news source it is likely from?
-### Use Cases
+### Applications
 By quantifying underlying differences on COVID-19 reporting and examining the predictive power of these
-patterns to identify the news source, this study can be useful for a number of use cases. For example,
-understanding biases in article text can help the reader understand inherent idealogical leanings towards
-certain news sources, which can help equip them with greater understanding and critical examination of
-news consumption. From a policy perspective, greater impact and studies could be conducted to place more
-standardized regulations in an effort to influence more objective reporting. We acknowledge this second
-use case can be difficult from business and philosophical perspectives, especially in relation to the First
-Amendement of the US Constitution in relation to the freedom of speech.
+patterns to identify the news source, this study can be useful for a number of cases. For example, understanding
+biases in article text can help the reader understand inherent ideological leanings towards certain news sources.
+This can help to equip them with greater understanding and critical examination of news consumption. In
+the same way, it can help readers to be more selective when choosing news sources and reduce their stress
+impact. 
+
+From a policy perspective, greater impact and studies could be done to influence greater transparency6 in
+reporting across the news companies. This can assist in making informed decisions on which news sources to
+read or be aware of the bias different sources might have.
 
 ## Data sourcing
 Pulled article urls and metadata from GNews API: https://gnewsapi.net/ (5,360 articles queried, 3,454 articles returned for the time period 1/1/2020 - 4/9/2021). Scraped full article text across the following news sources:
