@@ -26,10 +26,10 @@ companies in particular carry large influence based on the audiences it can reac
 Channel averaged 2.5 million primetime viewers (8pm - 11pm) in February 2021, and CNN averaged 1.7
 million during the same time period.
 
-According to King G.$^1$ & et. al., *“. . . the exposure to news media causes Americans to take public stands on
+According to King G.(1) & et. al., *“. . . the exposure to news media causes Americans to take public stands on
 specific issues, join national policy conversation, and express themselves publicly”. Furthermore, Holman E.3 &
 et. al, suggest a correlation between raising level of stress and prolonged media exposure to “community-based
-traumas (e.g., mass shootings, natural disasters)”*. Recently, Holman$^2$ has suggested that COVID-19 is a
+traumas (e.g., mass shootings, natural disasters)”*. Recently, Holman(2) has suggested that COVID-19 is a
 particular case to study since multiple stressors have arose at the same time. To mention a few stressors:
 financial crisis, elections, and health crisis, among others. It can be said that news can influence the decisions,
 general views and mental health of Americans.
@@ -41,11 +41,11 @@ different major news sources are when reporting on COVID-19. It also explores un
 subtopics within COVID-19 that are published more in news sources over others. And if these patterns are
 predictive of which news source the article came from.
 
-$^1$ King, G., Schneer, B., & White, A. (2017). How the news media activate public expression and influence
+(1) King, G., Schneer, B., & White, A. (2017). How the news media activate public expression and influence
 national agendas. American Association for the Advancement of Science. Vol.358 (6364), pp.776-780.
 https://science.sciencemag.org/content/358/6364/776
 
-$^2$ 3 Holman, E., Garfin, D., & Silver, R. (2014). Media’s role in broadcasting acute stress following the Boston
+(2) Holman, E., Garfin, D., & Silver, R. (2014). Media’s role in broadcasting acute stress following the Boston
 Marathon bombings. Proceedings of the National Academy of Sciences of the United States of America.
 Vol.111 (1), pp.93- 98. https://doi.org/10.1073/pnas.1316265110
 
