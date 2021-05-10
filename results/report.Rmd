@@ -219,13 +219,13 @@ In order to evaluate existing literature on politization and polarization, featu
 
 - Scientist: 'scientist', 'research', 'professor', 'health official', 'doctor','dr', 'health commission','expert', 'health leader', 'health service','health authorit', 'world health organization', 'centers for disease control and prevention', 'cdc', 'national institutes of health', 'health and human services', 'mayo clinic', 'johns hopkins' , 'fauci', 'birx', 'tedros'
 
-- Republican: "republican","gop", 'conservative', "trump", "pence", "mcconnell","white house","administration"
+- Republican: "republican", "gop", 'conservative', "trump", "pence", "mcconnell", "white house", "administration"
 
-- Democrat: "democrat","liberal","progressive","pelosi" ,"schumer", "biden", "obama","newsom" , "whitmer", "cuomo" , "biden," ,"sanders"
+- Democrat: "democrat", "liberal", "progressive", "pelosi" , "schumer", "biden", "obama", "newsom" , "whitmer", "cuomo" , "biden," , "sanders"
 
-- Republican Words: "coronavirus","china","businesses","realdonaltrump","relief","inittogether","small","together", "cares", "great"
+- Republican Words: "coronavirus", "china", "businesses", "realdonaltrump", "relief", "inittogether", "small", "together", "cares",  "great"
 
-- Democrat Words: "health","need","crisis","public","workers","trump","must","pandemic","care","leave","paid","familiesfirst","people","sick","emergency"
+- Democrat Words: "health", "need", "crisis", "public", "workers", "trump", "must", "pandemic", "care", "leave", "paid", "familiesfirst", "people", "sick", "emergency"
 
 Politically divisive national policies that needs to be addressed this year$^{10}$
 
