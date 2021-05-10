@@ -173,12 +173,15 @@ accross all the news sources. The purpose of each set of features was to explain
 which the news sources might be differentiated. The three dimensions modeled were: topic content, sentiment
 based on key words, and vocabulary used among conservative and liberal sources. 
 
-# Feature Engineering
+The analysis was split in two. First, the bias accross sources was measured with a chi-squared test in each 
+of the explained dimension. Second, the patterns were analyzed through different classification algorithms.
+
+## Feature Engineering
 
 In order to create features to build classification models for predicting a 
 news source based on text, the below features were generated.
 
-## Average Sentiment and Word counts
+### Average Sentiment and Word counts
 
 One feature was generated for each article:
 
@@ -187,7 +190,7 @@ One feature was generated for each article:
 - word count
 - word count with a sentiment
 
-## Keyword features
+### Keyword features
 
 As a baseline, keyword features based on the researchers' assumptions on the 
 following topics was used to generate average Afinn sentiment for articles. One 
@@ -199,7 +202,7 @@ feature was generated for each term below (noted in quotes).
 
 - Pandemic: "death", "pandemic", "disease", "illness"
 
-## Topic features from prior research
+### Topic features from prior research
 
 We have introduced several new features which has been defined and researched previous published papers to increase our model’s predictability:
 
@@ -229,7 +232,7 @@ https://advances.sciencemag.org/content/6/28/eabc2717
 
 - Democrat Words
 
-## Topic Modeling: Latent Dirichlet Allocation
+### Topic Modeling: Latent Dirichlet Allocation
 
 To assess commonalities in topics and article text across articles, Latend
 Dirichlet Allocation was applied. After experimentation, it was decided that 
@@ -253,7 +256,7 @@ kable(topics_, caption = "Topics from LDA")
 
 ![Topic Modeling: Top Words](../figures/lda_top_terms.png)
 
-# Measuring Bias Across News Sources
+## Measuring Bias Across News Sources
 
 Performing a chi-square test to measure differences in signifances across news sources,
 the following metrics were used. The chi-square test for all three metrics suggest 
@@ -264,7 +267,7 @@ knitr::kable(as.data.frame(read_csv("../figures/chi_sq_test_results.csv")),
       caption = "Chi Square Test Results")
 ```
 
-## Topic Probabilities
+### Topic Probabilities
 
 Following intuition, The Wall Street Journal has the highest average topic 
 probability for Business and Economy articles. It is interesting that Reuters has 
@@ -278,7 +281,7 @@ relation to average topic probabilities.
 
 ![Topic Modeling Probabilities](../figures/topic_probabilities_news_source.png)
 
-## Average Sentiment
+### Average Sentiment
 
 The chi-square test (*p < 1%*) indicates there are correlations across each news source 
 in relation to average Afinn sentiment.
@@ -287,7 +290,7 @@ in relation to average Afinn sentiment.
 
 ![Avg sentiment by sentence across articles](../figures/sentence_afinn_sentiment.png)
 
-## Word Count
+### Word Count
 
 
 The chi-square test (*p < 1%*) indicates there are correlations across each news source 
@@ -297,7 +300,7 @@ in relation to average word count.
 
 ![Avg word count across articles](../figures/avg_word_count.png)
 
-# Classification
+## Classification Algorithms
 
 For each of the 5 algorithms run, 4 models were run using different sets of 
 features:
