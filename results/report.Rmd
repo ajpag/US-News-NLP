@@ -312,9 +312,9 @@ features:
 
 - All features
 
-# Results
+# Conclusion
 
-## Conclusion
+## Results
 
 Assessing bias using the chi-square test per section 7 suggests that there is strong evidence 
 that the article text varies significantly in some dimensions across news sources.
