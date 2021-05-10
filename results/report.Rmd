@@ -301,7 +301,7 @@ in relation to average word count.
 
 ## Classification Algorithms
 
-In order to analyze the difference in patters across news sources, 5 algorithms were evaluated. Each algorithm, ran 4 models using different sets of 
+In order to analyze the difference in patterns across news sources, 5 algorithms were evaluated. Each algorithm, ran 4 models using different sets of 
 features:
 
 - **Topic Modeling features**: per section 5.1.3
@@ -317,20 +317,22 @@ features:
 ## Conclusion
 
 Assessing bias using the chi-square test per section 7 suggests that there is strong evidence 
-that the article text varies significantly across news sources.
+that the article text varies significantly in some dimensions across news sources.
 
 Of all the models we ran, the random forest using all features performed the best (90% accuracy, 
-98%). The models that performed least favorably were Naive Bayes and Support Vector Machine. 
+98% AUC). The models that performed least favorably were Naive Bayes and Support Vector Machine. 
 The random forest model performed the best because it is a non-parametric model without strong 
-assumptions. Since the news sources have inherent topics they are more likely to write about, such as business for WSJ, the random forest can model these patterns more strongly vs. other models such 
-as logistic regression.
+assumptions. Random Forest is designed as a sequence of decision trees that can classify accuratly 
+clasify "clusters" of characteristics. Since the news sources have inherent topics (i.e. Business in The Wall Street Journal) they are more likely to write about, 
+but have some degree of overlap, the random forest can model these patterns more effiently vs. other models such as logistic regression.  
 
 Naive Bayes and Support Vector Machine did not perform well for a number of reasons:
 
-- Strong assumptions: Naive Bayes assumes independence of features, which is not the case in our data
+- Strong assumptions: Naive Bayes assumes independence of features, which is not the case in our data.
 
 - Binary vs. Multi-class predictions: The two models are better suited for binary classifications, 
-as opposed to multi-class problems
+as opposed to multi-class problems. Even when it is possible to fit the models as binary predictions. 
+It is time consuming and there are other factors that need to be taken into account, such as rebalance of the train samples.
 
 - Boundary splitting: Naive Bayes and SVM perform better when the data structure naturally splits 
 the data to accurately classify the news source. Since the data does not have clear patterns that 
