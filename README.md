@@ -132,7 +132,10 @@ these two algorithms can split the data, it does not perform as well.
 
 
 ### Conclusion
+*Refer to /results/report.pdf*
 
 ### Limitations
+*Refer to /results/report.pdf*
 
 ### Next steps
+*Refer to /results/report.pdf*
