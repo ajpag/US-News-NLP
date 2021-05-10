@@ -1,11 +1,9 @@
 # US-News-NLP
 Natural language processing (sentiment analysis, topic modeling) and classification modeling on major news sources to measure bias on COVID-19 reporting.
 
+See ```/results/report.pdf``` for full analysis
+
 ## Directory Stucture
-```/results```: See ```report.pdf``` for full analysis
-
-Order (final batch script to be added):
-
 1.) ```/scripts```: 
 - ```gnews_ingest_cnn_reuters.R``` and ```Scrap_and_clean_BBC_WSJ.R```
 - ```combine_news_sources.R```
