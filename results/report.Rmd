@@ -206,14 +206,7 @@ feature was generated for each term below (noted in quotes).
 
 In order to evaluate existing literature on politization and polarization, features based on previous published papers were generated.
 
-- First paper by Hart, Chinn and Soroka$^{8}$ introduced a dictionary, which assembled major words with the most relevant vocabularies such as Covid-19, Scientist, Republican and Democrat, to explore politicization and polarization in pandemic news in the U.S. newspapers from March to May 2020. 
-
-- Second paper by Green et al$^{9}$ demonstrated an absolute difference in the proportion of words used by political party using Tweet data from January to March 2020.
-
--	Final research by Schaeffer$^{10}$ also shows the difference in views on various topics based on their political stands from January and Feb 2021.
-
-- The new features computed the frequency of these list of words used in each article. Since these features are not extracted nor inferred from the collected article data but from a broader analysis, it can be expected that these features can enhance our model’s performance.
-
+First paper by Hart, Chinn and Soroka$^{8}$ introduced a dictionary, which assembled major words with the most relevant vocabularies such as Covid-19, Scientist, Republican and Democrat, to explore politicization and polarization in pandemic news in the U.S. newspapers from March to May 2020. 
 
 - COVID 19: "corona", "coronavirus","covid"
 
@@ -223,9 +216,13 @@ In order to evaluate existing literature on politization and polarization, featu
 
 - Democrat: "democrat", "liberal", "progressive", "pelosi" , "schumer", "biden", "obama", "newsom" , "whitmer", "cuomo" , "biden," , "sanders"
 
+Second paper by Green et al$^{9}$ demonstrated an absolute difference in the proportion of words used by political party using Tweet data from January to March 2020.
+
 - Republican Words: "coronavirus", "china", "businesses", "realdonaltrump", "relief", "inittogether", "small", "together", "cares",  "great"
 
 - Democrat Words: "health", "need", "crisis", "public", "workers", "trump", "must", "pandemic", "care", "leave", "paid", "familiesfirst", "people", "sick", "emergency"
+
+Final research by Schaeffer$^{10}$ also shows the difference in views on various topics based on their political stands from January and Feb 2021.
 
 Politically divisive national policies that needs to be addressed this year$^{10}$
 
@@ -238,6 +235,10 @@ Politically divisive national policies that needs to be addressed this year$^{10
 - div_words4: "race","racial","racism","blm"
  
 - div_words5: "climate","climate change","global warming","global climate change"
+
+
+The new features computed the frequency of these list of words used in each article. Since these features are not extracted nor inferred from the collected article data but from a broader analysis, it can be expected that these features can enhance our model’s performance.
+
 
 
 ### Topic Modeling: Latent Dirichlet Allocation
