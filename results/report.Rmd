@@ -212,25 +212,33 @@ In order to evaluate existing literature on politization and polarization, featu
 
 -	Final research by Schaeffer$^{10}$ also shows the difference in views on various topics based on their political stands from January and Feb 2021.
 
-The new features computed the frequency of these list of words used in each article. Since these features are not extracted nor inferred from the collected article data but from a broader analysis, it can be expected that these features can enhance our model’s performance.
+- The new features computed the frequency of these list of words used in each article. Since these features are not extracted nor inferred from the collected article data but from a broader analysis, it can be expected that these features can enhance our model’s performance.
 
-Source: "Politicization and Polarization in COVID-19 News Coverage"
-https://journals.sagepub.com/doi/full/10.1177/1075547020950735
 
-- COVID 19
+- COVID 19: "corona", "coronavirus","covid"
 
-- Scientist
+- Scientist: 'scientist', 'research', 'professor', 'health official', 'doctor','dr', 'health commission','expert', 'health leader', 'health service','health authorit', 'world health organization', 'centers for disease control and prevention', 'cdc', 'national institutes of health', 'health and human services', 'mayo clinic', 'johns hopkins' , 'fauci', 'birx', 'tedros'
 
-- Republican
+- Republican: "republican","gop", 'conservative', "trump", "pence", "mcconnell","white house","administration"
 
-- Democrat
+- Democrat: "democrat","liberal","progressive","pelosi" ,"schumer", "biden", "obama","newsom" , "whitmer", "cuomo" , "biden," ,"sanders"
 
-Source: "Polarization in elite communication on the COVID-19 pandemic"
-https://advances.sciencemag.org/content/6/28/eabc2717
+- Republican Words: "coronavirus","china","businesses","realdonaltrump","relief","inittogether","small","together", "cares", "great"
 
-- Republican Words
+- Democrat Words: "health","need","crisis","public","workers","trump","must","pandemic","care","leave","paid","familiesfirst","people","sick","emergency"
 
-- Democrat Words
+Politically divisive national policies that needs to be addressed this year$^{10}$
+
+- div_words1: "social distance","gathering","avoid","large groups"
+
+- div_words2: "limit","carry-out","restaurant","restaurants"
+ 
+- div_words3: "closing","close","k-12","school"
+
+- div_words4: "race","racial","racism","blm"
+ 
+- div_words5: "climate","climate change","global warming","global climate change"
+
 
 ### Topic Modeling: Latent Dirichlet Allocation
 
