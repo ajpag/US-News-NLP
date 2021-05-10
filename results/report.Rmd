@@ -133,7 +133,7 @@ The original plan was to also extract articles from a conservative newspaper, su
 # Exploratory Data Analysis
 
 To better understand the data, sentiment analysis utilizing various lexicons were 
-explored. Of the lexicons available in ```tidytext::get_sentiments()``` the most informative one for this analysis was AFFIN lexicon. This provided a range of sentiments from negative to positive on a scale from -5 (most negative) to 5 (most positive). It also allows for more streamlined sentiment analysis, such as finding average sentiment. Key visualizations of the data are illustrated below.
+explored. Of the lexicons available in ```tidytext::get_sentiments()``` the most informative one for this analysis was Afinn lexicon. This provided a range of sentiments from negative to positive on a scale from -5 (most negative) to 5 (most positive). It also allows for more streamlined sentiment analysis, such as finding average sentiment. Key visualizations of the data are illustrated below.
 
 Excluding The Wall Street Journal, BBC had the lowest average words per article, whereas CNN had the most words per article.
 
@@ -143,6 +143,11 @@ https://www.cnn.com/2020/05/29/us/coronavirus-infected-in-hospital-callout-invs/
 Reuters has articles with short reports, such as:
 https://www.reuters.com/article/us-china-health-azerbaijan/azerbaijan-reports-first-case-of-coronavirus-ifax-idUKKCN20M1IR
 
+The two longest articles were written by CNN and The Wall Street Journal:
+
+- https://www.cnn.com/2020/11/30/asia/wuhan-china-covid-intl/index.html
+
+- https://www.wsj.com/articles/what-we-know-about-the-coronavirus-11579716128
 
 ![Words Per Article](../figures/words_per_article.png)
 
@@ -162,18 +167,16 @@ would require further analysis outside of this study.
 
 # Methodology
 
-The analysis was made with three sets of features in order to evaluate the bias and  different patterns 
-accross all the news sources. The purpose of each set of features was to explain a different dimension in 
-which the news sources might be differentiated. The three dimensions modeled were: sentiment based on key words, 
-vocabulary previously studied in other papers, and topic content. 
+In order to predict which news source the article was written by, classification modeling was performed. The analysis was done with three sets of features in order to evaluate the bias and different patterns 
+accross all the news sources. The purpose of each set of features is to explain a different dimension in 
+which the news sources might be differentiated. The three dimensions modeled were: 1.) sentiment based on key words,2.) vocabulary previously studied in other papers, and 3.) topics determined through topic modeling. 
 
-The analysis was split in two. First, the bias accross sources was measured with a chi-squared test in each 
-of the explained dimension. Second, the patterns were analyzed through different classification algorithms.
+The analysis was split in two parts. First, the bias across sources was measured with a chi-squared test in each of the explained dimensions. Second, the patterns were analyzed through various classification algorithms.
 
 ## Feature Engineering
 
 In order to create features to build classification models for predicting a 
-news source based on text and measure bias accross sources, the below features were generated.
+news source based on text and measure bias across sources, the below features were generated.
 
 ### Average Sentiment and Word counts
 
@@ -198,25 +201,26 @@ feature was generated for each term below (noted in quotes).
 
 ### Topic features from prior research
 
-In order to evaluate existing literature on politization and polarization, features based on previous published papers were generated.
+In order to evaluate existing literature on politicization and polarization, features based on previous published papers were generated.
 
-First paper by Hart, Chinn and Soroka$^{8}$ introduced a dictionary, which assembled major words with the most relevant vocabularies such as Covid-19, Scientist, Republican and Democrat, to explore politicization and polarization in pandemic news in the U.S. newspapers from March to May 2020. 
+The first paper used to generate features (Hart, Chinn and Soroka$^{8}$) introduced a dictionary, which assembled major words with the most relevant vocabularies such as Covid-19, Scientist, Republican and Democrat, to explore politicization and polarization in pandemic news in the U.S. newspapers from March 2020 to May 2020. 
 
 - COVID 19: "corona", "coronavirus","covid"
 
 - Scientist: 'scientist', 'research', 'professor', 'health official', 'doctor','dr', 'health commission','expert', 'health leader', 'health service','health authorit', 'world health organization', 'centers for disease control and prevention', 'cdc', 'national institutes of health', 'health and human services', 'mayo clinic', 'johns hopkins' , 'fauci', 'birx', 'tedros'
 
-- Republican: "republican", "gop", 'conservative', "trump", "pence", "mcconnell", "white house", "administration"
+- Republican: "republican", "gdp", 'conservative', "trump", "pence", "mcconnell", "white house", "administration"
 
 - Democrat: "democrat", "liberal", "progressive", "pelosi" , "schumer", "biden", "obama", "newsom" , "whitmer", "cuomo" , "biden," , "sanders"
 
-Second paper by Green et al$^{9}$ demonstrated an absolute difference in the proportion of words used by political party using Tweet data from January to March 2020.
+The second paper by Green et al$^{9}$ demonstrated an absolute difference in the proportion of words used by political party using Tweet data from January to March 2020.
 
-- Republican Words: "coronavirus", "china", "businesses", "realdonaltrump", "relief", "inittogether", "small", "together", "cares",  "great"
+- Republican Words: "coronavirus", "china", "businesses", "realdonaldtrump", "relief", "inittogether", "small", "together", "cares",  "great"
 
-- Democrat Words: "health", "need", "crisis", "public", "workers", "trump", "must", "pandemic", "care", "leave", "paid", "familiesfirst", "people", "sick", "emergency"
+- Democrat Words: "health", "need", "crisis", "public", "workers", "trump", "must", "pandemic", 
+"care", "leave", "paid", "familiesfirst", "people", "sick", "emergency"
 
-Final research by Schaeffer$^{10}$ also shows the difference in views on various topics based on their political stands from January and Feb 2021.
+The final research by Schaeffer$^{10}$ also shows the difference in views on various topics based on their political stands from January and Feb 2021.
 
 Politically divisive national policies that needs to be addressed this year$^{10}$
 
@@ -231,15 +235,14 @@ Politically divisive national policies that needs to be addressed this year$^{10
 - div_words5: "climate","climate change","global warming","global climate change"
 
 
-The new features computed the frequency of these list of words used in each article. Since these features are not extracted nor inferred from the collected article data but from a broader analysis, it can be expected that these features can enhance our model’s performance.
-
+The new features computed the frequency of these list of words used in each article. Since these features are not extracted nor inferred from the collected article data but from a broader analysis, it is plausible that these features can enhance our classification model performance.
 
 
 ### Topic Modeling: Latent Dirichlet Allocation
 
-To assess commonalities in topics and article text across articles, Latend
-Dirichlet Allocation was applied. After experimentation, it was decided that 
-7 topics was the optimal number, based on interpretabilty and overlap of topics. 
+To assess commonalities in topics and article text across articles, Latent
+Dirichlet Allocation was applied. After tuning, it was decided that 
+7 topics was the optimal number, based on interpretabilty and minimal overlap of topic words.
 The VEM method was used: 
 https://www.tidytextmining.com/topicmodeling.html
 
@@ -261,8 +264,7 @@ kable(topics_, caption = "Topics from LDA")
 
 ## Measuring Bias Across News Sources
 
-A chi-square test was perform, in two of the previous dimensions (topic probability and average sentiment), as well as the word count, to measure the signifance 
-of differences across news sources. The chi-square test for all three metrics suggest that there is indeed bias in article text across the news sources.
+To measure bias across news sources, chi-square tests were performed using two of the previous dimensions (topic probability and average sentiment), as well as the word count, to measure the significant differences. The chi-square tests for each of the three metrics suggest that there is indeed bias in article text across the news sources.
 
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}
 knitr::kable(as.data.frame(read_csv("../figures/chi_sq_test_results.csv")),
@@ -304,14 +306,13 @@ in relation to average word count.
 
 ## Classification Algorithms
 
-In order to analyze the difference in patterns across news sources, 5 algorithms were evaluated. Each algorithm, ran 4 models using different sets of 
-features:
+In order to analyze the difference in patterns across news sources, 5 algorithms were used. For rach algorithm, 4 models were run using different sets of features:
 
-- **Topic Modeling features**: per section 5.1.3
+- **Topic Modeling features**: per section 5.1.4
 
-- **Keyword features**: per section 5.1.1
+- **Keyword features**: per section 5.1.2
 
-- **Topic keyword features**: per section 5.1.2
+- **Topic keyword features**: per section 5.1.3
 
 - All features
 
@@ -319,27 +320,23 @@ features:
 
 ## Results
 
-Assessing bias using the chi-square test per section 7 suggests that there is strong evidence 
-that the article text varies significantly in some dimensions across news sources.
+Assessing bias using the chi-square test 7 suggests that there is strong evidence that the article text varies significantly across the news sources.
 
-Of all the models we ran, the random forest using all features performed the best (90% accuracy, 
-98% AUC). The models that performed least favorably were Naive Bayes and Support Vector Machine. 
+Of all the models that were run, the random forest using all features performed the best (90% accuracy, 98% AUC). The models that performed least favorably were Naive Bayes and Support Vector Machine. 
 The random forest model performed the best because it is a non-parametric model without strong 
-assumptions. Random Forest is designed as a sequence of decision trees that can classify accuratly 
-clasify "clusters" of characteristics. Since the news sources have inherent topics (i.e. Business in The Wall Street Journal) they are more likely to write about, 
-but have some degree of overlap, the random forest can model these patterns more effiently vs. other models such as logistic regression.  
+assumptions. Since the news sources have inherent topics (i.e. Business in The Wall Street Journal) they are more likely to write about, 
+but have some degree of overlap, the random forest can model these patterns better vs. other models such as logistic regression.  
 
 Naive Bayes and Support Vector Machine did not perform well for a number of reasons:
 
 - Strong assumptions: Naive Bayes assumes independence of features, which is not the case in our data.
 
 - Binary vs. Multi-class predictions: The two models are better suited for binary classifications, 
-as opposed to multi-class problems. Even when it is possible to fit the models as binary predictions. 
-It is time consuming and there are other factors that need to be taken into account, such as rebalance of the train samples.
+as opposed to multi-class problems. Even when it is possible to fit the models as binary predictions, it is time consuming and there are other factors that need to be taken into account, such as rebalancing of the training samples.
 
 - Boundary splitting: Naive Bayes and SVM perform better when the data structure naturally splits 
 the data to accurately classify the news source. Since the data does not have clear patterns that 
-these two algorithms can split the data, it does not perform as well.
+can split the data cleanly, it does not perform as well.
 
 The feature importance for the best model, Random Forest (all features), are 
 shown in the below figure. 
@@ -351,15 +348,14 @@ which best split Wall Street Journal from the other news sources.
 
 ## Implications
 
-It seems that, as other papers have suggested, there is some bias align in the news sources article. The bias in different dimensions generates patterns that can accurately predict the news sources of which a text is coming from. This information could potentially be used towards making more transparent the bias across news sources. It is also a foundation towards modeling sentiment across different topics to evaluate the impact in health issued. 
-
+It seems that, as other papers have suggested, there is indeed bias across news sources. The bias as shown through the modeling generates patterns that can accurately predict the news sources of which an article is coming from. This information could potentially be used towards making bias more transparent across news sources for the reader. It is also a foundation towards modeling sentiment across different topics to evaluate the impact in healh during the pandemic. 
 
 ## Limitations
 
 - Selection bias in news articles analyzed: Due to legal 
 restrictions, more conservative news sources, such as Fox News, were not scraped.
 Also due to legal restrictions, the articles of The Wall Street Journal were not 
-able to be fully scrapped. 
+able to be fully scraped. 
 
 - Context limitations in sentiment: The sentiment method used, Afinn, only parsed 
 words individually, and not into context of the entire article. So, the sentence 
