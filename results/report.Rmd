@@ -29,7 +29,7 @@ The full code and dataset can be found here: https://github.com/ajpag/US-News-NL
 
 All analysis was completed in R.
 
-# Research Question
+# Motivation
 
 ## Research Question
 
@@ -48,35 +48,30 @@ averaged 2.5 million primetime viewers (8pm - 11pm) in February 2021, and CNN
 averaged 1.7 million during the same time period.
 
 According to King G.$^{2}$ & et. al., *"...the exposure to news media causes Americans to take public stands on specific issues, join national policy conversation, and express themselves publicly"*. Furthermore, Holman E.$^{3}$ & et. al, suggest a correlation between raising level of stress and prolonged media exposure to "community-based traumas (e.g., mass shootings, natural disasters)". 
-Recently, Holman$^{4}$ has suggested the COVID-19 is a particular case to study; since multiple stressors
-have arose at the same time. To mention some: financial crisis, elections, health crisis, among others.It can be said that news can influence the decisions, general views and metal health of Americans.
+Recently, Holman$^{4}$ has suggested that COVID-19 is a particular case to study since multiple stressors
+have arose at the same time. To mention a few stressors: financial crisis, elections, and health crisis, among others. It can be said that news can influence the decisions, general views and mental health of Americans.
 
 The large influence that major news companies have on how information is commmunicated to its audiences, and 
 the impact news have on its readers makes it vital to quantify how different these sources are in relation 
-to COVID-19 news. By measuring potential bias in relation to each source, this analysis examines how different 
-major news sources are when reporting on COVID-19. It also explores underlying patterns 
-such as subtopics within COVID-19 that are published more in news sources over others. And if these patterns
-are predictive of which news source the article came from. 
+to COVID-19 news. By measuring potential bias in relation to each source, this analysis examines how different major news sources are when reporting on COVID-19. It also explores underlying patterns such as subtopics within COVID-19 that are published more in news sources over others. And if these patterns are predictive of which news source the article came from. 
 
 ## Applications
 
 By quantifying underlying differences on COVID-19 reporting and examining the 
 predictive power of these patterns to identify the news source, this study can be 
 useful for a number of cases. For example, understanding biases in article text 
-can help the reader understand inherent idealogical leanings towards certain news 
+can help the reader understand inherent ideological leanings towards certain news 
 sources. This can help to equip them with greater understanding and critical 
 examination of news consumption. In the same way, it can help readers to be more selective 
 when choosing news sources and reduce their stress impact.
 
-From a policy perspective, greater impact and studies could be done to influence greater transparency$^{6}$ in reporting across the news companies. In order to make inform decisions on which news sources to read or be aware of the bias different sources might have.
+From a policy perspective, greater impact and studies could be done to influence greater transparency$^{6}$ in reporting across the news companies. This can assist in making informed decisions on which news sources to read or be aware of the bias different sources might have.
 
 # Data Description
 
 ## Data Sourcing
 
-In order to choose major news sources to analyze, diversity of news sources was important. 
-Therefore, we used the figure below created by the Pew Research Center. This figure shows where 
-on the US political spectrum various news companies fall. This criteria was used to get a mix of sources across the conservative and liberal spectrum, while balancing limitations of computing resources. The following news sources were used to procure a dataset.  
+In order to choose major news sources to analyze, looking at diversity of news sources is important. Therefore, we used the figure below created by the Pew Research Center. This figure shows where on the US political spectrum various news companies fall. This criteria was used to get a mix of sources across the conservative and liberal spectrum, while meeting limitations of computing resources. The following news sources were used to procure a dataset.  
 
 ![Source: Pew Research Center](../figures/PJ_14.10.21_mediaPolarization-08.png)
 
@@ -92,9 +87,9 @@ on the US political spectrum various news companies fall. This criteria was used
 
 Leveraging the **[GNews API](https://gnewsapi.net/)**, news article data related 
 to COVID-19 were pulled for the selected major news sources (filtered to US articles). 
-The time frame used for this analysis was between January/1/2020 - April/9/2021.
+The time frame used for this analysis was between January 1st 2020 - April 9th 2021.
 
-A total of 5,360 articles were called from the API (20 articles per week and news source, for 67 weeks). The API call returned 3,454 records for article-related data. Below are some of the key fields from the API call, with an example:
+A total of 5,360 articles were called from the API (20 articles per week and news source, for 67 weeks). The API call returned 3,454 records for article-related data (due to REST api query limitations). Below are some of the key fields from the API call, with an example:
 
 - ```article url```: https://www.cnn.com/2021/02/08/health/covid-19-antigen-tests-states-cnn-analysis/index.html
 
@@ -107,11 +102,6 @@ A total of 5,360 articles were called from the API (20 articles per week and new
 
 *Note: Due to legal restrictions, Fox News data was not pulled*
 
-```{r setup, include=FALSE}
-setwd("C:/Users/apagta950/Documents/NYU/Courses/Spring 2021/MDML/Final Project/US-News-NLP/results")
-knitr::opts_chunk$set(echo = TRUE)
-```
-
 ## Data Cleaning: Web scraping
 
 After gathering the article URLs, the full news text for each article was pulled. Each
@@ -120,35 +110,39 @@ highlight the unique aspects of web scraping each data source.
 
 ### BBC
 
-BBC news articles used different HTML structures based on each section. Hence, the need to use keyword function in “Gnews API” to extract articles only in “news” tab. This allowed to scrap all body text. However, it also scrapped advertisement and unnecessary information. As a result, there was a need to remove irrelevant lines and words to prevent these features from affecting the analysis.
+BBC news articles used different HTML structures based on each section. Hence, there was a need to use the keyword aguments in the “GNews API” to extract articles only in BBC's “News” tab. This allowed all body text to be scraped. However, it also scraped advertisements and extraneous information (such as disclaimers). As a result, there was a need to remove irrelevant lines and words to prevent these features from affecting the analysis.
 
 ### CNN
 
 There were two distinct HTML structures. One for the first sentence, and another 
 for the remainder of the article. Additional cleaning needed to be done to remove 
-the "(CNN)" and "(CNN Business)" text at the beginning of each article, as well as additional escape
-characters scattered throughout the article.
+the "(CNN)" and "(CNN Business)" text at the beginning of each article, as well as additional escape characters scattered throughout the article.
 
 ### Reuters
 
 This was relatively streamlined compared to the other news sources. One unique 
 aspect of Reuters was that a number of their articles were not text articles in the 
-traditional sense, but slideshows. For example this article:
+traditional sense, but slideshows, such as : https://www.reuters.com/news/picture/coronavirus-outbreak-spreads-in-china-idUSRTS2ZART
 
-https://www.reuters.com/news/picture/coronavirus-outbreak-spreads-in-china-idUSRTS2ZART
+As such, these articles were not scraped due to significantly different html structures (n = 18).
 
 ### The Wall Street Journal
 
-The original plan was to extract articles from a conservative newspaper, such as Fox news. However, Fox news updated their Terms of Use which strictly forbidden to use *“…any automated means, including "robots," "spiders," or "offline readers"…”*. Thus, it was decided to scrape The Wall Street Journal instead. One downside of using The Wall Street Journal was that it is a subscribe-based website; and it only allows ordinary viewers to extract a fraction of the articles. This could potentially explain the small amount of average word count per article. Similarly to BBC, scraped body text contained irrelevant information and it was removed with further cleaning process.
+The original plan was to also extract articles from a conservative newspaper, such as Fox News. However, Fox news updated their Terms of Use which strictly forbids scraping: *“…any automated means, including "robots," "spiders," or "offline readers"…”*. Thus, The Wall Street Journal was scraped instead. One downside of using The Wall Street Journal was that it is a subscriber-based website and only allows readers without a subscription to extract a fraction of each article. This could potentially explain the small amount of average word count per article. Similarly to BBC, scraped body text contained irrelevant information and it was removed with further cleaning processes.
 
 # Exploratory Data Analysis
 
 To better understand the data, sentiment analysis utilizing various lexicons were 
-explored. And it was conclude that the most informative one for this analysis was AFFIN lexicon.
-Additionally, key visualizations of the data were illustrated:
+explored. Of the lexicons available in ```tidytext::get_sentiments()``` the most informative one for this analysis was AFFIN lexicon. This provided a range of sentiments from negative to positive on a scale from -5 (most negative) to 5 (most positive). It also allows for more streamlined sentiment analysis, such as finding average sentiment. Key visualizations of the data are illustrated below.
 
-BBC had the least average words per article, whereas CNN had the most words per 
-article.
+Excluding The Wall Street Journal, BBC had the lowest average words per article, whereas CNN had the most words per article.
+
+There were a couple of CNN articles that asked for reader feedback, hence low counts. Example:
+https://www.cnn.com/2020/05/29/us/coronavirus-infected-in-hospital-callout-invs/index.html (words = 33)
+
+Reuters has articles with short reports, such as:
+https://www.reuters.com/article/us-china-health-azerbaijan/azerbaijan-reports-first-case-of-coronavirus-ifax-idUKKCN20M1IR
+
 
 ![Words Per Article](../figures/words_per_article.png)
 
