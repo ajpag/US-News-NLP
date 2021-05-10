@@ -346,7 +346,13 @@ which best split Wall Street Journal from the other news sources.
 
 ![Avg word count across articles](../figures/rf_feature_importance.png)
 
+## Implications
+
+It seems that, as other papers have suggested, there is some bias align in the news sources article. The bias in different dimensions generates patterns that can accurately predict the news sources of which a text is coming from. This information could potentially be used towards making more transparent the bias across news sources. It is also a foundation towards modeling sentiment across different topics to evaluate the impact in health issued. 
+
+
 ## Limitations
+
 - Selection bias in news articles analyzed: Due to legal 
 restrictions, more conservative news sources, such as Fox News, were not scraped.
 Also due to legal restrictions, the articles of The Wall Street Journal were not 
@@ -370,9 +376,9 @@ Parsed sentence(s)
 
 - ```"Coleman home for wearing the headscarf was due to a lack of training," Warren said."```
 
--	Calculating sentiment scores from news articles to predict the publisher may not be an effective mechanism. Our research question hypothesized that the average sentiment of articles from each newspaper on a single phenomenon is not equal. It is true that each newspaper has its own perspectives in general. However, it is difficult to detect and to measure these patterns based on each article’s sentiment; news articles are mostly written with an objective and logical tone. It would be more comprehensible if we focus on the headline of the articles[11] or data from social network service such as Facebook or Twitter as they are more likely to include emotional words. In this paper, the researchers used machine learning models that we used to predict three major sentiments based on Twitter data with a higher accuracy.[12]  
+-	Calculating sentiment scores from news articles to predict the publisher may not be an effective mechanism. Our research question hypothesized that the average sentiment of articles from each newspaper on a single phenomenon is not equal. It is true that each newspaper has its own perspectives in general. However, it is difficult to detect and to measure these patterns based on each article’s sentiment; news articles are mostly written with an objective and logical tone. It would be more comprehensible if we focus on the headline of the articles$^{11}$ or data from social network service such as Facebook or Twitter as they are more likely to include emotional words. In this paper, the researchers used machine learning models that we used to predict three major sentiments based on Twitter data with a higher accuracy.$^{12}$  
 
--	Another issue is related to newspaper’s several differences in their nature. Firstly, Wall Street Journal is a newspaper specialized in business and economic issues, unlike BBC or CNN newspapers, which cover general topics. Moreover, Wall Street Journal and CNN are based on the United States whereas Reuters and BBC News based in the United Kingdom. Finally, BBC and CNN are regarded as broadcast news sites which implies that some articles are from press services such as Reuters and AP News[13]. Inequality in different data sources may explain the topic modeling features carry the highest significance in prediction.
+-	Another issue is related to newspaper’s several differences in their nature. Firstly, Wall Street Journal is a newspaper specialized in business and economic issues, unlike BBC or CNN newspapers, which cover general topics. Moreover, Wall Street Journal and CNN are based on the United States whereas Reuters and BBC News based in the United Kingdom. Finally, BBC and CNN are regarded as broadcast news sites which implies that some articles are from press services such as Reuters and AP News$^{13}$. Inequality in different data sources may explain the topic modeling features carry the highest significance in prediction.
 
 -	Furthermore, the data size was limited. We have collected 700-800 articles per newspaper with covid-19 topic from 2020 to 2021. But since we did not specify the section and as a result there might be a tendency that the newspaper with a more articles related to culture, entertainment, and leisure have a more positive sentiment score. Since the number of articles was not large enough so that few positive sentiment article contents with irrelevant topic was enough to impact on the general sentiment analysis.  It is expected to reduce such noise by increasing data size or using more specific keyword as well as section types.
 
