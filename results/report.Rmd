@@ -139,7 +139,7 @@ https://www.reuters.com/news/picture/coronavirus-outbreak-spreads-in-china-idUSR
 
 ### The Wall Street Journal
 
-The original plan was to extract articles from a conservative newspaper, such as Fox news. However, Fox news updated their Terms of Use which strictly forbidden to use *“…any automated means, including "robots," "spiders," or "offline readers"…”*. Thus, it was decided to scrape The Wall Street Journal instead. One downside of using The Wall Street Journal was that it is a subscribe-based website; and it only allows ordinary viewers to extract a fraction of the articles. This could potentially explain the small amount of average word count per article comparing to other newspapers such as BBC or CNN. Similarly to BBC, scraped body text contained irrelevant information and it was removed with further cleaning process.
+The original plan was to extract articles from a conservative newspaper, such as Fox news. However, Fox news updated their Terms of Use which strictly forbidden to use *“…any automated means, including "robots," "spiders," or "offline readers"…”*. Thus, it was decided to scrape The Wall Street Journal instead. One downside of using The Wall Street Journal was that it is a subscribe-based website; and it only allows ordinary viewers to extract a fraction of the articles. This could potentially explain the small amount of average word count per article. Similarly to BBC, scraped body text contained irrelevant information and it was removed with further cleaning process.
 
 # Exploratory Data Analysis
 
