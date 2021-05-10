@@ -27,9 +27,9 @@ Channel averaged 2.5 million primetime viewers (8pm - 11pm) in February 2021, an
 million during the same time period.
 
 According to King G.(1) & et. al., *“. . . the exposure to news media causes Americans to take public stands on
-specific issues, join national policy conversation, and express themselves publicly”*. Furthermore, Holman E.3 &
+specific issues, join national policy conversation, and express themselves publicly”*. Furthermore, Holman E.(2) &
 et. al, suggest a correlation between raising level of stress and prolonged media exposure to *“community-based
-traumas (e.g., mass shootings, natural disasters)”*. Recently, Holman(2) has suggested that COVID-19 is a
+traumas (e.g., mass shootings, natural disasters)”*. Recently, Holman has suggested that COVID-19 is a
 particular case to study since multiple stressors have arose at the same time. To mention a few stressors:
 financial crisis, elections, and health crisis, among others. It can be said that news can influence the decisions,
 general views and mental health of Americans.
