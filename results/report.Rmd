@@ -144,7 +144,8 @@ The original plan was to extract articles from a conservative newspaper, such as
 # Exploratory Data Analysis
 
 To better understand the data, sentiment analysis utilizing various lexicons were 
-explored. Key visualizations of the data are illustrated:
+explored. And it was conclude that the most informative one for this analysis was AFFIN lexicon.
+Additionally, key visualizations of the data were illustrated:
 
 BBC had the least average words per article, whereas CNN had the most words per 
 article.
@@ -164,6 +165,13 @@ would require further analysis outside of this study.
 *Afinn lexicon: https://www.tidytextmining.com/sentiment.html*
 
 ![Average Sentiment by Week](../figures/sentence_afinn_sentiment_week.png)
+
+# Methodology
+
+The analysis was made with three sets of features in order to evaluate the bias and  different patterns 
+accross all the news sources. The purpose of each set of features was to explain a different dimension in 
+which the news sources might be differentiated. The three dimensions modeled were: topic content, sentiment
+based on key words, and vocabulary used among conservative and liberal sources. 
 
 # Feature Engineering
 
@@ -195,11 +203,11 @@ feature was generated for each term below (noted in quotes).
 
 We have introduced several new features which has been defined and researched previous published papers to increase our model’s predictability:
 
-- First paper by Hart, Chinn and Soroka$^{8}$  introduced a dictionary, which assembled major words with the most relevant vocabularies such as Covid-19, Scientist, Republican and Democrat, to explore politicization and polarization in pandemic news in the U.S. newspapers from March to May 2020. 
+- First paper by Hart, Chinn and Soroka[8] introduced a dictionary, which assembled major words with the most relevant vocabularies such as Covid-19, Scientist, Republican and Democrat, to explore politicization and polarization in pandemic news in the U.S. newspapers from March to May 2020. 
 
-- Second paper by Green et al$^{9}$ demonstrated that absolute difference in the proportion of words used by political party using Tweet data from January to March 2020.
+- Second paper by Green et al[9] demonstrated that absolute difference in the proportion of words used by political party using Tweet data from January to March 2020.
 
--	Final research by Schaeffer$^{10}$ also shows the difference in views on various topic based on their political stands from January and Feb 2021.
+-	Final research by Schaeffer[10] also shows the difference in views on various topic based on their political stands from January and Feb 2021.
 
 The new features will compute the frequency of these list of words used in each article. Since these features are not extracted nor inferred from our collected article data but rather the result from a broader analysis, we can expect that these features can enhance our model’s performance on the dataset that we did not use.
 
@@ -358,13 +366,13 @@ Parsed sentence(s)
 
 - ```"Coleman home for wearing the headscarf was due to a lack of training," Warren said."```
 
--	Calculating sentiment scores from news articles to predict the publisher may not be an effective mechanism. Our research question hypothesized that the average sentiment of articles from each newspaper on a single phenomenon is not equal. It is true that each newspaper has its own perspectives in general. However, it is difficult to detect and to measure these patterns based on each article’s sentiment; news articles are mostly written with an objective and logical tone. It would be more comprehensible if we focus on the headline of the articles$^{11}$ or data from social network service such as Facebook or Twitter as they are more likely to include emotional words. In this paper, the researchers used machine learning models that we used to predict three major sentiments based on Twitter data with a higher accuracy$^{12}$.
+-	Calculating sentiment scores from news articles to predict the publisher may not be an effective mechanism. Our research question hypothesized that the average sentiment of articles from each newspaper on a single phenomenon is not equal. It is true that each newspaper has its own perspectives in general. However, it is difficult to detect and to measure these patterns based on each article’s sentiment; news articles are mostly written with an objective and logical tone. It would be more comprehensible if we focus on the headline of the articles[11] or data from social network service such as Facebook or Twitter as they are more likely to include emotional words. In this paper, the researchers used machine learning models that we used to predict three major sentiments based on Twitter data with a higher accuracy.[12]  
 
--	Another issue is related to newspaper’s several differences in their nature. Firstly, Wall Street Journal is a newspaper specialized in business and economic issues, unlike BBC or CNN newspapers, which cover general topics. Moreover, Wall Street Journal and CNN are based on the United States whereas Reuters and BBC News based in the United Kingdom. Finally, BBC and CNN are regarded as broadcast news sites which implies that some articles are from press services such as Reuters and AP News$^{13}$. Inequality in different data sources may explain the topic modeling features carry the highest significance in prediction.
+-	Another issue is related to newspaper’s several differences in their nature. Firstly, Wall Street Journal is a newspaper specialized in business and economic issues, unlike BBC or CNN newspapers, which cover general topics. Moreover, Wall Street Journal and CNN are based on the United States whereas Reuters and BBC News based in the United Kingdom. Finally, BBC and CNN are regarded as broadcast news sites which implies that some articles are from press services such as Reuters and AP News[13]. Inequality in different data sources may explain the topic modeling features carry the highest significance in prediction.
 
 -	Furthermore, the data size was limited. We have collected 700-800 articles per newspaper with covid-19 topic from 2020 to 2021. But since we did not specify the section and as a result there might be a tendency that the newspaper with a more articles related to culture, entertainment, and leisure have a more positive sentiment score. Since the number of articles was not large enough so that few positive sentiment article contents with irrelevant topic was enough to impact on the general sentiment analysis.  It is expected to reduce such noise by increasing data size or using more specific keyword as well as section types.
 
--	Finally, negativity in newspaper may not be a good indicator to predict the news sources as major U.S. media outlet are more likely to have negative content comparing to any other major media outlet outside the U.S., according to the study done by B. Sacerdote, R Sehgal, and M Cook$^{14}$. As the study used covid-19 related newspaper from 2020 with 9.4 million news stores, it is worth to consider the finding when we interpret the sentiment analysis result.
+-	Finally, negativity in newspaper may not be a good indicator to predict the news sources as major U.S. media outlet are more likely to have negative content comparing to any other major media outlet outside the U.S., according to the study done by B. Sacerdote, R Sehgal, and M Cook [14]. As the study used covid-19 related newspaper from 2020 with 9.4 million news stores, it is worth to consider the finding when we interpret the sentiment analysis result.
 
 ## Next Steps
 
