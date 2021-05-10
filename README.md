@@ -1,5 +1,6 @@
 # US-News-NLP
 Natural language processing (sentiment analysis, topic modeling) and classification modeling on major news sources to measure bias on COVID-19 reporting.
+
 *Andrew Pagtakhan, Kwan Bo Shim, Cinthia Jazmin Trejo Medina*
 
 
