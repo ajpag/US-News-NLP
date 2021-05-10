@@ -43,12 +43,12 @@ The means in which informaton is communicated with regards to the COVID-19 pande
 has had major influence on how we read and learn about the virus through a multitude 
 of media outlets. Some of these major sources include television, YouTube, social 
 media forums, and major news companies. Major news companies in particular carry large
-influence based on the audiences it can reach. For example$^{1/}$, Fox News Channel 
+influence based on the audiences it can reach. For example$^{1}$, Fox News Channel 
 averaged 2.5 million primetime viewers (8pm - 11pm) in February 2021, and CNN 
 averaged 1.7 million during the same time period.
 
-According to King G.$^{2/}$ & et. al., *"...the exposure to news media causes Americans to take public stands on specific issues, join national policy conversation, and express themselves publicly"*. Furthermore, Holman E.$^{3/}$ & et. al, suggest a correlation between raising level of stress and prolonged media exposure to "community-based traumas (e.g., mass shootings, natural disasters)". 
-Recently, Holman$^{4/}$ has suggested the COVID-19 is a particular case to study; since multiple stressors
+According to King G.$^{2}$ & et. al., *"...the exposure to news media causes Americans to take public stands on specific issues, join national policy conversation, and express themselves publicly"*. Furthermore, Holman E.$^{3}$ & et. al, suggest a correlation between raising level of stress and prolonged media exposure to "community-based traumas (e.g., mass shootings, natural disasters)". 
+Recently, Holman$^{4}$ has suggested the COVID-19 is a particular case to study; since multiple stressors
 have arose at the same time. To mention some: financial crisis, elections, health crisis, among others.It can be said that news can influence the decisions, general views and metal health of Americans.
 
 The large influence that major news companies have on how information is commmunicated to its audiences, and 
@@ -68,7 +68,7 @@ sources. This can help to equip them with greater understanding and critical
 examination of news consumption. In the same way, it can help readers to be more selective 
 when choosing news sources and reduce their stress impact.
 
-From a policy perspective, greater impact and studies could be done to influence greater transparency$^{6/}$ in reporting across the news companies. In order to make inform decisions on which news sources to read or be aware of the bias different sources might have.
+From a policy perspective, greater impact and studies could be done to influence greater transparency$^{6}$ in reporting across the news companies. In order to make inform decisions on which news sources to read or be aware of the bias different sources might have.
 
 # Data Description
 
@@ -206,11 +206,11 @@ feature was generated for each term below (noted in quotes).
 
 In order to evaluate existing literature on politization and polarization, features based on previous published papers were generated.
 
-- First paper by Hart, Chinn and Soroka$^{8/}$ introduced a dictionary, which assembled major words with the most relevant vocabularies such as Covid-19, Scientist, Republican and Democrat, to explore politicization and polarization in pandemic news in the U.S. newspapers from March to May 2020. 
+- First paper by Hart, Chinn and Soroka$^{8}$ introduced a dictionary, which assembled major words with the most relevant vocabularies such as Covid-19, Scientist, Republican and Democrat, to explore politicization and polarization in pandemic news in the U.S. newspapers from March to May 2020. 
 
-- Second paper by Green et al$^{9/}$ demonstrated an absolute difference in the proportion of words used by political party using Tweet data from January to March 2020.
+- Second paper by Green et al$^{9}$ demonstrated an absolute difference in the proportion of words used by political party using Tweet data from January to March 2020.
 
--	Final research by Schaeffer$^{10/}$ also shows the difference in views on various topics based on their political stands from January and Feb 2021.
+-	Final research by Schaeffer$^{10}$ also shows the difference in views on various topics based on their political stands from January and Feb 2021.
 
 The new features computed the frequency of these list of words used in each article. Since these features are not extracted nor inferred from the collected article data but from a broader analysis, it can be expected that these features can enhance our model’s performance.
 
