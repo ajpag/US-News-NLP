@@ -44,7 +44,7 @@ use case can be difficult from business and philosophical perspectives, especial
 Amendement of the US Constitution in relation to the freedom of speech.
 
 ## Data sourcing
-Pulled article urls and metadata from GNews API: https://gnewsapi.net/. Scraped full article text across the following news sources:
+Pulled article urls and metadata from GNews API: https://gnewsapi.net/ (5,360 articles queried, 3,454 articles returned for the time period 1/1/2020 - 4/9/2021). Scraped full article text across the following news sources:
 - BBC
 - CNN
 - Reuters
